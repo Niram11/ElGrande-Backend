@@ -14,4 +14,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     List<Restaurant> findAllBy();
     @Query("SELECT r FROM Restaurant r WHERE r.id = :id")
     Optional<Restaurant> findBy(UUID id);
+
 }

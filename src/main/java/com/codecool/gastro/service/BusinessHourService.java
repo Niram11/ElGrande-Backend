@@ -42,4 +42,9 @@ public class BusinessHourService {
         BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DTOToBusinessHour(newBusinessHourDTO));
         return businessHourMapper.businessHourToDTO(savedBusinessHour);
     }
+
+    public BusinessHourDTO updateBusinessHour(UUID id, NewBusinessHourDTO newBusinessHourDTO) {
+        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DTOToBusinessHour(newBusinessHourDTO, id));
+        return businessHourMapper.businessHourToDTO(savedBusinessHour);
+    }
 }

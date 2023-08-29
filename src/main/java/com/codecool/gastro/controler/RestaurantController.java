@@ -33,4 +33,9 @@ public class RestaurantController {
     public RestaurantDTO createNewRestaurant(@Valid @RequestBody NewRestaurantDTO newRestaurantDTO) {
         return restaurantService.saveNewRestaurant(newRestaurantDTO);
     }
+
+    @PutMapping("/{id}")
+    public RestaurantDTO updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDTO newRestaurantDTO) {
+        return restaurantService.updateRestaurant(id, newRestaurantDTO);
+    }
 }

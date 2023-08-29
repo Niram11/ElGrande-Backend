@@ -9,6 +9,8 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.UUID;
+
 @Mapper(componentModel = "spring")
 public interface BusinessHourMapper {
 
@@ -17,4 +19,8 @@ public interface BusinessHourMapper {
 
     @Mapping(source = "newBusinessHourDTO.restaurantId", target = "restaurant.id")
     BusinessHour DTOToBusinessHour(NewBusinessHourDTO newBusinessHourDTO);
+
+    @Mapping(source = "newBusinessHourDTO.restaurantId", target = "restaurant.id")
+    @Mapping(source = "id", target = "id")
+    BusinessHour DTOToBusinessHour(NewBusinessHourDTO newBusinessHourDTO, UUID id);
 }

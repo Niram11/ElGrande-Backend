@@ -38,4 +38,9 @@ public class RestaurantService {
         Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.DTOToRestaurant(newRestaurantDTO));
         return restaurantMapper.restaurantToDTO(savedRestaurant);
     }
+
+    public RestaurantDTO updateRestaurant(UUID id, NewRestaurantDTO newRestaurantDTO) {
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.DTOToRestaurant(newRestaurantDTO, id));
+        return restaurantMapper.restaurantToDTO(updatedRestaurant);
+    }
 }

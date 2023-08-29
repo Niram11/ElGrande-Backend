@@ -36,4 +36,9 @@ public class BusinessHourController {
         return businessHourService.saveNewBusinessHour(newBusinessHourDTO);
     }
 
+    @PutMapping("/{id}")
+    public BusinessHourDTO updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDTO newBusinessHourDTO) {
+        return businessHourService.updateBusinessHour(id, newBusinessHourDTO);
+    }
+
 }
