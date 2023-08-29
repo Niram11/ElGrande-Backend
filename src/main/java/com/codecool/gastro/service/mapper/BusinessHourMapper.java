@@ -1,7 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
-import com.codecool.gastro.dto.businesshour.BusinessHourDTO;
-import com.codecool.gastro.dto.businesshour.NewBusinessHourDTO;
+import com.codecool.gastro.dto.businesshour.BusinessHourDto;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.repository.entity.BusinessHour;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,15 +12,15 @@ import java.util.UUID;
 public interface BusinessHourMapper {
 
     @Mapping(target = "restaurantId", source = "businessHour.restaurant.id")
-    BusinessHourDTO businessHourToDTO(BusinessHour businessHour);
+    BusinessHourDto businessHourToDto(BusinessHour businessHour);
 
-    @Mapping(source = "newBusinessHourDTO.restaurantId", target = "restaurant.id")
-    BusinessHour DTOToBusinessHour(NewBusinessHourDTO newBusinessHourDTO);
+    @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
+    BusinessHour DtoToBusinessHour(NewBusinessHourDto newBusinessHourDto);
 
-    @Mapping(source = "newBusinessHourDTO.restaurantId", target = "restaurant.id")
+    @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
     @Mapping(source = "id", target = "id")
-    BusinessHour DTOToBusinessHour(NewBusinessHourDTO newBusinessHourDTO, UUID id);
+    BusinessHour DtoToBusinessHour(NewBusinessHourDto newBusinessHourDto, UUID id);
 
     @Mapping(source = "id", target = "id")
-    BusinessHour DTOToBusinessHour(UUID id);
+    BusinessHour DtoToBusinessHour(UUID id);
 }

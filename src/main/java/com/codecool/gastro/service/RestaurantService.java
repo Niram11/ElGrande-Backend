@@ -1,7 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.dto.restaurant.RestaurantDTO;
+import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
+import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.EntityNotFoundException;
@@ -24,25 +24,25 @@ public class RestaurantService {
         this.restaurantMapper = restaurantMapper;
     }
 
-    public List<RestaurantDTO> getRestaurants() {
+    public List<RestaurantDto> getRestaurants() {
         return restaurantRepository.findAllBy().stream()
-                .map(restaurantMapper::restaurantToDTO).toList();
+                .map(restaurantMapper::restaurantToDto).toList();
     }
 
-    public RestaurantDTO getRestaurantById(UUID id) {
+    public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
-                .map(restaurantMapper::restaurantToDTO)
+                .map(restaurantMapper::restaurantToDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public RestaurantDTO saveNewRestaurant(NewRestaurantDTO newRestaurantDTO) {
-        Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.DTOToRestaurant(newRestaurantDTO));
-        return restaurantMapper.restaurantToDTO(savedRestaurant);
+    public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
+        Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.DtoToRestaurant(newRestaurantDto));
+        return restaurantMapper.restaurantToDto(savedRestaurant);
     }
 
-    public RestaurantDTO updateRestaurant(UUID id, NewRestaurantDTO newRestaurantDTO) {
-        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.DTOToRestaurant(newRestaurantDTO, id));
-        return restaurantMapper.restaurantToDTO(updatedRestaurant);
+    public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.DtoToRestaurant(newRestaurantDto, id));
+        return restaurantMapper.restaurantToDto(updatedRestaurant);
     }
 
     public void softDelete(UUID id) {

@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.dto.restaurant.RestaurantDTO;
+import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
+import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +19,23 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantDTO> getAllRestaurants() {
+    public List<RestaurantDto> getAllRestaurants() {
         return restaurantService.getRestaurants();
     }
 
     @GetMapping("/{id}")
-    public RestaurantDTO getAllRestaurants(@PathVariable UUID id) {
+    public RestaurantDto getAllRestaurants(@PathVariable UUID id) {
         return restaurantService.getRestaurantById(id);
     }
 
     @PostMapping
-    public RestaurantDTO createNewRestaurant(@Valid @RequestBody NewRestaurantDTO newRestaurantDTO) {
-        return restaurantService.saveNewRestaurant(newRestaurantDTO);
+    public RestaurantDto createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
+        return restaurantService.saveNewRestaurant(newRestaurantDto);
     }
 
     @PutMapping("/{id}")
-    public RestaurantDTO updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDTO newRestaurantDTO) {
-        return restaurantService.updateRestaurant(id, newRestaurantDTO);
+    public RestaurantDto updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {
+        return restaurantService.updateRestaurant(id, newRestaurantDto);
     }
 
     @DeleteMapping("/{id}")

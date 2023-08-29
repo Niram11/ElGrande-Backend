@@ -1,7 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.businesshour.BusinessHourDTO;
-import com.codecool.gastro.dto.businesshour.NewBusinessHourDTO;
+import com.codecool.gastro.dto.businesshour.BusinessHourDto;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
@@ -21,29 +21,29 @@ public class BusinessHourService {
         this.businessHourMapper = businessHourMapper;
     }
 
-    public List<BusinessHourDTO> getBusinessHours() {
+    public List<BusinessHourDto> getBusinessHours() {
         return businessHourRepository.findAllBy().stream()
-                .map(businessHourMapper::businessHourToDTO).toList();
+                .map(businessHourMapper::businessHourToDto).toList();
     }
 
-    public BusinessHourDTO getBusinessHourById(UUID id) {
+    public BusinessHourDto getBusinessHourById(UUID id) {
         return businessHourRepository.findById(id)
-                .map(businessHourMapper::businessHourToDTO)
+                .map(businessHourMapper::businessHourToDto)
                 .orElseThrow(() -> new EntityNotFoundException(id, BusinessHour.class));
     }
 
-    public BusinessHourDTO saveNewBusinessHour(NewBusinessHourDTO newBusinessHourDTO) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DTOToBusinessHour(newBusinessHourDTO));
-        return businessHourMapper.businessHourToDTO(savedBusinessHour);
+    public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
+        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DtoToBusinessHour(newBusinessHourDto));
+        return businessHourMapper.businessHourToDto(savedBusinessHour);
     }
 
-    public BusinessHourDTO updateBusinessHour(UUID id, NewBusinessHourDTO newBusinessHourDTO) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DTOToBusinessHour(newBusinessHourDTO, id));
-        return businessHourMapper.businessHourToDTO(savedBusinessHour);
+    public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
+        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DtoToBusinessHour(newBusinessHourDto, id));
+        return businessHourMapper.businessHourToDto(savedBusinessHour);
     }
 
     public void deleteBusinessHour(UUID id) {
-        BusinessHour deletedBusinessHour = businessHourMapper.DTOToBusinessHour(id);
+        BusinessHour deletedBusinessHour = businessHourMapper.DtoToBusinessHour(id);
         businessHourRepository.delete(deletedBusinessHour);
     }
 

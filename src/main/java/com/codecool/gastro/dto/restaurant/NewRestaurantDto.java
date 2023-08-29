@@ -1,6 +1,6 @@
 package com.codecool.gastro.dto.restaurant;
 
-public record NewRestaurantDTO(
+public record NewRestaurantDto(
         String name,
         String description,
         String website,

@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.dto.businesshour.BusinessHourDTO;
-import com.codecool.gastro.dto.businesshour.NewBusinessHourDTO;
+import com.codecool.gastro.dto.businesshour.BusinessHourDto;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.service.BusinessHourService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +19,23 @@ public class BusinessHourController {
     }
 
     @GetMapping
-    public List<BusinessHourDTO> getAllBusinessHours() {
+    public List<BusinessHourDto> getAllBusinessHours() {
         return businessHourService.getBusinessHours();
     }
 
     @GetMapping("/{id}")
-    public BusinessHourDTO getBusinessHour(@PathVariable UUID id) {
+    public BusinessHourDto getBusinessHour(@PathVariable UUID id) {
         return businessHourService.getBusinessHourById(id);
     }
 
     @PostMapping
-    public BusinessHourDTO createNewBusinessHour(@Valid @RequestBody NewBusinessHourDTO newBusinessHourDTO) {
-        return businessHourService.saveNewBusinessHour(newBusinessHourDTO);
+    public BusinessHourDto createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
+        return businessHourService.saveNewBusinessHour(newBusinessHourDto);
     }
 
     @PutMapping("/{id}")
-    public BusinessHourDTO updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDTO newBusinessHourDTO) {
-        return businessHourService.updateBusinessHour(id, newBusinessHourDTO);
+    public BusinessHourDto updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
+        return businessHourService.updateBusinessHour(id, newBusinessHourDto);
     }
 
     @DeleteMapping("/{id}")
