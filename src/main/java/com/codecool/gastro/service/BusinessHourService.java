@@ -1,18 +1,12 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.controler.dto.businesshour.BusinessHourDTO;
-import com.codecool.gastro.controler.dto.businesshour.NewBusinessHourDTO;
-import com.codecool.gastro.controler.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.controler.dto.restaurant.RestaurantDTO;
-import com.codecool.gastro.mapper.BusinessHourMapper;
-import com.codecool.gastro.mapper.RestaurantMapper;
+import com.codecool.gastro.dto.businesshour.BusinessHourDTO;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDTO;
+import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.repository.BusinessHourRepository;
-import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
-import com.codecool.gastro.repository.entity.Restaurant;
-import org.springframework.http.HttpStatus;
+import com.codecool.gastro.service.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +29,7 @@ public class BusinessHourService {
     public BusinessHourDTO getBusinessHourById(UUID id) {
         return businessHourRepository.findById(id)
                 .map(businessHourMapper::businessHourToDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(id, BusinessHour.class));
     }
 
     public BusinessHourDTO saveNewBusinessHour(NewBusinessHourDTO newBusinessHourDTO) {
@@ -47,4 +41,10 @@ public class BusinessHourService {
         BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DTOToBusinessHour(newBusinessHourDTO, id));
         return businessHourMapper.businessHourToDTO(savedBusinessHour);
     }
+
+    public void deleteBusinessHour(UUID id) {
+        BusinessHour deletedBusinessHour = businessHourMapper.DTOToBusinessHour(id);
+        businessHourRepository.delete(deletedBusinessHour);
+    }
+
 }

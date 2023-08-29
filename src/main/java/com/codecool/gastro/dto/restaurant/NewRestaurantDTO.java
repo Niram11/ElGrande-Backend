@@ -1,6 +1,4 @@
-package com.codecool.gastro.controler.dto.restaurant;
-
-import java.util.UUID;
+package com.codecool.gastro.dto.restaurant;
 
 public record NewRestaurantDTO(
         String name,

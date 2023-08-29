@@ -1,10 +1,11 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.controler.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.controler.dto.restaurant.RestaurantDTO;
-import com.codecool.gastro.mapper.RestaurantMapper;
+import com.codecool.gastro.dto.restaurant.NewRestaurantDTO;
+import com.codecool.gastro.dto.restaurant.RestaurantDTO;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.service.exception.EntityNotFoundException;
+import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,4 +44,30 @@ public class RestaurantService {
         Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.DTOToRestaurant(newRestaurantDTO, id));
         return restaurantMapper.restaurantToDTO(updatedRestaurant);
     }
+
+    public void softDelete(UUID id) {
+        Restaurant restaurant = restaurantRepository.findBy(id)
+                .orElseThrow(() -> new EntityNotFoundException(id, Restaurant.class));
+
+        obfuscateData(restaurant);
+        restaurantRepository.save(restaurant);
+    }
+
+    private void obfuscateData(Restaurant restaurant) {
+        int nameLength = restaurant.getName().length();
+        restaurant.setName("*".repeat(nameLength));
+
+        int descriptionLength = restaurant.getDescription().length();
+        restaurant.setDescription("*".repeat(descriptionLength));
+
+        int websiteLength = restaurant.getWebsite().length();
+        restaurant.setWebsite("*".repeat(websiteLength));
+
+        int contactNumberLength = restaurant.getContactNumber().length();
+        restaurant.setContactNumber("*".repeat(contactNumberLength));
+
+        int contactEmailLength = restaurant.getContactEmail().length();
+        restaurant.setContactEmail("*".repeat(contactEmailLength));
+    }
+
 }

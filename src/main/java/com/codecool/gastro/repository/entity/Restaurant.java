@@ -1,7 +1,9 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.util.UUID;
 
@@ -19,7 +21,7 @@ public class Restaurant {
     private String website;
     @NotBlank
     private String contactNumber;
-    @NotBlank
+    @Email
     private String contactEmail;
 
     public Restaurant(UUID id, String name, String description, String website, String contactNumber, String contactEmail) {

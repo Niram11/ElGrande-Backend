@@ -1,7 +1,7 @@
-package com.codecool.gastro.mapper;
+package com.codecool.gastro.service.mapper;
 
-import com.codecool.gastro.controler.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.controler.dto.restaurant.RestaurantDTO;
+import com.codecool.gastro.dto.restaurant.NewRestaurantDTO;
+import com.codecool.gastro.dto.restaurant.RestaurantDTO;
 import com.codecool.gastro.repository.entity.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

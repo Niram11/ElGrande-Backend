@@ -1,11 +1,8 @@
-package com.codecool.gastro.controler;
+package com.codecool.gastro.controller;
 
-import com.codecool.gastro.controler.dto.businesshour.BusinessHourDTO;
-import com.codecool.gastro.controler.dto.businesshour.NewBusinessHourDTO;
-import com.codecool.gastro.controler.dto.restaurant.NewRestaurantDTO;
-import com.codecool.gastro.controler.dto.restaurant.RestaurantDTO;
+import com.codecool.gastro.dto.businesshour.BusinessHourDTO;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDTO;
 import com.codecool.gastro.service.BusinessHourService;
-import com.codecool.gastro.service.RestaurantService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +36,11 @@ public class BusinessHourController {
     @PutMapping("/{id}")
     public BusinessHourDTO updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDTO newBusinessHourDTO) {
         return businessHourService.updateBusinessHour(id, newBusinessHourDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBusinessHour(@PathVariable UUID id) {
+        businessHourService.deleteBusinessHour(id);
     }
 
 }

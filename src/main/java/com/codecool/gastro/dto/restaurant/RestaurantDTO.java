@@ -1,6 +1,5 @@
-package com.codecool.gastro.controler.dto.restaurant;
+package com.codecool.gastro.dto.restaurant;
 
-import java.rmi.server.UID;
 import java.util.UUID;
 
 public record RestaurantDTO(

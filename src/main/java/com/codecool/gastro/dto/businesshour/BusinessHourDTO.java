@@ -1,6 +1,5 @@
-package com.codecool.gastro.controler.dto.businesshour;
+package com.codecool.gastro.dto.businesshour;
 
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.UUID;
 
