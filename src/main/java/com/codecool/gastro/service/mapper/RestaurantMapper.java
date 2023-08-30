@@ -13,8 +13,8 @@ public interface RestaurantMapper {
 
     RestaurantDto restaurantToDto(Restaurant restaurant);
 
-    Restaurant DtoToRestaurant(NewRestaurantDto newRestaurantDTO);
+    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDTO);
 
     @Mapping(source = "id", target = "id")
-    Restaurant DtoToRestaurant(NewRestaurantDto newRestaurantDTO, UUID id);
+    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDTO, UUID id);
 }

@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Service
 public class RestaurantService {
-    //TODO: soft delete?
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
 
@@ -32,16 +31,16 @@ public class RestaurantService {
     public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
                 .map(restaurantMapper::restaurantToDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(id, Restaurant.class));
     }
 
     public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
-        Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.DtoToRestaurant(newRestaurantDto));
+        Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto));
         return restaurantMapper.restaurantToDto(savedRestaurant);
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
-        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.DtoToRestaurant(newRestaurantDto, id));
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto, id));
         return restaurantMapper.restaurantToDto(updatedRestaurant);
     }
 

@@ -33,17 +33,17 @@ public class BusinessHourService {
     }
 
     public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DtoToBusinessHour(newBusinessHourDto));
+        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
         return businessHourMapper.businessHourToDto(savedBusinessHour);
     }
 
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.DtoToBusinessHour(newBusinessHourDto, id));
+        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto, id));
         return businessHourMapper.businessHourToDto(savedBusinessHour);
     }
 
     public void deleteBusinessHour(UUID id) {
-        BusinessHour deletedBusinessHour = businessHourMapper.DtoToBusinessHour(id);
+        BusinessHour deletedBusinessHour = businessHourMapper.dtoToBusinessHour(id);
         businessHourRepository.delete(deletedBusinessHour);
     }
 
