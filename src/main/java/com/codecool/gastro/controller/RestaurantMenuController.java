@@ -3,10 +3,10 @@ package com.codecool.gastro.controller;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.service.RestaurantMenuService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/restaurant-menu")
@@ -22,4 +22,11 @@ public class RestaurantMenuController {
     public RestaurantMenuDto createRestaurantMenu( @RequestBody NewRestaurantMenuDto newRestaurantMenu){
         return restaurantMenuService.saveNewRestaurantMenu(newRestaurantMenu);
     }
+
+    @GetMapping
+    public List<RestaurantMenuDto> getAllMenus(){
+        return restaurantMenuService.getAllMenus();
+    }
+
+
 }

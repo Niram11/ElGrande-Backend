@@ -1,14 +1,14 @@
 package com.codecool.gastro.controller.dto.restaurantMenuDto;
 
-import com.codecool.gastro.controller.dto.IdNamePairDto;
+import com.codecool.gastro.controller.dto.ingredientDto.IngredientDto;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public record RestaurantMenuDto(
-        UUID uuid,
+        UUID id,
         String dishName,
         BigDecimal price,
-        List<IdNamePairDto> ingredients) {
+        Set<IngredientDto> ingredients) {
 }
