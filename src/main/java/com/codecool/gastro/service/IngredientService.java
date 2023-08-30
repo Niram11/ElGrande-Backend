@@ -2,7 +2,7 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.controller.dto.ingredientDto.IngredientDto;
 import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
-import com.codecool.gastro.mapper.IngredientMapper;
+import com.codecool.gastro.service.mapper.IngredientMapper;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.entity.Ingredient;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class IngredientService {
 
     public IngredientDto saveNewIngredient(NewIngredientDto ingredientDto){
         Ingredient newIngredient = ingredientRepository
-                .save(ingredientMapper.mapDtoToIngredient(ingredientDto));
-        return ingredientMapper.mapIngredientToDto(newIngredient);
+                .save(ingredientMapper.dtoToIngredient(ingredientDto));
+        return ingredientMapper.getIngredientDto(newIngredient);
     }
 }

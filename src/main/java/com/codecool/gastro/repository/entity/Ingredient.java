@@ -3,6 +3,7 @@ package com.codecool.gastro.repository.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,8 +17,8 @@ public class Ingredient {
     @NotBlank
     private String name;
 
-    @ManyToMany(mappedBy = "restaurantMenu")
-    private Set<RestaurantMenu> restaurantMenus;
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<RestaurantMenu> restaurantMenus = new HashSet<>();
 
     public Ingredient() {
     }
