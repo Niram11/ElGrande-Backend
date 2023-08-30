@@ -1,9 +1,8 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.controller.dto.NewRestaurantMenuDto;
-import com.codecool.gastro.controller.dto.RestaurantMenuDto;
+import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
+import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.service.RestaurantMenuService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

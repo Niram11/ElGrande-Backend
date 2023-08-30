@@ -1,7 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.controller.dto.NewRestaurantMenuDto;
-import com.codecool.gastro.controller.dto.RestaurantMenuDto;
+import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
+import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.mapper.RestaurantMenuMapper;
 import com.codecool.gastro.repository.RestaurantMenuRepository;
 import com.codecool.gastro.repository.entity.RestaurantMenu;

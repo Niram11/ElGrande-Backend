@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -17,22 +20,26 @@ public class RestaurantMenu {
     @NotBlank(message = "cannot be empty")
     private String dishName;
 
-    @NotBlank(message = "cannot be empty")
-    private String ingredients;
 
     @NotNull
     private BigDecimal price;
+
+    @ManyToMany
+    @JoinTable(name = "restaurant_menu_ingredient",
+            joinColumns = @JoinColumn(name = "restaurantMenuId"),
+            inverseJoinColumns = @JoinColumn(name = "ingredientId"))
+    private Set<Ingredient> ingredients = new HashSet<>();
 
 //    @OneToMany
 //    private List<Restaurant> restaurants;
 
 
+
     public RestaurantMenu() {
     }
 
-    public RestaurantMenu(String dishName, String ingredients, BigDecimal price) {
+    public RestaurantMenu(String dishName, BigDecimal price) {
         this.dishName = dishName;
-        this.ingredients = ingredients;
         this.price = price;
     }
 
@@ -48,11 +55,11 @@ public class RestaurantMenu {
         this.dishName = dishName;
     }
 
-    public String getIngredients() {
+    public Set<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String ingredients) {
+    public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
