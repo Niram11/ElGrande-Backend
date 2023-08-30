@@ -19,7 +19,7 @@ public class RestaurantMenuController {
     }
 
     @PostMapping
-    public RestaurantMenuDto createRestaurantMenu( @RequestBody NewRestaurantMenuDto newRestaurantMenu){
+    public RestaurantMenuDto createRestaurantMenu(@Valid @RequestBody NewRestaurantMenuDto newRestaurantMenu){
         return restaurantMenuService.saveNewRestaurantMenu(newRestaurantMenu);
     }
 
