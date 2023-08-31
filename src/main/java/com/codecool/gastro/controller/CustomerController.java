@@ -2,29 +2,47 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.customers.CustomerDto;
 import com.codecool.gastro.service.CustomerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customers")
-public class CustomerController
-{
-    private CustomerService customerService;
+public class CustomerController {
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers()
-    {
+    public List<CustomerDto> getAllCustomers() {
         return customerService.getCustomers();
     }
 
     @GetMapping("/{id}")
-    public CustomerDto getCustomer(@PathVariable UUID id)
-    {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
+        CustomerDto customer = customerService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @RequestBody CustomerDto updateDto) {
+        CustomerDto updatedCustomer = customerService.updateCustomer(id, updateDto);
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CustomerDto> updateCustomerField(@PathVariable UUID id, @RequestParam String field, @RequestParam String value) {
+        CustomerDto updatedCustomer = customerService.updateCustomerField(id, field, value);
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
+        customerService.deleteCustomer(id);
+        return ResponseEntity.noContent().build();
     }
 }

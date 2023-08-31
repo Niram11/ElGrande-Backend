@@ -24,10 +24,10 @@ public class Customer
 
     @NotBlank
     @Email
-    String email;
+    private String email;
 
     @NotBlank
-    String passwordHash;
+    private String passwordHash;
 
     public Customer(UUID id, String forename, String surname, String email, String passwordHash)
     {
