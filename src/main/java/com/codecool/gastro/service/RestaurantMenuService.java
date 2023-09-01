@@ -59,4 +59,10 @@ public class RestaurantMenuService {
         deletedMenu.setIngredients(emptySet);
         restaurantMenuRepository.delete(deletedMenu);
     }
+
+    public RestaurantMenuDto getRestaurantMenuById(UUID id) {
+        return restaurantMenuRepository.findById(id)
+                .map(restaurantMenuMapper::getMenuDto)
+                .orElseThrow();
+    }
 }

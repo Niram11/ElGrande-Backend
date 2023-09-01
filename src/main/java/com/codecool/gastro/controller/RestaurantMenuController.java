@@ -29,6 +29,11 @@ public class RestaurantMenuController {
         return restaurantMenuService.getAllMenus();
     }
 
+    @GetMapping("/{id}")
+    public RestaurantMenuDto getMenuById(@PathVariable UUID id) {
+        return restaurantMenuService.getRestaurantMenuById(id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteMenu(@PathVariable UUID id){
         restaurantMenuService.deleteMenu(id);
