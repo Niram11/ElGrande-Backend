@@ -4,11 +4,9 @@ import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
-import com.codecool.gastro.service.exception.EntityNotFoundException;
+import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +29,7 @@ public class RestaurantService {
     public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
                 .map(restaurantMapper::restaurantToDto)
-                .orElseThrow(() -> new EntityNotFoundException(id, Restaurant.class));
+                .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
     public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
@@ -46,7 +44,7 @@ public class RestaurantService {
 
     public void softDelete(UUID id) {
         Restaurant restaurant = restaurantRepository.findBy(id)
-                .orElseThrow(() -> new EntityNotFoundException(id, Restaurant.class));
+                .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
 
         obfuscateData(restaurant);
         restaurantRepository.save(restaurant);
