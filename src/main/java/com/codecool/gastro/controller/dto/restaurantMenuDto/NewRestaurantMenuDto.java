@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record NewRestaurantMenuDto(
+        //bardziej szczególowa walidacja
         @NotBlank
         String dishName,
         @NotNull

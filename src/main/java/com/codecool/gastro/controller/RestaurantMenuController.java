@@ -29,8 +29,18 @@ public class RestaurantMenuController {
         return restaurantMenuService.getAllMenus();
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteMenu(@PathVariable UUID id){
+        restaurantMenuService.deleteMenu(id);
+    }
+
     @PutMapping("/{restaurantMenuId}/ingredients/{ingredientId}")
-    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId){
+    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId){ // zamiast uuid zrobić wybieranie z listy
         restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredientId);
+    }
+
+    @PutMapping("/{id}")
+    public void updateMenu(@PathVariable UUID id){
+
     }
 }
