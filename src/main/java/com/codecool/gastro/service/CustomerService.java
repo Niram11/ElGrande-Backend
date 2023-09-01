@@ -65,48 +65,28 @@ public class CustomerService {
     }
 
     public CustomerDto updateCustomer(UUID id, CustomerDto updateDto) {
-        Customer existingCustomer = getCustomerEntityById(id);
+        getCustomerEntityById(id);
+        Customer updatedCustomer = customerMapper.dtoToCustomer(updateDto, id);
 
-        if (updateDto.forename() != null) {
-            existingCustomer.setForename(updateDto.forename());
-        }
-        if (updateDto.surname() != null) {
-            existingCustomer.setSurname(updateDto.surname());
-        }
-        if (updateDto.email() != null) {
-            existingCustomer.setEmail(updateDto.email());
-        }
-
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
+        customerRepository.save(updatedCustomer);
         return customerMapper.customerToDto(updatedCustomer);
-    }
-
-    public CustomerDto updateCustomerField(UUID id, String field, String value) {
-        Customer existingCustomer = getCustomerEntityById(id);
-
-        Map<String, String> fieldMap = Map.of(
-                "firstName", "setFirstName",
-                "lastName", "setLastName",
-                "email", "setEmail"
-        );
-
-        if (fieldMap.containsKey(field)) {
-            String methodName = fieldMap.get(field);
-            try {
-                existingCustomer.getClass().getMethod(methodName, String.class).invoke(existingCustomer, value);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to update customer field");
-            }
-
-            Customer updatedCustomer = customerRepository.save(existingCustomer);
-            return customerMapper.customerToDto(updatedCustomer);
-        } else {
-            throw new IllegalArgumentException("Invalid field name");
-        }
     }
 
     public void deleteCustomer(UUID id)
     {
-        // @TODO Soft delete
+        Customer existingCustomer = getCustomerEntityById(id);
+
+        String surname = existingCustomer.getSurname();
+        String maskedSurname = "*".repeat(surname.length());
+        existingCustomer.setSurname(maskedSurname);
+
+        String email = existingCustomer.getEmail();
+        int atIndex = email.indexOf('@');
+        if (atIndex != -1) {
+            String maskedEmail = "*".repeat(atIndex) + email.substring(atIndex);
+            existingCustomer.setEmail(maskedEmail);
+        }
+
+        customerRepository.save(existingCustomer);
     }
 }

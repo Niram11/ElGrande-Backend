@@ -2,6 +2,7 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.customers.CustomerDto;
 import com.codecool.gastro.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,8 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @RequestBody CustomerDto updateDto) {
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @Valid @RequestBody CustomerDto updateDto) {
         CustomerDto updatedCustomer = customerService.updateCustomer(id, updateDto);
-        return ResponseEntity.ok(updatedCustomer);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomerField(@PathVariable UUID id, @RequestParam String field, @RequestParam String value) {
-        CustomerDto updatedCustomer = customerService.updateCustomerField(id, field, value);
         return ResponseEntity.ok(updatedCustomer);
     }
 
