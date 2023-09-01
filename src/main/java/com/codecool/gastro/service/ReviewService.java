@@ -22,17 +22,22 @@ public class ReviewService {
     }
 
     public List<ReviewDTO> getReviews() {
-        return reviewRepository.findAll()
+        return reviewRepository.findAll().stream().map(reviewMapper::reviewToDTO).toList();
     }
 
     public ReviewDTO getReviewByUUID(UUID id) {
-        return reviewRepository.findById(id)
+        return reviewRepository.findById(id).map(reviewMapper::reviewToDTO)
+                .orElseThrow(() -> new RuntimeException());
     }
 
     public ReviewDTO saveReview(NewReviewDTO newReviewDTO) {
+        Review savedReview = reviewRepository.save(reviewMapper.DTOToReview(newReviewDTO));
+        return reviewMapper.reviewToDTO(savedReview);
     }
 
     public ReviewDTO updateReview(UUID id, NewReviewDTO newReviewDTO) {
+        Review updatedReview = reviewRepository.save(reviewMapper.DTOToReview(newReviewDTO, id));
+        return reviewMapper.reviewToDTO(updatedReview);
 
     }
 
