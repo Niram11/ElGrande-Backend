@@ -33,7 +33,6 @@ public class RestaurantMenu {
 //    private List<Restaurant> restaurants;
 
 
-
     public RestaurantMenu() {
     }
 

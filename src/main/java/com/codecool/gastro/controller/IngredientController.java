@@ -2,13 +2,12 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.controller.dto.ingredientDto.IngredientDto;
 import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
-import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.service.IngredientService;
 import jakarta.validation.Valid;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/ingredients")
@@ -23,6 +22,11 @@ public class IngredientController {
     @GetMapping
     public List<IngredientDto> getAllIngredients(){
         return ingredientService.getAllIngredients();
+    }
+
+    @GetMapping("/{id}")
+    public IngredientDto getIngredientById(@PathVariable UUID id) {
+        return ingredientService.getIngredientById(id);
     }
 
     @PostMapping

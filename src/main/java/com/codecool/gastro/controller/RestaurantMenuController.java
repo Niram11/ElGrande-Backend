@@ -20,12 +20,12 @@ public class RestaurantMenuController {
     }
 
     @PostMapping
-    public RestaurantMenuDto createRestaurantMenu(@Valid @RequestBody NewRestaurantMenuDto newRestaurantMenu){
+    public RestaurantMenuDto createRestaurantMenu(@Valid @RequestBody NewRestaurantMenuDto newRestaurantMenu) {
         return restaurantMenuService.saveNewRestaurantMenu(newRestaurantMenu);
     }
 
     @GetMapping
-    public List<RestaurantMenuDto> getAllMenus(){
+    public List<RestaurantMenuDto> getAllMenus() {
         return restaurantMenuService.getAllMenus();
     }
 
@@ -35,17 +35,17 @@ public class RestaurantMenuController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMenu(@PathVariable UUID id){
+    public void deleteMenu(@PathVariable UUID id) {
         restaurantMenuService.deleteMenu(id);
     }
 
     @PutMapping("/{restaurantMenuId}/ingredients/{ingredientId}")
-    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId){ // zamiast uuid zrobić wybieranie z listy
+    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId) { // zamiast uuid zrobić wybieranie z listy
         restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredientId);
     }
 
     @PutMapping("/{id}")
-    public void updateMenu(@PathVariable UUID id){
+    public void updateMenu(@PathVariable UUID id) {
 
     }
 }

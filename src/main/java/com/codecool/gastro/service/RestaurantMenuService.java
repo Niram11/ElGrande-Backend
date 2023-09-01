@@ -3,14 +3,13 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.repository.IngredientRepository;
-import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.service.mapper.RestaurantMenuMapper;
 import com.codecool.gastro.repository.RestaurantMenuRepository;
+import com.codecool.gastro.repository.entity.Ingredient;
 import com.codecool.gastro.repository.entity.RestaurantMenu;
-import jakarta.persistence.EntityNotFoundException;
+import com.codecool.gastro.service.exception.EntityNotFoundException;
+import com.codecool.gastro.service.mapper.RestaurantMenuMapper;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,10 +43,10 @@ public class RestaurantMenuService {
 
     public void assignIngredientToMenu(UUID restaurantMenuId, UUID ingredientId) {
         RestaurantMenu menu = restaurantMenuRepository.findOneById(restaurantMenuId)
-                .orElseThrow(() -> new RuntimeException("No such restaurant menu"));
+                .orElseThrow(() -> new EntityNotFoundException(restaurantMenuId, RestaurantMenu.class));
 
         Ingredient ingredient = ingredientRepository.findOneById(ingredientId)
-                .orElseThrow(() -> new RuntimeException("No such ingredient"));
+                .orElseThrow(() -> new EntityNotFoundException(ingredientId, Ingredient.class));
 
         menu.assignIngredient(ingredient);
         restaurantMenuRepository.save(menu);
@@ -63,6 +62,6 @@ public class RestaurantMenuService {
     public RestaurantMenuDto getRestaurantMenuById(UUID id) {
         return restaurantMenuRepository.findById(id)
                 .map(restaurantMenuMapper::getMenuDto)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException(id, RestaurantMenu.class));
     }
 }
