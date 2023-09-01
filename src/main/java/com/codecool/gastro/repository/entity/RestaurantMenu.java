@@ -79,4 +79,8 @@ public class RestaurantMenu {
                 ", price=" + price +
                 '}';
     }
+
+    public void assignIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+    }
 }

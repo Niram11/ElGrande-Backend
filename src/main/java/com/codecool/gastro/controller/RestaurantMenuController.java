@@ -7,9 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/restaurant-menu")
+@RequestMapping("api/v1/restaurant-menus")
 public class RestaurantMenuController {
 
     private final RestaurantMenuService restaurantMenuService;
@@ -28,5 +29,8 @@ public class RestaurantMenuController {
         return restaurantMenuService.getAllMenus();
     }
 
-
+    @PutMapping("/{restaurantMenuId}/ingredients/{ingredientId}")
+    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId){
+        restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredientId);
+    }
 }

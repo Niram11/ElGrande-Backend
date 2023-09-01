@@ -46,4 +46,8 @@ public class Ingredient {
     public void setRestaurantMenus(Set<RestaurantMenu> restaurantMenus) {
         this.restaurantMenus = restaurantMenus;
     }
+
+    public void addRestaurantMenu(RestaurantMenu menu) {
+        restaurantMenus.add(menu);
+    }
 }
