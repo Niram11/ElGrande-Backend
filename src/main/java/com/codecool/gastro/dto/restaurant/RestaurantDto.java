@@ -7,7 +7,7 @@ public record RestaurantDto(
         String name,
         String description,
         String website,
-        String contactNumber,
+        Integer contactNumber,
         String contactEmail
 ) {
 

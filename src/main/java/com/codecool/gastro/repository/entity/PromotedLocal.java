@@ -13,7 +13,9 @@ public class PromotedLocal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @NotBlank(message = "Start date cannot be empty")
     private LocalTime startDate;
+    @NotBlank(message = "End date cannot be empty")
     private LocalTime endDate;
     @OneToOne
     @JoinColumn(name = "restaurant_id", nullable = false)

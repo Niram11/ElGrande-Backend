@@ -62,11 +62,10 @@ public class RestaurantService {
         int websiteLength = restaurant.getWebsite().length();
         restaurant.setWebsite("*".repeat(websiteLength));
 
-        int contactNumberLength = restaurant.getContactNumber().length();
-        restaurant.setContactNumber("*".repeat(contactNumberLength));
+        restaurant.setContactNumber(0);
 
-        int contactEmailLength = restaurant.getContactEmail().length();
-        restaurant.setContactEmail("*".repeat(contactEmailLength));
+        String[] contactEmail = restaurant.getContactEmail().split("@");
+        restaurant.setContactEmail(UUID.randomUUID() + "*".repeat(contactEmail[0].length()) + contactEmail[1]);
     }
 
 }

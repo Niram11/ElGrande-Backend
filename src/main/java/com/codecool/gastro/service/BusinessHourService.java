@@ -23,7 +23,8 @@ public class BusinessHourService {
 
     public List<BusinessHourDto> getBusinessHours() {
         return businessHourRepository.findAllBy().stream()
-                .map(businessHourMapper::businessHourToDto).toList();
+                .map(businessHourMapper::businessHourToDto)
+                .toList();
     }
 
     public BusinessHourDto getBusinessHourById(UUID id) {

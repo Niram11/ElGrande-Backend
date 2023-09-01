@@ -1,6 +1,8 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Time;
@@ -13,8 +15,12 @@ public class BusinessHour {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Min(1)
+    @Max(7)
     private Integer dayOfWeek;
+    @NotBlank(message = "Opening hour cannot be empty")
     private LocalTime openingHour;
+    @NotBlank(message = "Closing hour cannot be empty")
     private LocalTime closingHour;
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)

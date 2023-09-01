@@ -14,16 +14,11 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface PromotedLocalMapper {
 
-    @Mapping(target = "restaurantId", source = "restaurant.id")
     PromotedLocalDto promotedLocalToDto(PromotedLocal promotedLocal);
 
-    @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
     PromotedLocal dtoToPromotedLocal(NewPromotedLocalDto newPromotedLocalDto);
 
-    @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
-    @Mapping(source = "id", target = "id")
     PromotedLocal dtoToPromotedLocal(NewPromotedLocalDto newPromotedLocalDto, UUID id);
 
-    @Mapping(source = "id", target = "id")
     PromotedLocal dtoToPromotedLocal(UUID id);
 }

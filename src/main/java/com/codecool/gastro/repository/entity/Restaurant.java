@@ -1,8 +1,10 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.NumberFormat;
 
 import java.util.UUID;
@@ -13,18 +15,17 @@ public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank
+    @Size(min = 4, max = 100, message = "Title must be between 4 and 100 characters long")
     private String name;
     @NotBlank
     private String description;
-    @NotBlank
     private String website;
-    @NotBlank
-    private String contactNumber;
+    @Digits(message = "Number must be 15 digits long", integer = 15, fraction = 0)
+    private Integer contactNumber;
     @Email
     private String contactEmail;
 
-    public Restaurant(UUID id, String name, String description, String website, String contactNumber, String contactEmail) {
+    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -68,11 +69,11 @@ public class Restaurant {
         this.website = website;
     }
 
-    public String getContactNumber() {
+    public Integer getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(String contactNumber) {
+    public void setContactNumber(Integer contactNumber) {
         this.contactNumber = contactNumber;
     }
 

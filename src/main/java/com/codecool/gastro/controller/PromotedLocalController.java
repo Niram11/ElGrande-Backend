@@ -21,27 +21,27 @@ public class PromotedLocalController {
     }
 
     @GetMapping
-    public List<PromotedLocalDto> getAllRestaurants() {
+    public List<PromotedLocalDto> getAllPromotedLocals() {
         return promotedLocalService.getPromotedLocals();
     }
 
     @GetMapping("/{id}")
-    public PromotedLocalDto getAllRestaurants(@PathVariable UUID id) {
+    public PromotedLocalDto getPromotedLocal(@PathVariable UUID id) {
         return promotedLocalService.getPromotedLocalBy(id);
     }
 
     @PostMapping
-    public PromotedLocalDto createNewRestaurant(@Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
+    public PromotedLocalDto createNewPromotedLocal(@Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
         return promotedLocalService.saveNewPromotedLocal(newPromotedLocalDto);
     }
 
     @PutMapping("/{id}")
-    public PromotedLocalDto updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
+    public PromotedLocalDto updatePromotedLocal(@PathVariable UUID id, @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
         return promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto);
     }
 
     @DeleteMapping("/{id}")
-    public void softDeleteRestaurant(@PathVariable UUID id) {
+    public void deletePromotedLocal(@PathVariable UUID id) {
         promotedLocalService.deletePromotedLocal(id);
     }
 }
