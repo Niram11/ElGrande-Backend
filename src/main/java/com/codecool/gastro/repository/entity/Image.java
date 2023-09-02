@@ -1,9 +1,6 @@
 package com.codecool.gastro.repository.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
@@ -16,6 +13,9 @@ public class Image {
     private UUID id;
     @NotBlank
     private String pathToImage;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 
     public Image() {
     }
