@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface MapLocationRepository extends JpaRepository<MapLocation, UUID> {
 
+    @Query("SELECT ml FROM MapLocation ml")
     List<MapLocation> findALl();
     @Query("SELECT ml FROM MapLocation ml WHERE ml.id = :id")
     Optional<MapLocation> findOneBy(UUID id);

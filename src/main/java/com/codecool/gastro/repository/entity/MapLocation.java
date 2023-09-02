@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -16,8 +17,10 @@ public class MapLocation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Digits(message = "Max 4 number before \",\"", integer = 4, fraction = 10)
+    @NotNull
     private BigDecimal latitude;
     @Digits(message = "Max 4 number before \",\"", integer = 4, fraction = 10)
+    @NotNull
     private BigDecimal longitude;
 
     public MapLocation() {
