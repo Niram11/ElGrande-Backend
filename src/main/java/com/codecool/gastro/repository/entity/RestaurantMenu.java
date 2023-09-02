@@ -1,8 +1,7 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -16,11 +15,15 @@ public class RestaurantMenu {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "cannot be empty")
+    @NotBlank(message = "Field cannot be empty")
+    @Size(min = 3, message = "Field must have at least 3 characters")
+    @Pattern(regexp = "^[a-zA-Z]+( [a-zA-Z]+)*$",
+            message = "Field must contain only letters and not start with number or whitespace")
     private String dishName;
 
 
     @NotNull
+    @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 
     @ManyToMany

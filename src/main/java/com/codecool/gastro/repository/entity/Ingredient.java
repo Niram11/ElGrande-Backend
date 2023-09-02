@@ -2,6 +2,8 @@ package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +16,10 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank
+    @NotBlank(message = "Field cannot be empty")
+    @Size(min = 3, message = "Field must have at least 3 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$",
+            message = "Field must contain only letters and not start with number or whitespace")
     private String name;
 
     @ManyToMany(mappedBy = "ingredients")
