@@ -22,11 +22,11 @@ public class RestaurantService {
     }
 
     public List<RestaurantDto> getRestaurants() {
-        return restaurantRepository.findAllBy().stream()
+        return restaurantRepository.findAll().stream()
                 .map(restaurantMapper::restaurantToDto).toList();
     }
 
-    public RestaurantDto getRestaurantById(UUID id) {
+    public RestaurantDto getRestaurantBy(UUID id) {
         return restaurantRepository.findById(id)
                 .map(restaurantMapper::restaurantToDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));

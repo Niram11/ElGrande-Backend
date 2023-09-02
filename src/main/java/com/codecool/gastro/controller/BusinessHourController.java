@@ -25,7 +25,7 @@ public class BusinessHourController {
 
     @GetMapping("/{id}")
     public BusinessHourDto getBusinessHour(@PathVariable UUID id) {
-        return businessHourService.getBusinessHourById(id);
+        return businessHourService.getBusinessHourBy(id);
     }
 
     @PostMapping

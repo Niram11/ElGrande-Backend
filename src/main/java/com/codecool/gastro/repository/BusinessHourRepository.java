@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface BusinessHourRepository extends JpaRepository<BusinessHour, UUID> {
-    List<BusinessHour> findAllBy();
+    List<BusinessHour> findAll();
     @Query("SELECT bh FROM BusinessHour bh WHERE bh.id = :id")
     Optional<BusinessHour> findBy(UUID id);
 }

@@ -22,12 +22,12 @@ public class BusinessHourService {
     }
 
     public List<BusinessHourDto> getBusinessHours() {
-        return businessHourRepository.findAllBy().stream()
+        return businessHourRepository.findAll().stream()
                 .map(businessHourMapper::businessHourToDto)
                 .toList();
     }
 
-    public BusinessHourDto getBusinessHourById(UUID id) {
+    public BusinessHourDto getBusinessHourBy(UUID id) {
         return businessHourRepository.findById(id)
                 .map(businessHourMapper::businessHourToDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
@@ -44,8 +44,7 @@ public class BusinessHourService {
     }
 
     public void deleteBusinessHour(UUID id) {
-        BusinessHour deletedBusinessHour = businessHourMapper.dtoToBusinessHour(id);
-        businessHourRepository.delete(deletedBusinessHour);
+        businessHourRepository.delete(businessHourMapper.dtoToBusinessHour(id));
     }
 
 }

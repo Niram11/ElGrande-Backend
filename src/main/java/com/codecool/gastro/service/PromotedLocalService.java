@@ -22,7 +22,7 @@ public class PromotedLocalService {
     }
 
     public List<PromotedLocalDto> getPromotedLocals() {
-        return promotedLocalRepository.findAllBy().stream()
+        return promotedLocalRepository.findAll().stream()
                 .map(promotedLocalMapper::promotedLocalToDto).toList();
     }
 
@@ -43,8 +43,7 @@ public class PromotedLocalService {
     }
 
     public void deletePromotedLocal(UUID id) {
-        PromotedLocal deletedPromotedLocal = promotedLocalMapper.dtoToPromotedLocal(id);
-        promotedLocalRepository.delete(deletedPromotedLocal);
+        promotedLocalRepository.delete(promotedLocalMapper.dtoToPromotedLocal(id));
     }
 
 }

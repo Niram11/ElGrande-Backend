@@ -1,6 +1,6 @@
 package com.codecool.gastro.repository;
 
-import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.MapLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
-    List<Restaurant> findAll();
-    @Query("SELECT r FROM Restaurant r WHERE r.id = :id")
-    Optional<Restaurant> findBy(UUID id);
+public interface MapLocationRepository extends JpaRepository<MapLocation, UUID> {
 
+    List<MapLocation> findALl();
+    @Query("SELECT ml FROM MapLocation ml WHERE ml.id = :id")
+    Optional<MapLocation> findOneBy(UUID id);
 }
