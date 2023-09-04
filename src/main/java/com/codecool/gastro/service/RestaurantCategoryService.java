@@ -24,24 +24,29 @@ public class RestaurantCategoryService {
     }
 
     public List<RestaurantCategoryDTO> getRestaurantCategories() {
-        return restaurantCategoryRepository
+        return restaurantCategoryRepository.findAll().stream().map(restaurantCategoryMapper::restaurantCategoryToDTO)
+                .toList();
     }
 
     public RestaurantCategoryDTO getRestaurantCategoryByUUID(UUID id) {
-        return restaurantCategoryRepository
+        return restaurantCategoryRepository.findById(id).map(restaurantCategoryMapper::restaurantCategoryToDTO)
+                .orElseThrow(() -> new RuntimeException());
     }
 
     public RestaurantCategoryDTO saveRestaurantCategory(NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
-        RestaurantCategory savedRestaurantCategory =
+        RestaurantCategory savedRestaurantCategory = restaurantCategoryRepository
+                .save(restaurantCategoryMapper.DTOToRestaurantCategory(newRestaurantCategoryDTO));
         return null;
     }
 
     public RestaurantCategoryDTO updateRestaurantCategory(UUID id, NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
-        RestaurantCategory updatedRestaurantCategory =
+        RestaurantCategory updatedRestaurantCategory = restaurantCategoryRepository
+                .save(restaurantCategoryMapper.DTOToRestaurantCategory(newRestaurantCategoryDTO, id));
         return null;
     }
 
     public void deleteRestaurantCategory(UUID id) {
-        RestaurantCategory deletedRestaurantCategory =
+        RestaurantCategory deletedRestaurantCategory = restaurantCategoryMapper.DTOToRestaurantCategory(id);
+        restaurantCategoryRepository.delete(deletedRestaurantCategory);
     }
 }

@@ -18,30 +18,41 @@ public class RestaurantRestaurantCategoryService {
     private RestaurantRestaurantCategoryMapper restaurantRestaurantCategoryMapper;
 
     public RestaurantRestaurantCategoryService(RestaurantRestaurantCategoryRepository
-        restaurantRestaurantCategoryRepository, RestaurantRestaurantCategoryMapper restaurantRestaurantCategoryMapper) {
+                                                       restaurantRestaurantCategoryRepository, RestaurantRestaurantCategoryMapper restaurantRestaurantCategoryMapper) {
         this.restaurantRestaurantCategoryRepository = restaurantRestaurantCategoryRepository;
         this.restaurantRestaurantCategoryMapper = restaurantRestaurantCategoryMapper;
     }
 
     public List<RestaurantRestaurantCategoryDTO> getRestaurantRestaurantCategories() {
-        return restaurantRestaurantCategoryRepository
+        return restaurantRestaurantCategoryRepository.findAll().stream()
+                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDTO).toList();
     }
 
     public RestaurantRestaurantCategoryDTO getRestaurantRestaurantCategoryByUUID(UUID id) {
-        return restaurantRestaurantCategoryRepository
+        return restaurantRestaurantCategoryRepository.findById(id)
+                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDTO)
+                .orElseThrow(() -> new RuntimeException());
     }
 
     public RestaurantRestaurantCategoryDTO saveRestaurantRestaurantCategory(NewRestaurantRestaurantCategoryDTO
                                                                                     newRestaurantRestaurantCategoryDTO) {
-        return restaurantRestaurantCategoryRepository
+        RestaurantRestaurantCategory savedRestaurantRestaurantCategory = restaurantRestaurantCategoryRepository
+                .save(restaurantRestaurantCategoryMapper
+                        .DTOToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO));
+        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDTO(savedRestaurantRestaurantCategory);
     }
 
-    public RestaurantRestaurantCategoryDTO updateRestaurantRestaurantCategory(NewRestaurantRestaurantCategoryDTO
-                                                                                      newRestaurantRestaurantCategoryDTO) {
-        return restaurantRestaurantCategoryRepository
+    public RestaurantRestaurantCategoryDTO updateRestaurantRestaurantCategory(UUID id, NewRestaurantRestaurantCategoryDTO
+            newRestaurantRestaurantCategoryDTO) {
+        RestaurantRestaurantCategory updatedRestaurantRestaurantCategory = restaurantRestaurantCategoryRepository
+                .save(restaurantRestaurantCategoryMapper
+                        .DTOToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO, id));
+        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDTO(updatedRestaurantRestaurantCategory);
     }
 
     public void deleteRestaurantRestaurantCategory(UUID id) {
-        RestaurantRestaurantCategory deletedRestaurantRestaurantCategory =
+        RestaurantRestaurantCategory deletedRestaurantRestaurantCategory = restaurantRestaurantCategoryMapper
+                .DTOToRestaurantRestaurantCategory(id);
+        restaurantRestaurantCategoryRepository.delete(deletedRestaurantRestaurantCategory);
     }
 }

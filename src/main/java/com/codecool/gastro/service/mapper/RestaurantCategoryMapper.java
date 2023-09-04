@@ -1,6 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
 
+import com.codecool.gastro.DTO.restaurantcategory.NewRestaurantCategoryDTO;
 import com.codecool.gastro.DTO.restaurantcategory.RestaurantCategoryDTO;
 import com.codecool.gastro.repository.entity.RestaurantCategory;
 import org.mapstruct.Mapper;
@@ -12,9 +13,9 @@ public interface RestaurantCategoryMapper {
 
     RestaurantCategoryDTO restaurantCategoryToDTO(RestaurantCategory restaurantCategory);
 
-    RestaurantCategory DTOToRestaurantCategory(RestaurantCategoryDTO restaurantCategoryDTO);
+    RestaurantCategory DTOToRestaurantCategory(NewRestaurantCategoryDTO newRestaurantCategoryDTO);
 
     RestaurantCategory DTOToRestaurantCategory(UUID id);
 
-    RestaurantCategory DTOToRestaurantCategory(RestaurantCategoryDTO restaurantCategoryDTO, UUID id);
+    RestaurantCategory DTOToRestaurantCategory(NewRestaurantCategoryDTO newRestaurantCategoryDTO, UUID id);
 }
