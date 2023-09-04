@@ -14,7 +14,7 @@ public class Location {
     private double longitude;
 //    @OneToMany
 //    @JoinColumn(name = "restaurant_id", nullable = false)
-//    private Restaurant restaurant_UUID;
+//    private Restaurant restaurantId;
 
     public Location() {
     }
@@ -24,7 +24,7 @@ public class Location {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-//    this.restaurant_UUID = restaurant_UUID;
+//    this.restaurantId = restaurantId;
     }
 
     public UUID getId() {
@@ -40,7 +40,7 @@ public class Location {
     }
 
 //    public Restaurant getRestaurantUUID() {
-//        return restaurant_UUID;
+//        return restaurantId;
 //    }
 
     public void setId(UUID id) {
@@ -55,7 +55,7 @@ public class Location {
         this.longitude = longitude;
     }
 
-//    public void setRestaurant(Restaurant restaurant_UUID) {
-//        this.restaurant_UUID = restaurant_UUID;
+//    public void setRestaurant(Restaurant restaurantId) {
+//        this.restaurantId = restaurantId;
 //    }
 }
