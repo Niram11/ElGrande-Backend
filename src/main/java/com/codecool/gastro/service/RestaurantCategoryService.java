@@ -1,10 +1,13 @@
 package com.codecool.gastro.service;
 
 
+import com.codecool.gastro.DTO.restaurantcategory.NewRestaurantCategoryDTO;
+import com.codecool.gastro.DTO.restaurantcategory.RestaurantCategoryDTO;
 import com.codecool.gastro.repository.RestaurantCategoryRepository;
 import com.codecool.gastro.repository.entity.RestaurantCategory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,12 +27,12 @@ public class RestaurantCategoryService {
         return restaurantCategoryRepository
     }
 
-    public RestaurantCategoryDTO saveRestaurantCategory(NewRestaurantCategory newRestaurantCategory) {
+    public RestaurantCategoryDTO saveRestaurantCategory(NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
         RestaurantCategory savedRestaurantCategory =
         return null;
     }
 
-    public RestaurantCategoryDTO updateRestaurantCategory(UUID id, NewRestaurantCategory newRestaurantCategory) {
+    public RestaurantCategoryDTO updateRestaurantCategory(UUID id, NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
         RestaurantCategory updatedRestaurantCategory =
         return null;
     }

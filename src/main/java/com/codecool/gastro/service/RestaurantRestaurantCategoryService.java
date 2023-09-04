@@ -1,10 +1,13 @@
 package com.codecool.gastro.service;
 
 
+import com.codecool.gastro.DTO.restaurantrestaurantcategory.NewRestaurantRestaurantCategoryDTO;
+import com.codecool.gastro.DTO.restaurantrestaurantcategory.RestaurantRestaurantCategoryDTO;
 import com.codecool.gastro.repository.RestaurantRestaurantCategoryRepository;
 import com.codecool.gastro.repository.entity.RestaurantRestaurantCategory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
