@@ -12,6 +12,7 @@ public class Locations {
     private UUID id;
     private double latitude;
     private double longitude;
+    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
 //    @OneToMany
 //    @JoinColumn(name = "restaurant_id", nullable = false)
 //    private Restaurant restaurant_UUID;
@@ -39,6 +40,7 @@ public class Locations {
         return longitude;
     }
 
+    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
 //    public Restaurant getRestaurantUUID() {
 //        return restaurant_UUID;
 //    }
@@ -55,6 +57,7 @@ public class Locations {
         this.longitude = longitude;
     }
 
+    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
 //    public void setRestaurant(Restaurant restaurant_UUID) {
 //        this.restaurant_UUID = restaurant_UUID;
 //    }

@@ -1,4 +1,4 @@
-package com.codecool.gastro.DTO.locations;
+package com.codecool.gastro.dto.locations;
 
 import java.util.UUID;
 

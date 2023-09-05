@@ -1,8 +1,8 @@
 package com.codecool.gastro.service.mapper;
 
 
-import com.codecool.gastro.DTO.locations.LocationsDTO;
-import com.codecool.gastro.DTO.locations.NewLocationsDTO;
+import com.codecool.gastro.dto.locations.LocationsDTO;
+import com.codecool.gastro.dto.locations.NewLocationsDTO;
 import com.codecool.gastro.repository.entity.Locations;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

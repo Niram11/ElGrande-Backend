@@ -1,4 +1,4 @@
-package com.codecool.gastro.controller.dto.restaurantMenuDto;
+package com.codecool.gastro.dto.restaurantmenu;
 
 import com.codecool.gastro.repository.entity.RestaurantMenu;
 import jakarta.validation.constraints.*;

@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.controller.dto.ingredientDto.IngredientDto;
-import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
+import com.codecool.gastro.dto.ingredient.IngredientDto;
+import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.service.IngredientService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

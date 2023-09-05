@@ -1,4 +1,4 @@
-package com.codecool.gastro.controller.dto.ingredientDto;
+package com.codecool.gastro.dto.ingredient;
 
 import com.codecool.gastro.repository.entity.Ingredient;
 import jakarta.validation.constraints.NotBlank;

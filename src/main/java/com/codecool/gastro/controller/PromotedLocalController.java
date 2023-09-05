@@ -2,8 +2,6 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.promotedlocal.NewPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.PromotedLocalDto;
-import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
-import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.PromotedLocalService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

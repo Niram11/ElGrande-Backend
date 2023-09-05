@@ -1,8 +1,8 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
-import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
-import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
+import com.codecool.gastro.dto.ingredient.NewIngredientDto;
+import com.codecool.gastro.dto.restaurantmenu.NewRestaurantMenuDto;
+import com.codecool.gastro.dto.restaurantmenu.RestaurantMenuDto;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.RestaurantMenuRepository;
 import com.codecool.gastro.repository.entity.Ingredient;
@@ -22,7 +22,9 @@ public class RestaurantMenuService {
     private final IngredientMapper ingredientMapper;
     private final RestaurantMenuMapper restaurantMenuMapper;
 
-    public RestaurantMenuService(RestaurantMenuRepository restaurantMenuRepository, IngredientRepository ingredientRepository, IngredientMapper ingredientMapper, RestaurantMenuMapper restaurantMenuMapper) {
+    public RestaurantMenuService(RestaurantMenuRepository restaurantMenuRepository,
+       IngredientRepository ingredientRepository, IngredientMapper ingredientMapper,
+                                 RestaurantMenuMapper restaurantMenuMapper) {
         this.restaurantMenuRepository = restaurantMenuRepository;
         this.ingredientRepository = ingredientRepository;
         this.ingredientMapper = ingredientMapper;

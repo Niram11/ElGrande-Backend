@@ -1,7 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
-import com.codecool.gastro.controller.dto.ingredientDto.IngredientDto;
-import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
+import com.codecool.gastro.dto.ingredient.IngredientDto;
+import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.entity.Ingredient;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

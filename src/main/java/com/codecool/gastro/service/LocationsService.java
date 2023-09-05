@@ -1,6 +1,6 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.DTO.locations.LocationsDTO;
+import com.codecool.gastro.dto.locations.LocationsDTO;
 import com.codecool.gastro.repository.LocationsRepository;
 import com.codecool.gastro.repository.entity.Locations;
 import com.codecool.gastro.service.mapper.LocationsMapper;

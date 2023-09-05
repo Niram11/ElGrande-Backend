@@ -1,8 +1,8 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
-import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
-import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
+import com.codecool.gastro.dto.ingredient.NewIngredientDto;
+import com.codecool.gastro.dto.restaurantmenu.NewRestaurantMenuDto;
+import com.codecool.gastro.dto.restaurantmenu.RestaurantMenuDto;
 import com.codecool.gastro.service.RestaurantMenuService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +41,8 @@ public class RestaurantMenuController {
         restaurantMenuService.deleteMenu(id);
     }
 
+
+    //TODO: (Sebgaw12 improve endpoint "to list/from list")
     @PutMapping("/{restaurantMenuId}/ingredients")
     public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @RequestBody Set<NewIngredientDto> ingredients) { // zamiast uuid zrobić wybieranie z listy
         restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredients);

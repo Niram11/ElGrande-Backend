@@ -1,4 +1,4 @@
-package com.codecool.gastro.controller.dto.ingredientDto;
+package com.codecool.gastro.dto.ingredient;
 
 import java.util.UUID;
 
