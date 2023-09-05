@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class Locations {
+public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -17,11 +17,11 @@ public class Locations {
 //    @JoinColumn(name = "restaurant_id", nullable = false)
 //    private Restaurant restaurant_UUID;
 
-    public Locations() {
+    public Location() {
     }
 
 //    add Restaurant restaurant_UUID
-    public Locations(UUID id, double latitude, double longitude) {
+    public Location(UUID id, double latitude, double longitude) {
     this.id = id;
     this.latitude = latitude;
     this.longitude = longitude;
