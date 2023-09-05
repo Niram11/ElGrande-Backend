@@ -23,27 +23,17 @@ public class RestaurantMenu {
             message = "Field must contain only letters and not start with number or whitespace")
     private String dishName;
 
-
     @NotNull(message = "Field must not be null")
     @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 
     @ManyToMany
-    @JoinTable(name = "restaurant_menu_ingredient",
+    @JoinTable(name = "ingredients_in_menu",
             joinColumns = @JoinColumn(name = "restaurantMenuId"),
             inverseJoinColumns = @JoinColumn(name = "ingredientId"))
     private Set<Ingredient> ingredients = new HashSet<>();
 
-//    @OneToMany
-//    private List<Restaurant> restaurants;
-
-
     public RestaurantMenu() {
-    }
-
-    public RestaurantMenu(String dishName, BigDecimal price) {
-        this.dishName = dishName;
-        this.price = price;
     }
 
     public void setId(UUID id) {
@@ -54,38 +44,12 @@ public class RestaurantMenu {
         return id;
     }
 
-    public String getDishName() {
-        return dishName;
-    }
-
-    public void setDishName(String dishName) {
-        this.dishName = dishName;
-    }
-
     public Set<Ingredient> getIngredients() {
         return ingredients;
     }
 
     public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "RestaurantMenu{" +
-                "id=" + id +
-                ", dishName='" + dishName + '\'' +
-                ", ingredients='" + ingredients + '\'' +
-                ", price=" + price +
-                '}';
     }
 
     public void assignIngredient(Ingredient addedIngredients) {

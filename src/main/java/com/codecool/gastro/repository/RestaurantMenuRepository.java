@@ -12,7 +12,6 @@ import java.util.UUID;
 @Repository
 public interface RestaurantMenuRepository extends JpaRepository<RestaurantMenu, UUID> {
 
-
-    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients where rm.id = :restaurantMenuId")
-    Optional<RestaurantMenu> findOneById(UUID restaurantMenuId);
+    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients where rm.id = :id")
+    Optional<RestaurantMenu> findOneById(UUID id);
 }

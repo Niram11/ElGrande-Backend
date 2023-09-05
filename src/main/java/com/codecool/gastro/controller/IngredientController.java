@@ -20,7 +20,7 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<IngredientDto> getAllIngredients(){
+    public List<IngredientDto> getAllIngredients() {
         return ingredientService.getAllIngredients();
     }
 
@@ -30,7 +30,12 @@ public class IngredientController {
     }
 
     @PostMapping
-    public IngredientDto createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto){
+    public IngredientDto createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
         return ingredientService.saveNewIngredient(newIngredientDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteIngredient(@PathVariable UUID id) {
+        ingredientService.deleteIngredient(id);
     }
 }

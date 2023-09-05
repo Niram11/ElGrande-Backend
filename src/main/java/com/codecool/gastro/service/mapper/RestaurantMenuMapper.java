@@ -11,12 +11,10 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface RestaurantMenuMapper {
 
-
     RestaurantMenuDto getMenuDto(RestaurantMenu menu);
 
     RestaurantMenu dtoToRestaurantMenu(NewRestaurantMenuDto menuDto);
 
     @Mapping(source = "id", target = "id")
     RestaurantMenu dtoToRestaurantMenu(UUID id);
-
 }

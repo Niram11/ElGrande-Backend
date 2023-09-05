@@ -24,9 +24,9 @@ public class IngredientService {
     }
 
     public IngredientDto saveNewIngredient(NewIngredientDto ingredientDto) {
-        Ingredient newIngredient = ingredientRepository
-                .save(ingredientMapper.dtoToIngredient(ingredientDto));
-        return ingredientMapper.getIngredientDto(newIngredient);
+        Ingredient newIngredient = ingredientMapper.dtoToIngredient(ingredientDto);
+        newIngredient.setName(newIngredient.getName().toLowerCase());
+        return ingredientMapper.getIngredientDto(ingredientRepository.save(newIngredient));
     }
 
     public List<IngredientDto> getAllIngredients() {
@@ -39,5 +39,10 @@ public class IngredientService {
         return ingredientRepository.findById(id)
                 .map(ingredientMapper::getIngredientDto)
                 .orElseThrow(() -> new EntityNotFoundException(id, RestaurantMenu.class));
+    }
+
+    public void deleteIngredient(UUID id) {
+        Ingredient deletedIngredient = ingredientMapper.dtoToIngredient(id);
+        ingredientRepository.delete(deletedIngredient);
     }
 }

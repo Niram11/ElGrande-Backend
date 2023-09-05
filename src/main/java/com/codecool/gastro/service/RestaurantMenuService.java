@@ -76,7 +76,7 @@ public class RestaurantMenuService {
 
             } else if (!menu.getIngredients().contains(ingredient)) {
 
-                menu.assignIngredient(mappedIngredient);
+                menu.assignIngredient(ingredientOptional.get());
             }
         }
     }
