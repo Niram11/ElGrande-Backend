@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class GastroApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GastroApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GastroApplication.class, args);
+    }
 
 }
