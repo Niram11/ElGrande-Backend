@@ -12,16 +12,18 @@ import java.util.UUID;
 @Entity
 public class Ingredient {
 
+    public static final String REGEX_FOR_INGREDIENT = "^[a-zA-Z][a-zA-Z ]*$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank(message = "Field cannot be empty")
     @Size(min = 3, message = "Field must have at least 3 characters")
-    @Pattern(regexp = "^[a-zA-Z]+$",
+    @Pattern(regexp = REGEX_FOR_INGREDIENT,
             message = "Field must contain only letters and not start with number or whitespace")
     private String name;
-
+// TODO tylko z małej litery
     @ManyToMany(mappedBy = "ingredients")
     private Set<RestaurantMenu> restaurantMenus = new HashSet<>();
 

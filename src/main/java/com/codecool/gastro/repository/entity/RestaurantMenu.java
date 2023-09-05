@@ -11,18 +11,20 @@ import java.util.UUID;
 @Entity
 public class RestaurantMenu {
 
+    public static final String REGEX_FOR_MENU = "^[a-zA-Z][a-zA-Z' ]*$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank(message = "Field cannot be empty")
     @Size(min = 3, message = "Field must have at least 3 characters")
-    @Pattern(regexp = "^[a-zA-Z]+( [a-zA-Z]+)*$",
+    @Pattern(regexp = REGEX_FOR_MENU,
             message = "Field must contain only letters and not start with number or whitespace")
     private String dishName;
 
 
-    @NotNull
+    @NotNull(message = "Field must not be null")
     @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 
@@ -86,7 +88,7 @@ public class RestaurantMenu {
                 '}';
     }
 
-    public void assignIngredient(Ingredient ingredient) {
-        ingredients.add(ingredient);
+    public void assignIngredient(Ingredient addedIngredients) {
+        ingredients.add(addedIngredients);
     }
 }

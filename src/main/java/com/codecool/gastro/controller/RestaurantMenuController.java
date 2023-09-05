@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.controller.dto.ingredientDto.NewIngredientDto;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.NewRestaurantMenuDto;
 import com.codecool.gastro.controller.dto.restaurantMenuDto.RestaurantMenuDto;
 import com.codecool.gastro.service.RestaurantMenuService;
@@ -7,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -39,9 +41,9 @@ public class RestaurantMenuController {
         restaurantMenuService.deleteMenu(id);
     }
 
-    @PutMapping("/{restaurantMenuId}/ingredients/{ingredientId}")
-    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @PathVariable UUID ingredientId) { // zamiast uuid zrobić wybieranie z listy
-        restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredientId);
+    @PutMapping("/{restaurantMenuId}/ingredients")
+    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @RequestBody Set<NewIngredientDto> ingredients) { // zamiast uuid zrobić wybieranie z listy
+        restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredients);
     }
 
     @PutMapping("/{id}")
