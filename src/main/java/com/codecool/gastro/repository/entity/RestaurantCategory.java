@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class RestaurantCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID restaurantId;
+    @NotBlank(message = "category cannot be empty")
     private String category;
 
     public UUID getRestaurantId() {

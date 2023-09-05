@@ -1,6 +1,7 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
@@ -10,7 +11,9 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @NotBlank(message = "Latitude cannot be empty")
     private double latitude;
+    @NotBlank(message = "Longitude Id cannot be empty")
     private double longitude;
 //    @OneToMany
 //    @JoinColumn(name = "restaurant_id", nullable = false)

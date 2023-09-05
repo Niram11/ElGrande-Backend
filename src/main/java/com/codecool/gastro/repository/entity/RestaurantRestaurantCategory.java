@@ -3,6 +3,7 @@ package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
@@ -10,7 +11,9 @@ import java.util.UUID;
 public class RestaurantRestaurantCategory {
 
     @Id
+    @NotBlank(message = "Restaurant Id cannot be empty")
     private UUID restaurantId;
+    @NotBlank(message = "Restaurant category Id cannot be empty")
     private UUID restaurantCategoryId;
 
     public UUID getRestaurantId() {

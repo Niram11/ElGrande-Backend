@@ -5,7 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -14,8 +18,11 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    @NotBlank(message = "Review cannot be empty")
     private String review;
-    private int grade;
+    @Min(1)
+    @Max(10)
+    private BigDecimal grade;
 //    private User user;
 //    private Restaurant restaurant;
 
@@ -30,7 +37,7 @@ public class Review {
         return review;
     }
 
-    public int getGrade(){
+    public BigDecimal getGrade(){
         return grade;
     }
 
@@ -50,7 +57,7 @@ public class Review {
         this.review = review;
     }
 
-    public void setGrade(int grade) {
+    public void setGrade(BigDecimal grade) {
         this.grade = grade;
     }
 
