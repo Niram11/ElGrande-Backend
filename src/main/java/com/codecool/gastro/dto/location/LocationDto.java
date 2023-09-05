@@ -1,8 +1,8 @@
-package com.codecool.gastro.DTO.location;
+package com.codecool.gastro.dto.location;
 
 import java.util.UUID;
 
-public record LocationDTO(
+public record LocationDto(
     UUID id,
     double latitude,
     double longitude

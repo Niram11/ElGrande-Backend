@@ -1,8 +1,8 @@
 package com.codecool.gastro.controler;
 
 
-import com.codecool.gastro.DTO.review.NewReviewDTO;
-import com.codecool.gastro.DTO.review.ReviewDTO;
+import com.codecool.gastro.dto.review.NewReviewDto;
+import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -20,22 +20,22 @@ public class ReviewController {
     }
 
     @GetMapping
-    public List<ReviewDTO> getAllReviews() {
+    public List<ReviewDto> getAllReviews() {
         return reviewService.getReviews();
     }
 
     @GetMapping("/{id}")
-    public ReviewDTO getReview(@PathVariable UUID id) {
+    public ReviewDto getReview(@PathVariable UUID id) {
         return reviewService.getReviewByUUID(id);
     }
 
     @PostMapping
-    public ReviewDTO createNewReview(@Valid @RequestBody NewReviewDTO newReviewDTO) {
+    public ReviewDto createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return reviewService.saveReview(newReviewDTO);
     }
 
     @PutMapping("/{id}")
-    public ReviewDTO updateReview(@PathVariable UUID id, @Valid @RequestBody NewReviewDTO newReviewDTO) {
+    public ReviewDto updateReview(@PathVariable UUID id, @Valid @RequestBody NewReviewDto newReviewDTO) {
         return reviewService.updateReview(id, newReviewDTO);
     }
 

@@ -1,7 +1,7 @@
 package com.codecool.gastro.controler;
 
-import com.codecool.gastro.DTO.location.LocationDTO;
-import com.codecool.gastro.DTO.location.NewLocationDTO;
+import com.codecool.gastro.dto.location.LocationDto;
+import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +18,22 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<LocationDTO> getAllLocation() {
+    public List<LocationDto> getAllLocation() {
         return locationsService.getLocations();
     }
 
     @GetMapping("/{id}")
-    public LocationDTO getLocation(@PathVariable UUID id) {
+    public LocationDto getLocation(@PathVariable UUID id) {
         return locationsService.getLocationByUUID(id);
     }
 
     @PostMapping
-    public LocationDTO createNewLocation(@Valid @RequestBody NewLocationDTO newLocationDTO) {
+    public LocationDto createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
         return locationsService.saveLocation(newLocationDTO);
     }
 
     @PutMapping("/{id}")
-    public LocationDTO updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDTO newLocationDTO) {
+    public LocationDto updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
         return locationsService.updateLocation(id, newLocationDTO);
     }
 

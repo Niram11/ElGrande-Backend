@@ -1,11 +1,10 @@
 package com.codecool.gastro.service.mapper;
 
 
-import com.codecool.gastro.DTO.location.LocationDTO;
-import com.codecool.gastro.DTO.location.NewLocationDTO;
+import com.codecool.gastro.dto.location.LocationDto;
+import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.entity.Location;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.UUID;
 
@@ -13,12 +12,12 @@ import java.util.UUID;
 public interface LocationMapper {
 
 //    @Mapping(target = "restaurant", source = "location.restaurant.id")
-    LocationDTO locationToDTO(Location locations);
+    LocationDto locationToDto(Location locations);
 
 //    @Mapping(target = "location.restaurant.id", source = "restaurant")
-    Location DTOToLocation(NewLocationDTO newLocationDTO);
+    Location DtoToLocation(NewLocationDto newLocationDto);
 
-    Location DTOToLocation(UUID id);
+    Location DtoToLocation(UUID id);
 
-    Location DTOToLocation(NewLocationDTO newLocationsDTO, UUID id);
+    Location DtoToLocation(NewLocationDto newLocationsDto, UUID id);
 }

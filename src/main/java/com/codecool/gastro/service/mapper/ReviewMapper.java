@@ -1,8 +1,8 @@
 package com.codecool.gastro.service.mapper;
 
 
-import com.codecool.gastro.DTO.review.NewReviewDTO;
-import com.codecool.gastro.DTO.review.ReviewDTO;
+import com.codecool.gastro.dto.review.NewReviewDto;
+import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.entity.Review;
 import org.mapstruct.Mapper;
 
@@ -11,11 +11,11 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    ReviewDTO reviewToDTO(Review review);
+    ReviewDto reviewToDto(Review review);
 
-    Review DTOToReview(NewReviewDTO newReviewDTO);
+    Review DtoToReview(NewReviewDto newReviewDto);
 
-    Review DTOToReview(UUID id);
+    Review DtoToReview(UUID id);
 
-    Review DTOToReview(NewReviewDTO newReviewDTO, UUID id);
+    Review DtoToReview(NewReviewDto newReviewDto, UUID id);
 }

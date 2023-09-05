@@ -1,6 +1,6 @@
-package com.codecool.gastro.DTO.review;
+package com.codecool.gastro.dto.review;
 
-public record NewReviewDTO(
+public record NewReviewDto(
         String review,
         int grade
 //        User user,

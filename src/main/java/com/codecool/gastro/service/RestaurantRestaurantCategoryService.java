@@ -1,8 +1,8 @@
 package com.codecool.gastro.service;
 
 
-import com.codecool.gastro.DTO.restaurantrestaurantcategory.NewRestaurantRestaurantCategoryDTO;
-import com.codecool.gastro.DTO.restaurantrestaurantcategory.RestaurantRestaurantCategoryDTO;
+import com.codecool.gastro.dto.restaurantrestaurantcategory.NewRestaurantRestaurantCategoryDto;
+import com.codecool.gastro.dto.restaurantrestaurantcategory.RestaurantRestaurantCategoryDto;
 import com.codecool.gastro.repository.RestaurantRestaurantCategoryRepository;
 import com.codecool.gastro.repository.entity.RestaurantRestaurantCategory;
 import com.codecool.gastro.service.mapper.RestaurantRestaurantCategoryMapper;
@@ -23,36 +23,36 @@ public class RestaurantRestaurantCategoryService {
         this.restaurantRestaurantCategoryMapper = restaurantRestaurantCategoryMapper;
     }
 
-    public List<RestaurantRestaurantCategoryDTO> getRestaurantRestaurantCategories() {
+    public List<RestaurantRestaurantCategoryDto> getRestaurantRestaurantCategories() {
         return restaurantRestaurantCategoryRepository.findAll().stream()
-                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDTO).toList();
+                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDto).toList();
     }
 
-    public RestaurantRestaurantCategoryDTO getRestaurantRestaurantCategoryByUUID(UUID id) {
+    public RestaurantRestaurantCategoryDto getRestaurantRestaurantCategoryByUUID(UUID id) {
         return restaurantRestaurantCategoryRepository.findById(id)
-                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDTO)
+                .map(restaurantRestaurantCategoryMapper::restaurantRestaurantCategoryToDto)
                 .orElseThrow(() -> new RuntimeException());
     }
 
-    public RestaurantRestaurantCategoryDTO saveRestaurantRestaurantCategory(NewRestaurantRestaurantCategoryDTO
+    public RestaurantRestaurantCategoryDto saveRestaurantRestaurantCategory(NewRestaurantRestaurantCategoryDto
                                                                                     newRestaurantRestaurantCategoryDTO) {
         RestaurantRestaurantCategory savedRestaurantRestaurantCategory = restaurantRestaurantCategoryRepository
                 .save(restaurantRestaurantCategoryMapper
-                        .DTOToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO));
-        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDTO(savedRestaurantRestaurantCategory);
+                        .DtoToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO));
+        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDto(savedRestaurantRestaurantCategory);
     }
 
-    public RestaurantRestaurantCategoryDTO updateRestaurantRestaurantCategory(UUID id, NewRestaurantRestaurantCategoryDTO
+    public RestaurantRestaurantCategoryDto updateRestaurantRestaurantCategory(UUID id, NewRestaurantRestaurantCategoryDto
             newRestaurantRestaurantCategoryDTO) {
         RestaurantRestaurantCategory updatedRestaurantRestaurantCategory = restaurantRestaurantCategoryRepository
                 .save(restaurantRestaurantCategoryMapper
-                        .DTOToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO, id));
-        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDTO(updatedRestaurantRestaurantCategory);
+                        .DtoToRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO, id));
+        return restaurantRestaurantCategoryMapper.restaurantRestaurantCategoryToDto(updatedRestaurantRestaurantCategory);
     }
 
     public void deleteRestaurantRestaurantCategory(UUID id) {
         RestaurantRestaurantCategory deletedRestaurantRestaurantCategory = restaurantRestaurantCategoryMapper
-                .DTOToRestaurantRestaurantCategory(id);
+                .DtoToRestaurantRestaurantCategory(id);
         restaurantRestaurantCategoryRepository.delete(deletedRestaurantRestaurantCategory);
     }
 }

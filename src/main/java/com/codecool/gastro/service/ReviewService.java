@@ -1,8 +1,8 @@
 package com.codecool.gastro.service;
 
 
-import com.codecool.gastro.DTO.review.NewReviewDTO;
-import com.codecool.gastro.DTO.review.ReviewDTO;
+import com.codecool.gastro.dto.review.NewReviewDto;
+import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.mapper.ReviewMapper;
@@ -21,28 +21,28 @@ public class ReviewService {
         this.reviewMapper = reviewMapper;
     }
 
-    public List<ReviewDTO> getReviews() {
-        return reviewRepository.findAll().stream().map(reviewMapper::reviewToDTO).toList();
+    public List<ReviewDto> getReviews() {
+        return reviewRepository.findAll().stream().map(reviewMapper::reviewToDto).toList();
     }
 
-    public ReviewDTO getReviewByUUID(UUID id) {
-        return reviewRepository.findById(id).map(reviewMapper::reviewToDTO)
+    public ReviewDto getReviewByUUID(UUID id) {
+        return reviewRepository.findById(id).map(reviewMapper::reviewToDto)
                 .orElseThrow(() -> new RuntimeException());
     }
 
-    public ReviewDTO saveReview(NewReviewDTO newReviewDTO) {
-        Review savedReview = reviewRepository.save(reviewMapper.DTOToReview(newReviewDTO));
-        return reviewMapper.reviewToDTO(savedReview);
+    public ReviewDto saveReview(NewReviewDto newReviewDTO) {
+        Review savedReview = reviewRepository.save(reviewMapper.DtoToReview(newReviewDTO));
+        return reviewMapper.reviewToDto(savedReview);
     }
 
-    public ReviewDTO updateReview(UUID id, NewReviewDTO newReviewDTO) {
-        Review updatedReview = reviewRepository.save(reviewMapper.DTOToReview(newReviewDTO, id));
-        return reviewMapper.reviewToDTO(updatedReview);
+    public ReviewDto updateReview(UUID id, NewReviewDto newReviewDTO) {
+        Review updatedReview = reviewRepository.save(reviewMapper.DtoToReview(newReviewDTO, id));
+        return reviewMapper.reviewToDto(updatedReview);
 
     }
 
     public void deleteReview(UUID id) {
-        Review deletedReview = reviewMapper.DTOToReview(id);
+        Review deletedReview = reviewMapper.DtoToReview(id);
         reviewRepository.delete(deletedReview);
     }
 

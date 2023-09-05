@@ -1,8 +1,8 @@
 package com.codecool.gastro.controler;
 
 
-import com.codecool.gastro.DTO.restaurantrestaurantcategory.NewRestaurantRestaurantCategoryDTO;
-import com.codecool.gastro.DTO.restaurantrestaurantcategory.RestaurantRestaurantCategoryDTO;
+import com.codecool.gastro.dto.restaurantrestaurantcategory.NewRestaurantRestaurantCategoryDto;
+import com.codecool.gastro.dto.restaurantrestaurantcategory.RestaurantRestaurantCategoryDto;
 import com.codecool.gastro.service.RestaurantRestaurantCategoryService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -21,24 +21,24 @@ public class RestaurantRestaurantCategoryController {
     }
 
     @GetMapping
-    public List<RestaurantRestaurantCategoryDTO> getRestaurantRestaurantCategories() {
+    public List<RestaurantRestaurantCategoryDto> getRestaurantRestaurantCategories() {
         return restaurantRestaurantCategoryService.getRestaurantRestaurantCategories();
     }
 
     @GetMapping("/{id}")
-    public RestaurantRestaurantCategoryDTO getRestaurantRestaurantCategoryByID(@PathVariable UUID id) {
+    public RestaurantRestaurantCategoryDto getRestaurantRestaurantCategoryByID(@PathVariable UUID id) {
         return restaurantRestaurantCategoryService.getRestaurantRestaurantCategoryByUUID(id);
     }
 
     @PostMapping
-    public RestaurantRestaurantCategoryDTO createNewRestaurantRestaurantCategory(@Valid @RequestBody
-                                                                                 NewRestaurantRestaurantCategoryDTO newRestaurantRestaurantCategoryDTO) {
+    public RestaurantRestaurantCategoryDto createNewRestaurantRestaurantCategory(@Valid @RequestBody
+                                                                                 NewRestaurantRestaurantCategoryDto newRestaurantRestaurantCategoryDTO) {
         return restaurantRestaurantCategoryService.saveRestaurantRestaurantCategory(newRestaurantRestaurantCategoryDTO);
     }
 
     @PutMapping("/{id}")
-    public RestaurantRestaurantCategoryDTO updateRestaurantRestaurantCategory(@PathVariable UUID id, @Valid @RequestBody
-    NewRestaurantRestaurantCategoryDTO newRestaurantRestaurantCategoryDTO) {
+    public RestaurantRestaurantCategoryDto updateRestaurantRestaurantCategory(@PathVariable UUID id, @Valid @RequestBody
+    NewRestaurantRestaurantCategoryDto newRestaurantRestaurantCategoryDTO) {
         return restaurantRestaurantCategoryService.updateRestaurantRestaurantCategory
                 (id,newRestaurantRestaurantCategoryDTO);
     }

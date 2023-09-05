@@ -1,7 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.DTO.location.LocationDTO;
-import com.codecool.gastro.DTO.location.NewLocationDTO;
+import com.codecool.gastro.dto.location.LocationDto;
+import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.entity.Location;
 import com.codecool.gastro.service.mapper.LocationMapper;
@@ -20,27 +20,27 @@ public class LocationService {
         this.locationMapper = locationMapper;
     }
 
-    public List<LocationDTO> getLocations() {
-        return locationRepository.findAll().stream().map(locationMapper::locationToDTO).toList();
+    public List<LocationDto> getLocations() {
+        return locationRepository.findAll().stream().map(locationMapper::locationToDto).toList();
     }
 
-    public LocationDTO getLocationByUUID(UUID id) {
-        return locationRepository.findById(id).map(locationMapper::locationToDTO)
+    public LocationDto getLocationByUUID(UUID id) {
+        return locationRepository.findById(id).map(locationMapper::locationToDto)
                 .orElseThrow(() -> new RuntimeException());
     }
 
-    public LocationDTO saveLocation(NewLocationDTO newLocationsDTO) {
-        Location savedLocations = locationRepository.save(locationMapper.DTOToLocation(newLocationsDTO));
-        return locationMapper.locationToDTO(savedLocations);
+    public LocationDto saveLocation(NewLocationDto newLocationsDTO) {
+        Location savedLocations = locationRepository.save(locationMapper.DtoToLocation(newLocationsDTO));
+        return locationMapper.locationToDto(savedLocations);
     }
 
-    public LocationDTO updateLocation(UUID id, NewLocationDTO newLocationsDTO) {
-        Location savedLocations = locationRepository.save(locationMapper.DTOToLocation(newLocationsDTO, id));
-        return locationMapper.locationToDTO(savedLocations);
+    public LocationDto updateLocation(UUID id, NewLocationDto newLocationsDTO) {
+        Location savedLocations = locationRepository.save(locationMapper.DtoToLocation(newLocationsDTO, id));
+        return locationMapper.locationToDto(savedLocations);
     }
 
     public void deleteLocation(UUID id) {
-        Location deletedLocations = locationMapper.DTOToLocation(id);
+        Location deletedLocations = locationMapper.DtoToLocation(id);
         locationRepository.delete(deletedLocations);
     }
 }

@@ -1,8 +1,8 @@
 package com.codecool.gastro.service;
 
 
-import com.codecool.gastro.DTO.restaurantcategory.NewRestaurantCategoryDTO;
-import com.codecool.gastro.DTO.restaurantcategory.RestaurantCategoryDTO;
+import com.codecool.gastro.dto.restaurantcategory.NewRestaurantCategoryDto;
+import com.codecool.gastro.dto.restaurantcategory.RestaurantCategoryDto;
 import com.codecool.gastro.repository.RestaurantCategoryRepository;
 import com.codecool.gastro.repository.entity.RestaurantCategory;
 import com.codecool.gastro.service.mapper.RestaurantCategoryMapper;
@@ -23,30 +23,30 @@ public class RestaurantCategoryService {
         this.restaurantCategoryMapper = restaurantCategoryMapper;
     }
 
-    public List<RestaurantCategoryDTO> getRestaurantCategories() {
-        return restaurantCategoryRepository.findAll().stream().map(restaurantCategoryMapper::restaurantCategoryToDTO)
+    public List<RestaurantCategoryDto> getRestaurantCategories() {
+        return restaurantCategoryRepository.findAll().stream().map(restaurantCategoryMapper::restaurantCategoryToDto)
                 .toList();
     }
 
-    public RestaurantCategoryDTO getRestaurantCategoryByUUID(UUID id) {
-        return restaurantCategoryRepository.findById(id).map(restaurantCategoryMapper::restaurantCategoryToDTO)
+    public RestaurantCategoryDto getRestaurantCategoryByUUID(UUID id) {
+        return restaurantCategoryRepository.findById(id).map(restaurantCategoryMapper::restaurantCategoryToDto)
                 .orElseThrow(() -> new RuntimeException());
     }
 
-    public RestaurantCategoryDTO saveRestaurantCategory(NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
+    public RestaurantCategoryDto saveRestaurantCategory(NewRestaurantCategoryDto newRestaurantCategoryDTO) {
         RestaurantCategory savedRestaurantCategory = restaurantCategoryRepository
-                .save(restaurantCategoryMapper.DTOToRestaurantCategory(newRestaurantCategoryDTO));
+                .save(restaurantCategoryMapper.DtoToRestaurantCategory(newRestaurantCategoryDTO));
         return null;
     }
 
-    public RestaurantCategoryDTO updateRestaurantCategory(UUID id, NewRestaurantCategoryDTO newRestaurantCategoryDTO) {
+    public RestaurantCategoryDto updateRestaurantCategory(UUID id, NewRestaurantCategoryDto newRestaurantCategoryDTO) {
         RestaurantCategory updatedRestaurantCategory = restaurantCategoryRepository
-                .save(restaurantCategoryMapper.DTOToRestaurantCategory(newRestaurantCategoryDTO, id));
+                .save(restaurantCategoryMapper.DtoToRestaurantCategory(newRestaurantCategoryDTO, id));
         return null;
     }
 
     public void deleteRestaurantCategory(UUID id) {
-        RestaurantCategory deletedRestaurantCategory = restaurantCategoryMapper.DTOToRestaurantCategory(id);
+        RestaurantCategory deletedRestaurantCategory = restaurantCategoryMapper.DtoToRestaurantCategory(id);
         restaurantCategoryRepository.delete(deletedRestaurantCategory);
     }
 }

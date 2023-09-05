@@ -1,12 +1,12 @@
-package com.codecool.gastro.DTO.review;
+package com.codecool.gastro.dto.review;
 
 
 import java.util.UUID;
 
-public record ReviewDTO (
+public record ReviewDto(
         UUID id,
         String review,
-        int grade
+        java.math.BigDecimal grade
 //        User user,
 //        Restaurant restaurant
 ) {
