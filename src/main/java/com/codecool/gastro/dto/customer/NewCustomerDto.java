@@ -1,14 +1,9 @@
-package com.codecool.gastro.dto.customers;
+package com.codecool.gastro.dto.customer;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.UUID;
-
-public record CustomerDto(
-
-        UUID id,
-
+public record NewCustomerDto(
         @NotBlank
         @Size(min=3)
         String forename,
@@ -18,11 +13,9 @@ public record CustomerDto(
         String surname,
 
         @Email
-        @Size(min=6)
         String email,
 
         @NotBlank
-        @Size(min=8)
         String passwordHash
 )
 {

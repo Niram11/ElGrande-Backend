@@ -1,6 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.customers.CustomerDto;
+import com.codecool.gastro.dto.customer.CustomerDto;
+import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.service.mapper.CustomerMapper;
@@ -12,49 +13,47 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class CustomerService {
+public class CustomerService
+{
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper)
+    {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
     }
 
-    public List<CustomerDto> getCustomers() {
+    public CustomerDto saveCustomer(NewCustomerDto newCustomerDto)
+    {
+        Customer savedCustomer = customerRepository.save(customerMapper.dtoToCustomer(newCustomerDto));
+        return customerMapper.customerToDto(savedCustomer);
+    }
+
+    public List<CustomerDto> getCustomers()
+    {
         return customerRepository.findAll()
                 .stream()
                 .map(customerMapper::customerToDto)
                 .toList();
     }
 
-    public CustomerDto getCustomerById(UUID id) {
+    public CustomerDto getCustomerById(UUID id)
+    {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public CustomerDto updateForename(UUID id, String newForename) {
-        Customer existingCustomer = getCustomerEntityById(id);
-        existingCustomer.setForename(newForename);
+    public CustomerDto updateCustomer(UUID id, NewCustomerDto updateDto) {
+        getCustomerEntityById(id);
+        Customer updatedCustomer = customerMapper.dtoToCustomer(updateDto, id);
 
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
-        return customerMapper.customerToDto(updatedCustomer);
-    }
+        updatedCustomer.setSurname(updateDto.surname());
+        updatedCustomer.setForename(updateDto.forename());
+        updatedCustomer.setEmail(updateDto.email());
 
-    public CustomerDto updateSurname(UUID id, String newSurname) {
-        Customer existingCustomer = getCustomerEntityById(id);
-        existingCustomer.setSurname(newSurname);
-
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
-        return customerMapper.customerToDto(updatedCustomer);
-    }
-
-    public CustomerDto updateEmail(UUID id, String newEmail) {
-        Customer existingCustomer = getCustomerEntityById(id);
-        existingCustomer.setEmail(newEmail);
-
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
+        customerRepository.save(updatedCustomer);
         return customerMapper.customerToDto(updatedCustomer);
     }
 
@@ -63,21 +62,15 @@ public class CustomerService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public CustomerDto updateCustomer(UUID id, CustomerDto updateDto) {
-        getCustomerEntityById(id);
-        Customer updatedCustomer = customerMapper.dtoToCustomer(updateDto, id);
-
-        customerRepository.save(updatedCustomer);
-        return customerMapper.customerToDto(updatedCustomer);
-    }
-
     public void deleteCustomer(UUID id) {
         Customer existingCustomer = getCustomerEntityById(id);
 
+        // Mask surname by filling with *
         String surname = existingCustomer.getSurname();
         String maskedSurname = "*".repeat(surname.length());
         existingCustomer.setSurname(maskedSurname);
 
+        // Mask email by filling first part of the email (before @) with *
         UUID emailId = UUID.randomUUID();
         String email = existingCustomer.getEmail();
         int atIndex = email.indexOf('@');
