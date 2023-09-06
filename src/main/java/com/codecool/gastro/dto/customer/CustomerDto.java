@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 public record CustomerDto(
-        @NotBlank
+        @NotBlank(message = "customer need an identifier")
         UUID id,
 
-        @NotBlank
+        @NotBlank(message = "forename cannot be empty")
         @Size(min=3)
         String forename,
 
-        @NotBlank
+        @NotBlank(message = "surname cannot be empty")
         @Size(min=3)
         String surname,
 

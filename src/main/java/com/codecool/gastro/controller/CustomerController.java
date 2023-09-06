@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * This class represents the REST controller for managing customers.
- */
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
