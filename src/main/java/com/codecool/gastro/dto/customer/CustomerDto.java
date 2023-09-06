@@ -1,4 +1,5 @@
 package com.codecool.gastro.dto.customer;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -6,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 public record CustomerDto(
-        @NotBlank(message = "customer need an identifier")
+        @Id
         UUID id,
 
         @NotBlank(message = "forename cannot be empty")
