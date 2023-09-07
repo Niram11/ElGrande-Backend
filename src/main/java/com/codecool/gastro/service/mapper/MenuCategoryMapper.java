@@ -15,10 +15,8 @@ public interface MenuCategoryMapper
 
     MenuCategory dtoToMenuCategory(NewMenuCategoryDto menuCategoryDto);
 
-    @Mapping(source = "id", target = "id")
     MenuCategory dtoToMenuCategory(UUID id);
 
-    @Mapping(source = "id", target = "id")
     MenuCategory dtoToMenuCategory(NewMenuCategoryDto menuCategoryDto, UUID id);
 
 }

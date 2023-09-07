@@ -1,5 +1,6 @@
 package com.codecool.gastro.repository.entity;
 
+import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -33,6 +34,12 @@ public class RestaurantMenu {
             inverseJoinColumns = @JoinColumn(name = "ingredientId"))
     private Set<Ingredient> ingredients = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "categories_for_menu",
+    joinColumns = @JoinColumn(name = "restaurant_menu_id"),
+    inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
+    private Set<MenuCategory> categories = new HashSet<>();
+
     public RestaurantMenu() {
     }
 
@@ -55,4 +62,10 @@ public class RestaurantMenu {
     public void assignIngredient(Ingredient addedIngredients) {
         ingredients.add(addedIngredients);
     }
+
+    public void setCategories(Set<MenuCategory> categories)
+    {
+        this.categories = categories;
+    }
+
 }

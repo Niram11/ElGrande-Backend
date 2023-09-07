@@ -4,10 +4,9 @@ import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
 import com.codecool.gastro.dto.menucategory.NewMenuCategoryDto;
 import com.codecool.gastro.repository.MenuCategoryRepository;
 import com.codecool.gastro.repository.entity.MenuCategory;
+import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.MenuCategoryMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class MenuCategoryService
     {
         return menuCategoryRepository.findById(id)
                 .map(menuCategoryMapper::menuCategoryToDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(id, MenuCategory.class));
     }
 
     public MenuCategoryDto updateMenuCategory(UUID id, NewMenuCategoryDto newMenuCategoryDto)
