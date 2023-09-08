@@ -11,9 +11,10 @@ import java.util.UUID;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
-    @Query("SELECT r FROM Restaurant r")
+    @Query("SELECT res FROM Restaurant res left join fetch res.categories left join fetch res.businessHours" +
+            " left join fetch res.images left join fetch res.restaurantMenus left join fetch res.reviews")
     List<Restaurant> findAll();
-    @Query("SELECT r FROM Restaurant r WHERE r.id = :id")
+    @Query("SELECT res FROM Restaurant res left join fetch res.categories WHERE res.id = :id")
     Optional<Restaurant> findBy(UUID id);
 
 }

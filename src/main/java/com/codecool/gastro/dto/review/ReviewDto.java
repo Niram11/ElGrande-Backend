@@ -1,14 +1,15 @@
 package com.codecool.gastro.dto.review;
 
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public record ReviewDto(
         UUID id,
-        String review,
-        java.math.BigDecimal grade
-        //TODO:(Niram11) uncomment code after creating user and restaurant classes
-//        User user,
-//        Restaurant restaurant
+        String comment,
+        BigDecimal grade,
+        LocalDate submissionTime,
+        String customerName
 ) {
 }

@@ -1,4 +1,4 @@
-package com.codecool.gastro.controler;
+package com.codecool.gastro.controller;
 
 
 import com.codecool.gastro.dto.restaurantcategory.NewRestaurantCategoryDto;
@@ -26,20 +26,19 @@ public class RestaurantCategoryController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantCategoryDto getRestaurantCategoryById(@PathVariable UUID id) {
-        return restaurantCategoryService.getRestaurantCategoryByUUID(id);
+    public RestaurantCategoryDto getRestaurantCategory(@PathVariable UUID id) {
+        return restaurantCategoryService.getRestaurantCategory(id);
     }
 
     @PostMapping
-    public RestaurantCategoryDto createNewRestaurantCategory(@Valid @RequestBody NewRestaurantCategoryDto
-                                                                     newRestaurantCategoryDTO) {
+    public RestaurantCategoryDto createNewRestaurantCategory(@Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDTO) {
         return restaurantCategoryService.saveRestaurantCategory(newRestaurantCategoryDTO);
     }
 
     @PutMapping("/{id}")
-    public RestaurantCategoryDto updateRestaurantCategory(@PathVariable UUID id
-            , @Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDTO) {
-        return restaurantCategoryService.updateRestaurantCategory(id,newRestaurantCategoryDTO);
+    public RestaurantCategoryDto updateRestaurantCategory(@PathVariable UUID id,
+                                                          @Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDTO) {
+        return restaurantCategoryService.updateRestaurantCategory(id, newRestaurantCategoryDTO);
     }
 
     @DeleteMapping("/{id}")

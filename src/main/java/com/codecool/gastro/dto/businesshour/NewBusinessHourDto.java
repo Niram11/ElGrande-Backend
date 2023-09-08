@@ -8,14 +8,11 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public record NewBusinessHourDto(
-        @Min(1)
-        @Max(7)
+        @Min(value = 1, message = "Number must be greater then or equal 1")
+        @Max(value = 7, message = "Number must be less then or equal 10")
         Integer dayOfWeek,
-        @NotBlank(message = "Opening hour cannot be empty")
         LocalTime openingHour,
-        @NotBlank(message = "Closing hour cannot be empty")
         LocalTime closingHour,
-        @NotBlank(message = "Invalid id")
         UUID restaurantId
 
 ) {

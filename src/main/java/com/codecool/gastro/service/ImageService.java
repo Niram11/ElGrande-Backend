@@ -23,24 +23,24 @@ public class ImageService {
 
     public List<ImageDto> getImages() {
         return imageRepository.findALl().stream()
-                .map(imageMapper::imageToDto)
+                .map(imageMapper::toDto)
                 .toList();
     }
 
     public ImageDto getImageBy(UUID id) {
         return imageRepository.findOneBy(id)
-                .map(imageMapper::imageToDto)
+                .map(imageMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Image.class));
     }
 
     public ImageDto saveNewImage(NewImageDto newImageDto) {
         Image savedImage = imageRepository.save(imageMapper.dtoToImage(newImageDto));
-        return imageMapper.imageToDto(savedImage);
+        return imageMapper.toDto(savedImage);
     }
 
     public ImageDto updateImage(UUID id, NewImageDto newImageDto) {
         Image updatedImage = imageRepository.save(imageMapper.dtoToImage(newImageDto, id));
-        return imageMapper.imageToDto(updatedImage);
+        return imageMapper.toDto(updatedImage);
     }
 
     public void deleteImage(UUID id) {

@@ -4,6 +4,7 @@ import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.entity.Location;
+import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.LocationMapper;
 import org.springframework.stereotype.Service;
 
@@ -21,26 +22,29 @@ public class LocationService {
     }
 
     public List<LocationDto> getLocations() {
-        return locationRepository.findAll().stream().map(locationMapper::locationToDto).toList();
+        return locationRepository.findAll()
+                .stream()
+                .map(locationMapper::toDto)
+                .toList();
     }
 
-    public LocationDto getLocationByUUID(UUID id) {
-        return locationRepository.findById(id).map(locationMapper::locationToDto)
-                .orElseThrow(() -> new RuntimeException());
+    public LocationDto getLocationBy(UUID id) {
+        return locationRepository.findById(id)
+                .map(locationMapper::toDto)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Location.class));
     }
 
     public LocationDto saveLocation(NewLocationDto newLocationsDTO) {
-        Location savedLocations = locationRepository.save(locationMapper.DtoToLocation(newLocationsDTO));
-        return locationMapper.locationToDto(savedLocations);
+        Location savedLocations = locationRepository.save(locationMapper.dtoToLocation(newLocationsDTO));
+        return locationMapper.toDto(savedLocations);
     }
 
     public LocationDto updateLocation(UUID id, NewLocationDto newLocationsDTO) {
-        Location savedLocations = locationRepository.save(locationMapper.DtoToLocation(newLocationsDTO, id));
-        return locationMapper.locationToDto(savedLocations);
+        Location updatedLocations = locationRepository.save(locationMapper.dtoToLocation(newLocationsDTO, id));
+        return locationMapper.toDto(updatedLocations);
     }
 
     public void deleteLocation(UUID id) {
-        Location deletedLocations = locationMapper.DtoToLocation(id);
-        locationRepository.delete(deletedLocations);
+        locationRepository.delete(locationMapper.dtoToLocation(id));
     }
 }

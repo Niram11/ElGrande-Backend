@@ -21,35 +21,34 @@ public class RestaurantMenuController {
         this.restaurantMenuService = restaurantMenuService;
     }
 
-    @PostMapping
-    public RestaurantMenuDto createRestaurantMenu(@Valid @RequestBody NewRestaurantMenuDto newRestaurantMenu) {
-        return restaurantMenuService.saveNewRestaurantMenu(newRestaurantMenu);
-    }
-
     @GetMapping
-    public List<RestaurantMenuDto> getAllMenus() {
-        return restaurantMenuService.getAllMenus();
+    public List<RestaurantMenuDto> getAllRestaurantMenus() {
+        return restaurantMenuService.getAllRestaurantMenus();
     }
 
     @GetMapping("/{id}")
-    public RestaurantMenuDto getMenuById(@PathVariable UUID id) {
-        return restaurantMenuService.getRestaurantMenuById(id);
+    public RestaurantMenuDto getRestaurantMenu(@PathVariable UUID id) {
+        return restaurantMenuService.getRestaurantMenuBy(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteMenu(@PathVariable UUID id) {
-        restaurantMenuService.deleteMenu(id);
-    }
-
-
-    //TODO: (Sebgaw12 improve endpoint "to list/from list")
-    @PutMapping("/{restaurantMenuId}/ingredients")
-    public void assignIngredientToMenu(@PathVariable UUID restaurantMenuId, @RequestBody Set<NewIngredientDto> ingredients) { // zamiast uuid zrobić wybieranie z listy
-        restaurantMenuService.assignIngredientToMenu(restaurantMenuId, ingredients);
+    @PostMapping
+    public RestaurantMenuDto createNewRestaurantMenu(@Valid @RequestBody NewRestaurantMenuDto newRestaurantMenu) {
+        return restaurantMenuService.saveNewRestaurantMenu(newRestaurantMenu);
     }
 
     @PutMapping("/{id}")
-    public void updateMenu(@PathVariable UUID id) {
-
+    public RestaurantMenuDto updateRestaurantMenu(@PathVariable UUID id, @Valid @RequestBody NewRestaurantMenuDto newRestaurantMenuDto) {
+        return restaurantMenuService.updateRestaurantMenu(id, newRestaurantMenuDto);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteRestaurantMenu(@PathVariable UUID id) {
+        restaurantMenuService.deleteRestaurantMenu(id);
+    }
+
+    @PutMapping("/{id}/ingredients")
+    public void assignIngredientToMenu(@PathVariable UUID id, @RequestBody Set<NewIngredientDto> ingredients) {
+        restaurantMenuService.assignIngredientToMenu(id, ingredients);
+    }
+
 }

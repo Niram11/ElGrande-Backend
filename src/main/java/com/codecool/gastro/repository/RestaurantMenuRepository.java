@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface RestaurantMenuRepository extends JpaRepository<RestaurantMenu, UUID> {
+
+    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients")
+    List<RestaurantMenu> findAll();
 
     @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients where rm.id = :id")
     Optional<RestaurantMenu> findOneById(UUID id);

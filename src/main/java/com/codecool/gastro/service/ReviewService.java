@@ -5,6 +5,7 @@ import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Review;
+import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,27 +23,29 @@ public class ReviewService {
     }
 
     public List<ReviewDto> getReviews() {
-        return reviewRepository.findAll().stream().map(reviewMapper::reviewToDto).toList();
+        return reviewRepository.findAll()
+                .stream()
+                .map(reviewMapper::toDto)
+                .toList();
     }
 
-    public ReviewDto getReviewByUUID(UUID id) {
-        return reviewRepository.findById(id).map(reviewMapper::reviewToDto)
-                .orElseThrow(() -> new RuntimeException());
+    public ReviewDto getReviewBy(UUID id) {
+        return reviewRepository.findOneBy(id)
+                .map(reviewMapper::toDto)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
     }
 
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        Review savedReview = reviewRepository.save(reviewMapper.DtoToReview(newReviewDTO));
-        return reviewMapper.reviewToDto(savedReview);
+        Review savedReview = reviewRepository.save(reviewMapper.dtoToReview(newReviewDTO));
+        return reviewMapper.toDto(savedReview);
     }
 
     public ReviewDto updateReview(UUID id, NewReviewDto newReviewDTO) {
-        Review updatedReview = reviewRepository.save(reviewMapper.DtoToReview(newReviewDTO, id));
-        return reviewMapper.reviewToDto(updatedReview);
-
+        Review updatedReview = reviewRepository.save(reviewMapper.dtoToReview(id, newReviewDTO));
+        return reviewMapper.toDto(updatedReview);
     }
 
     public void deleteReview(UUID id) {
-        Review deletedReview = reviewMapper.DtoToReview(id);
-        reviewRepository.delete(deletedReview);
+        reviewRepository.delete(reviewMapper.dtoToReview(id));
     }
 }

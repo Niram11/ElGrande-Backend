@@ -19,7 +19,7 @@ public class ImageController {
     }
 
     @GetMapping
-    public List<ImageDto> getAllImage() {
+    public List<ImageDto> getAllImages() {
         return imageService.getImages();
     }
 

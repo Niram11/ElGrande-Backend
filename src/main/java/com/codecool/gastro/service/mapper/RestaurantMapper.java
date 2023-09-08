@@ -11,10 +11,18 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
 
-    RestaurantDto restaurantToDto(Restaurant restaurant);
 
-    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDTO);
+    @Mapping(target = "customerId", source = "customer.id")
+    @Mapping(target = "locationId", source = "location.id")
+    @Mapping(target = "addressId", source = "address.id")
+    @Mapping(target = "promotedLocalId", source = "promotedLocal.id")
+    RestaurantDto toDto(Restaurant restaurant);
 
-    @Mapping(source = "id", target = "id")
-    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDTO, UUID id);
+    @Mapping(target = "customer.id", source = "customerId")
+//    @Mapping(target = "location.id", source = "locationId")
+    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto);
+
+    @Mapping(target = "customer.id", source = "newRestaurantDto.customerId")
+//    @Mapping(target = "location.id", source = "newRestaurantDto.locationId")
+    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto, UUID id);
 }

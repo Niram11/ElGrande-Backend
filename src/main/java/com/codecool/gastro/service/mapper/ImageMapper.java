@@ -9,9 +9,11 @@ import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface ImageMapper {
-    ImageDto imageToDto(Image image);
+    ImageDto toDto(Image image);
 
     Image dtoToImage(NewImageDto newImageDto);
+
     Image dtoToImage(NewImageDto newImageDto, UUID id);
+
     Image dtoToImage(UUID id);
 }

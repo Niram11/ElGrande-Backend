@@ -23,24 +23,26 @@ public class BusinessHourService {
 
     public List<BusinessHourDto> getBusinessHours() {
         return businessHourRepository.findAll().stream()
-                .map(businessHourMapper::businessHourToDto)
+                .map(businessHourMapper::toDto)
                 .toList();
     }
 
     public BusinessHourDto getBusinessHourBy(UUID id) {
         return businessHourRepository.findById(id)
-                .map(businessHourMapper::businessHourToDto)
+                .map(businessHourMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
     }
 
     public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
-        return businessHourMapper.businessHourToDto(savedBusinessHour);
+        BusinessHour savedBusinessHour = businessHourRepository
+                .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
+        return businessHourMapper.toDto(savedBusinessHour);
     }
 
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository.save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto, id));
-        return businessHourMapper.businessHourToDto(savedBusinessHour);
+        BusinessHour savedBusinessHour = businessHourRepository
+                .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto, id));
+        return businessHourMapper.toDto(savedBusinessHour);
     }
 
     public void deleteBusinessHour(UUID id) {
