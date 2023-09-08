@@ -2,6 +2,9 @@ package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -10,55 +13,45 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private double latitude;
-    private double longitude;
-    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
-//    @OneToMany
-//    @JoinColumn(name = "restaurant_id", nullable = false)
-//    private Restaurant restaurant_UUID;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    @OneToMany(mappedBy = "location")
+    private final Set<Restaurant> restaurants = new HashSet<>();
 
     public Location() {
     }
 
-//    add Restaurant restaurant_UUID
-    public Location(UUID id, double latitude, double longitude) {
-    this.id = id;
-    this.latitude = latitude;
-    this.longitude = longitude;
-//    this.restaurant_UUID = restaurant_UUID;
+    public Location(UUID id, BigDecimal latitude, BigDecimal longitude) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
-//    public Restaurant getRestaurantUUID() {
-//        return restaurant_UUID;
-//    }
-
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setLatitude(double latitude) {
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
-    //TODO:(Niram11) uncomment restaurant column when class Restaurant were created
-//    public void setRestaurant(Restaurant restaurant_UUID) {
-//        this.restaurant_UUID = restaurant_UUID;
-//    }
+    public Set<Restaurant> getRestaurants() {
+        return restaurants;
+    }
 }

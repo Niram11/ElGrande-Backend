@@ -12,15 +12,13 @@ import java.util.UUID;
 public interface BusinessHourMapper {
 
     @Mapping(target = "restaurantId", source = "restaurant.id")
-    BusinessHourDto businessHourToDto(BusinessHour businessHour);
+    BusinessHourDto toDto(BusinessHour businessHour);
 
     @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
     BusinessHour dtoToBusinessHour(NewBusinessHourDto newBusinessHourDto);
 
     @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")
-    @Mapping(source = "id", target = "id")
     BusinessHour dtoToBusinessHour(NewBusinessHourDto newBusinessHourDto, UUID id);
 
-    @Mapping(source = "id", target = "id")
     BusinessHour dtoToBusinessHour(UUID id);
 }

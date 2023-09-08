@@ -24,7 +24,11 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantDto getAllRestaurants(@PathVariable UUID id) {
+    public RestaurantDto getRestaurant(@PathVariable UUID id) {
+        return restaurantService.getRestaurantBy(id);
+    }
+    @GetMapping("/{id}/business-hours")
+    public RestaurantDto getRestaurantBusinessHours(@PathVariable UUID id) {
         return restaurantService.getRestaurantBy(id);
     }
 

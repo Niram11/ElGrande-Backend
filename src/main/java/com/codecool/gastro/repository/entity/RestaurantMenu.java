@@ -28,11 +28,15 @@ public class RestaurantMenu {
     @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Restaurant restaurant;
+
     @ManyToMany
-    @JoinTable(name = "ingredients_in_menu",
+    @JoinTable(name = "restaurant_menu_ingredients",
             joinColumns = @JoinColumn(name = "restaurantMenuId"),
             inverseJoinColumns = @JoinColumn(name = "ingredientId"))
-    private Set<Ingredient> ingredients = new HashSet<>();
+    private final Set<Ingredient> ingredients = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "categories_for_menu",
@@ -43,20 +47,47 @@ public class RestaurantMenu {
     public RestaurantMenu() {
     }
 
-    public void setId(UUID id) {
+    public RestaurantMenu(UUID id, String dishName, BigDecimal price, Restaurant restaurant) {
         this.id = id;
+        this.dishName = dishName;
+        this.price = price;
+        this.restaurant = restaurant;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public Set<Ingredient> getIngredients() {
-        return ingredients;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public String getDishName() {
+        return dishName;
+    }
+
+    public void setDishName(String dishName) {
+        this.dishName = dishName;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
     }
 
     public void assignIngredient(Ingredient addedIngredients) {

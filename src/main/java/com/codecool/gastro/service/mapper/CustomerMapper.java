@@ -10,9 +10,9 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface CustomerMapper
 {
-    CustomerDto customerToDto(Customer customer);
+    CustomerDto toDto(Customer customer);
 
     Customer dtoToCustomer(NewCustomerDto customerDto);
 
-    Customer dtoToCustomer(NewCustomerDto customerDto, UUID id);
+    Customer dtoToCustomer(UUID id, NewCustomerDto customerDto);
 }

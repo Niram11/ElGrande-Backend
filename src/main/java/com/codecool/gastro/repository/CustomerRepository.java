@@ -12,7 +12,9 @@ import java.util.UUID;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID>
 {
+    @Query("SELECT customer from Customer customer")
     List<Customer> findAllBy();
-    @Query("SELECT c FROM Customer c WHERE c.id = :id")
+
+    @Query("SELECT customer FROM Customer customer WHERE customer.id = :id")
     Optional<Customer> findBy(UUID id);
 }

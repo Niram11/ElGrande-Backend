@@ -14,7 +14,7 @@ public class Image {
     @NotBlank
     private String pathToImage;
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Restaurant restaurant;
 
     public Image() {
@@ -39,5 +39,13 @@ public class Image {
 
     public void setPathToImage(String pathToImage) {
         this.pathToImage = pathToImage;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

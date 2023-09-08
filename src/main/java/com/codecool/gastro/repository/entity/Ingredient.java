@@ -28,10 +28,6 @@ public class Ingredient {
     public Ingredient() {
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -42,6 +38,10 @@ public class Ingredient {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

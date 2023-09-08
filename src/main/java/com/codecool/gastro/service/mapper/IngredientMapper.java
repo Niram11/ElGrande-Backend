@@ -11,10 +11,11 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface IngredientMapper {
 
-    IngredientDto getIngredientDto(Ingredient ingredient);
+    IngredientDto toDto(Ingredient ingredient);
 
     Ingredient dtoToIngredient(NewIngredientDto ingredientDto);
 
-    @Mapping(source = "id", target = "id")
     Ingredient dtoToIngredient(UUID id);
+
+    Ingredient dtoToIngredient(UUID id, NewIngredientDto newIngredientDto);
 }

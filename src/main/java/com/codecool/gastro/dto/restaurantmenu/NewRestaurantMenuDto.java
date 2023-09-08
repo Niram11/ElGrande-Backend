@@ -11,7 +11,7 @@ public record NewRestaurantMenuDto(
         @Pattern(regexp = RestaurantMenu.REGEX_FOR_MENU,
                 message = "Field must contain only letters and not start with number or whitespace")
         String dishName,
-        @NotNull
+        @NotNull(message = "Price cannot be empty")
         @Positive(message = "Price must be a positive number")
         BigDecimal price
 

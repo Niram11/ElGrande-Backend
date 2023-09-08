@@ -1,9 +1,9 @@
 package com.codecool.gastro.dto.restaurant;
 
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.NumberFormat;
+
+import java.util.UUID;
 
 public record NewRestaurantDto(
 
@@ -12,10 +12,11 @@ public record NewRestaurantDto(
         @NotBlank(message = "Description cannot be empty")
         String description,
         String website,
-        @Digits(message = "Number must be 15 digits long", integer = 15, fraction = 0)
+        @Digits(integer = 9, fraction = 0, message = "Number must be 9 digits long")
         Integer contactNumber,
         @Email(message = "Invalid email")
-        String contactEmail
+        String contactEmail,
+        UUID customerId
 ) {
 
 }

@@ -1,4 +1,4 @@
-package com.codecool.gastro.controler;
+package com.codecool.gastro.controller;
 
 
 import com.codecool.gastro.dto.review.NewReviewDto;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/reviews")
 public class ReviewController {
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
@@ -26,14 +26,13 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ReviewDto getReview(@PathVariable UUID id) {
-        return reviewService.getReviewByUUID(id);
+        return reviewService.getReviewBy(id);
     }
 
     @PostMapping
     public ReviewDto createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return reviewService.saveReview(newReviewDTO);
     }
-
     @PutMapping("/{id}")
     public ReviewDto updateReview(@PathVariable UUID id, @Valid @RequestBody NewReviewDto newReviewDTO) {
         return reviewService.updateReview(id, newReviewDTO);

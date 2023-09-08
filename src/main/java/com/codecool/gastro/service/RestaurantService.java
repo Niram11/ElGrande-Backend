@@ -22,24 +22,26 @@ public class RestaurantService {
     }
 
     public List<RestaurantDto> getRestaurants() {
-        return restaurantRepository.findAll().stream()
-                .map(restaurantMapper::restaurantToDto).toList();
+        return restaurantRepository.findAll()
+                .stream()
+                .map(restaurantMapper::toDto)
+                .toList();
     }
 
     public RestaurantDto getRestaurantBy(UUID id) {
         return restaurantRepository.findById(id)
-                .map(restaurantMapper::restaurantToDto)
+                .map(restaurantMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
     public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
         Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto));
-        return restaurantMapper.restaurantToDto(savedRestaurant);
+        return restaurantMapper.toDto(savedRestaurant);
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
         Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto, id));
-        return restaurantMapper.restaurantToDto(updatedRestaurant);
+        return restaurantMapper.toDto(updatedRestaurant);
     }
 
     public void softDelete(UUID id) {
@@ -49,6 +51,7 @@ public class RestaurantService {
         obfuscateData(restaurant);
         restaurantRepository.save(restaurant);
     }
+
 
     private void obfuscateData(Restaurant restaurant) {
         int nameLength = restaurant.getName().length();
@@ -61,9 +64,10 @@ public class RestaurantService {
         restaurant.setWebsite("*".repeat(websiteLength));
 
         restaurant.setContactNumber(0);
+        restaurant.setDeleted(true);
 
-        String[] contactEmail = restaurant.getContactEmail().split("@");
-        restaurant.setContactEmail(UUID.randomUUID() + "*".repeat(contactEmail[0].length()) + contactEmail[1]);
+        String emailSuffix = restaurant.getContactEmail().split("@")[1];
+        restaurant.setContactEmail(UUID.randomUUID() + "@" + emailSuffix);
     }
 
 }

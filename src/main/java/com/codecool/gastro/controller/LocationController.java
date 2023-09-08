@@ -1,4 +1,4 @@
-package com.codecool.gastro.controler;
+package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/location")
+@RequestMapping("/api/v1/locations")
 public class LocationController {
     private final LocationService locationsService;
 
@@ -24,7 +24,7 @@ public class LocationController {
 
     @GetMapping("/{id}")
     public LocationDto getLocation(@PathVariable UUID id) {
-        return locationsService.getLocationByUUID(id);
+        return locationsService.getLocationBy(id);
     }
 
     @PostMapping

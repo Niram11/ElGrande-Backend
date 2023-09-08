@@ -25,13 +25,18 @@ public class IngredientController {
     }
 
     @GetMapping("/{id}")
-    public IngredientDto getIngredientById(@PathVariable UUID id) {
-        return ingredientService.getIngredientById(id);
+    public IngredientDto getIngredient(@PathVariable UUID id) {
+        return ingredientService.getIngredientBy(id);
     }
 
     @PostMapping
     public IngredientDto createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
         return ingredientService.saveNewIngredient(newIngredientDto);
+    }
+
+    @PutMapping("/{id}")
+    public IngredientDto updateIngredient(@PathVariable UUID id, @Valid @RequestBody NewIngredientDto newIngredientDto){
+        return ingredientService.updateIngredient(id, newIngredientDto);
     }
 
     @DeleteMapping("/{id}")

@@ -4,17 +4,18 @@ import com.codecool.gastro.dto.restaurantmenu.NewRestaurantMenuDto;
 import com.codecool.gastro.dto.restaurantmenu.RestaurantMenuDto;
 import com.codecool.gastro.repository.entity.RestaurantMenu;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface RestaurantMenuMapper {
 
-    RestaurantMenuDto getMenuDto(RestaurantMenu menu);
+    RestaurantMenuDto toDto(RestaurantMenu menu);
 
-    RestaurantMenu dtoToRestaurantMenu(NewRestaurantMenuDto menuDto);
+    RestaurantMenu dtoToRestaurantMenu(NewRestaurantMenuDto newRestaurantMenuDto);
 
-    @Mapping(source = "id", target = "id")
+    RestaurantMenu dtoToRestaurantMenu(NewRestaurantMenuDto newRestaurantMenuDto, UUID id);
+
     RestaurantMenu dtoToRestaurantMenu(UUID id);
+
 }

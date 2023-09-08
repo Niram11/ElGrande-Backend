@@ -16,15 +16,8 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-    }
-
-    @PostMapping
-    public CustomerDto createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto)
-    {
-        return customerService.saveCustomer(newCustomerDto);
     }
 
     @GetMapping
@@ -32,19 +25,24 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
+    @PostMapping
+    public CustomerDto createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto) {
+        return customerService.saveCustomer(newCustomerDto);
+    }
+
     @GetMapping("/{id}")
     public CustomerDto getAllCustomers(@PathVariable UUID id) {
-        return customerService.getCustomerById(id);
+        return customerService.getCustomerBy(id);
     }
 
     @PutMapping("/{id}")
     public CustomerDto updateCustomer(@PathVariable UUID id,
-                                                      @Valid @RequestBody NewCustomerDto updateDto) {
+                                      @Valid @RequestBody NewCustomerDto updateDto) {
         return customerService.updateCustomer(id, updateDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteCustomer(@PathVariable UUID id) {
-        customerService.deleteCustomer(id);
+        customerService.softDelete(id);
     }
 }

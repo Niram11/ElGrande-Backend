@@ -14,15 +14,15 @@ public class BusinessHour {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Min(1)
-    @Max(7)
+    @Min(value = 1, message = "Number must be greater then or equal 1")
+    @Max(value = 7, message = "Number must be less then or equal 10")
     private Integer dayOfWeek;
-    @NotBlank(message = "Opening hour cannot be empty")
+
     private LocalTime openingHour;
-    @NotBlank(message = "Closing hour cannot be empty")
+
     private LocalTime closingHour;
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Restaurant restaurant;
 
     public BusinessHour() {

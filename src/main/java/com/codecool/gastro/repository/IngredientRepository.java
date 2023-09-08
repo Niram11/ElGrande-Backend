@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, UUID> {
 
-    @Query("select i from Ingredient i where i.id = :id")
+    @Query("select ingredient from Ingredient ingredient where ingredient.id = :id")
     Optional<Ingredient> findOneById(UUID id);
 
-    @Query("select i from Ingredient i where i.name = :name ")
+    @Query("select ingredient from Ingredient ingredient where ingredient.name = :name ")
     Optional<Ingredient> findByName(String name);
 }

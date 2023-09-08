@@ -34,7 +34,8 @@ public class PromotedLocalController {
     }
 
     @PutMapping("/{id}")
-    public PromotedLocalDto updatePromotedLocal(@PathVariable UUID id, @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
+    public PromotedLocalDto updatePromotedLocal(@PathVariable UUID id,
+                                                @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
         return promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto);
     }
 

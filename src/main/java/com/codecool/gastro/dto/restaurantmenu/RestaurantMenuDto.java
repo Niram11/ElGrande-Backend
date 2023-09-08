@@ -10,5 +10,6 @@ public record RestaurantMenuDto(
         UUID id,
         String dishName,
         BigDecimal price,
-        Set<IngredientDto> ingredients) {
+        Set<IngredientDto> ingredients
+) {
 }
