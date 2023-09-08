@@ -12,8 +12,8 @@ import java.util.UUID;
 @Repository
 public interface MenuCategoryRepository extends JpaRepository<MenuCategory, UUID>
 {
-    @Query("SELECT mc FROM MenuCategory mc")
+    @Query("SELECT menucategory FROM MenuCategory menucategory")
     List<MenuCategory> findALl();
-    @Query("SELECT mc FROM MenuCategory mc WHERE mc.id = :id")
-    Optional<MenuCategory> findOneBy(UUID id);
+    @Query("SELECT menucategory FROM MenuCategory menucategory WHERE menucategory.id = :id")
+    Optional<MenuCategory> findBy(UUID id);
 }

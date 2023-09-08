@@ -29,19 +29,19 @@ public class MenuCategoryService
     {
         MenuCategory savedMenuCategory = menuCategoryRepository.save(menuCategoryMapper.
                 dtoToMenuCategory(newMenuCategoryDto));
-        return menuCategoryMapper.menuCategoryToDto(savedMenuCategory);
+        return menuCategoryMapper.toDto(savedMenuCategory);
     }
 
     public List<MenuCategoryDto> getAllMenuCategories()
     {
         return menuCategoryRepository.findAll()
-                .stream().map(menuCategoryMapper::menuCategoryToDto).toList();
+                .stream().map(menuCategoryMapper::toDto).toList();
     }
 
     public MenuCategoryDto getMenuCategoryById(UUID id)
     {
-        return menuCategoryRepository.findById(id)
-                .map(menuCategoryMapper::menuCategoryToDto)
+        return menuCategoryRepository.findBy(id)
+                .map(menuCategoryMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, MenuCategory.class));
     }
 
@@ -49,7 +49,7 @@ public class MenuCategoryService
     {
         MenuCategory updatedMenuCategory = menuCategoryRepository.save(menuCategoryMapper.
                 dtoToMenuCategory(newMenuCategoryDto, id));
-        return menuCategoryMapper.menuCategoryToDto(updatedMenuCategory);
+        return menuCategoryMapper.toDto(updatedMenuCategory);
     }
 
     public void deleteMenuCategory(UUID id)

@@ -4,14 +4,13 @@ import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
 import com.codecool.gastro.dto.menucategory.NewMenuCategoryDto;
 import com.codecool.gastro.repository.entity.MenuCategory;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface MenuCategoryMapper
 {
-    MenuCategoryDto menuCategoryToDto(MenuCategory menuCategory);
+    MenuCategoryDto toDto(MenuCategory menuCategory);
 
     MenuCategory dtoToMenuCategory(NewMenuCategoryDto menuCategoryDto);
 
