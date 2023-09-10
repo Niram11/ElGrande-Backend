@@ -29,6 +29,9 @@ public class Restaurant {
     @ManyToOne
     @JoinColumn
     private Location location;
+    @ManyToOne
+    @JoinColumn
+    private Ownership ownership;
     @OneToOne(mappedBy = "restaurant")
     private Address address;
     @OneToOne(mappedBy = "restaurant")
@@ -51,7 +54,7 @@ public class Restaurant {
     public Restaurant() {
     }
 
-    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail, Boolean isDeleted, Customer customer, Location location, Address address, PromotedLocal promotedLocal) {
+    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail, Boolean isDeleted, Customer customer, Location location, Ownership ownership, Address address, PromotedLocal promotedLocal) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -61,6 +64,7 @@ public class Restaurant {
         this.isDeleted = isDeleted;
         this.customer = customer;
         this.location = location;
+        this.ownership = ownership;
         this.address = address;
         this.promotedLocal = promotedLocal;
     }
@@ -88,7 +92,6 @@ public class Restaurant {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public String getWebsite() {
         return website;
@@ -138,6 +141,14 @@ public class Restaurant {
         this.location = location;
     }
 
+    public Ownership getOwnership() {
+        return ownership;
+    }
+
+    public void setOwnership(Ownership ownership) {
+        this.ownership = ownership;
+    }
+
     public Address getAddress() {
         return address;
     }
@@ -153,6 +164,7 @@ public class Restaurant {
     public void setPromotedLocal(PromotedLocal promotedLocal) {
         this.promotedLocal = promotedLocal;
     }
+
 
     public Set<RestaurantCategory> getCategories() {
         return categories;

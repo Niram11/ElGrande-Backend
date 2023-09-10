@@ -7,48 +7,43 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Ownership
-{
+public class Ownership {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @OneToOne
+    @JoinColumn(nullable = false)
     private Customer customer;
 
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
 
-    public Ownership(Customer customer)
-    {
+    public Ownership() {
+    }
+
+    public Ownership(UUID id, Customer customer) {
+        this.id = id;
         this.customer = customer;
     }
 
-    public Ownership() {}
-
-    public UUID getId()
-    {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id)
-    {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-
-    public Customer getCustomer()
-    {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer)
-    {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    public Set<Restaurant> getRestaurants()
-    {
+    public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
 }

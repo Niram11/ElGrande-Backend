@@ -39,10 +39,10 @@ public class RestaurantMenu {
     private final Set<Ingredient> ingredients = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "categories_for_menu",
+    @JoinTable(name = "restaurant_menu_category",
     joinColumns = @JoinColumn(name = "restaurant_menu_id"),
     inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
-    private Set<MenuCategory> categories = new HashSet<>();
+    private final Set<MenuCategory> categories = new HashSet<>();
 
     public RestaurantMenu() {
     }
@@ -90,13 +90,15 @@ public class RestaurantMenu {
         return ingredients;
     }
 
+    public Set<MenuCategory> getCategories() {
+        return categories;
+    }
+
     public void assignIngredient(Ingredient addedIngredients) {
         ingredients.add(addedIngredients);
     }
-
-    public void setCategories(Set<MenuCategory> categories)
-    {
-        this.categories = categories;
+    public void assignCategories(MenuCategory addedIngredients) {
+        categories.add(addedIngredients);
     }
 
 }

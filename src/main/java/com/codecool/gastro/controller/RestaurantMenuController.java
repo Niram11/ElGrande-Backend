@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
+import com.codecool.gastro.dto.menucategory.NewMenuCategoryDto;
 import com.codecool.gastro.dto.restaurantmenu.NewRestaurantMenuDto;
 import com.codecool.gastro.dto.restaurantmenu.RestaurantMenuDto;
 import com.codecool.gastro.service.RestaurantMenuService;
@@ -49,6 +50,10 @@ public class RestaurantMenuController {
     @PutMapping("/{id}/ingredients")
     public void assignIngredientToMenu(@PathVariable UUID id, @RequestBody Set<NewIngredientDto> ingredients) {
         restaurantMenuService.assignIngredientToMenu(id, ingredients);
+    }
+    @PutMapping("/{id}/menu-categories")
+    public void assignMenuCategoriesToMenu(@PathVariable UUID id, @RequestBody Set<NewMenuCategoryDto> categories) {
+        restaurantMenuService.assignMenuCategoryToMenu(id, categories);
     }
 
 }

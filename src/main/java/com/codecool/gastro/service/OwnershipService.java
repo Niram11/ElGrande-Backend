@@ -28,18 +28,18 @@ public class OwnershipService
     {
         Ownership savedOwnership = ownershipRepository.save(
                 ownershipMapper.dtoToOwnership(newOwnershipDto));
-        return ownershipMapper.ownershipToDto(savedOwnership);
+        return ownershipMapper.toDto(savedOwnership);
     }
 
     public List<OwnershipDto> getAllOwnerships()
     {
-        return ownershipRepository.findALl().stream().map(ownershipMapper::ownershipToDto).toList();
+        return ownershipRepository.findALl().stream().map(ownershipMapper::toDto).toList();
     }
 
     public OwnershipDto getOwnership(UUID id)
     {
         return ownershipRepository.findOneBy(id)
-                .map(ownershipMapper::ownershipToDto)
+                .map(ownershipMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, MenuCategory.class));
     }
 
@@ -47,7 +47,7 @@ public class OwnershipService
     {
         Ownership updateOwnership = ownershipRepository.save(
                 ownershipMapper.dtoToOwnership(newOwnershipDto, id));
-        return ownershipMapper.ownershipToDto(updateOwnership);
+        return ownershipMapper.toDto(updateOwnership);
     }
 
     public void deleteOwnership(UUID id)

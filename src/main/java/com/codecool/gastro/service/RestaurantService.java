@@ -29,7 +29,7 @@ public class RestaurantService {
     }
 
     public RestaurantDto getRestaurantBy(UUID id) {
-        return restaurantRepository.findById(id)
+        return restaurantRepository.findBy(id)
                 .map(restaurantMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }

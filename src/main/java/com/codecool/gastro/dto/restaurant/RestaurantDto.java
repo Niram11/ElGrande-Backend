@@ -20,12 +20,12 @@ public record RestaurantDto(
         UUID locationId,
         UUID addressId,
         UUID promotedLocalId,
+        UUID ownershipId,
         Set<RestaurantCategoryDto> categories,
         Set<BusinessHourDto> businessHours,
         Set<ImageDto> images,
         Set<RestaurantMenuDto> restaurantMenus,
         Set<ReviewDto> reviews
-
 
 ) {
 

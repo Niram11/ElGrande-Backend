@@ -12,16 +12,14 @@ import java.util.UUID;
 public interface OwnershipMapper
 {
     @Mapping(source = "customer.id", target = "customerId")
-    // @TODO check set to set behaviour
-    @Mapping(source = "restaurants", target = "restaurantsIdsSet")
-    OwnershipDto ownershipToDto(Ownership ownership);
+    OwnershipDto toDto(Ownership ownership);
 
     @Mapping(source = "customerId", target = "customer.id")
     Ownership dtoToOwnership(NewOwnershipDto ownershipDto);
 
     Ownership dtoToOwnership(UUID id);
 
-    @Mapping(source = "customerId", target = "customer.id")
+    @Mapping(source = "ownershipDto.customerId", target = "customer.id")
     Ownership dtoToOwnership(NewOwnershipDto ownershipDto, UUID id);
 
 }

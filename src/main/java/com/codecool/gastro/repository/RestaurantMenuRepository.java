@@ -13,9 +13,10 @@ import java.util.UUID;
 @Repository
 public interface RestaurantMenuRepository extends JpaRepository<RestaurantMenu, UUID> {
 
-    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients")
+    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients left join fetch rm.categories")
     List<RestaurantMenu> findAll();
 
-    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients where rm.id = :id")
-    Optional<RestaurantMenu> findOneById(UUID id);
+    @Query("select rm from RestaurantMenu rm left join fetch rm.ingredients left join fetch rm.categories " +
+            "where rm.id = :id")
+    Optional<RestaurantMenu> findOneBy(UUID id);
 }

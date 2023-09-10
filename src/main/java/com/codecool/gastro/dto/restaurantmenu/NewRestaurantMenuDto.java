@@ -4,6 +4,7 @@ import com.codecool.gastro.repository.entity.RestaurantMenu;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record NewRestaurantMenuDto(
         @NotBlank(message = "Field cannot be empty")
@@ -13,7 +14,8 @@ public record NewRestaurantMenuDto(
         String dishName,
         @NotNull(message = "Price cannot be empty")
         @Positive(message = "Price must be a positive number")
-        BigDecimal price
+        BigDecimal price,
+        UUID restaurantId
 
 ) {
 }
