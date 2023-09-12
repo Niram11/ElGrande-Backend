@@ -41,7 +41,7 @@ public class RestaurantMenu {
     @JoinTable(name = "restaurant_menu_category",
             joinColumns = @JoinColumn(name = "restaurant_menu_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
-    private final Set<MenuCategory> categories = new HashSet<>();
+    private final Set<DishCategory> categories = new HashSet<>();
 
     public RestaurantMenu() {
     }
@@ -89,7 +89,7 @@ public class RestaurantMenu {
         return ingredients;
     }
 
-    public Set<MenuCategory> getCategories() {
+    public Set<DishCategory> getCategories() {
         return categories;
     }
 
@@ -97,7 +97,7 @@ public class RestaurantMenu {
         ingredients.add(addedIngredients);
     }
 
-    public void assignCategories(MenuCategory addedIngredients) {
+    public void assignCategories(DishCategory addedIngredients) {
         categories.add(addedIngredients);
     }
 

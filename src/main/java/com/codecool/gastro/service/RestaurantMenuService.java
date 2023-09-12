@@ -1,18 +1,18 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
-import com.codecool.gastro.dto.menucategory.NewMenuCategoryDto;
 import com.codecool.gastro.dto.restaurantmenu.NewRestaurantMenuDto;
 import com.codecool.gastro.dto.restaurantmenu.RestaurantMenuDto;
 import com.codecool.gastro.repository.IngredientRepository;
-import com.codecool.gastro.repository.MenuCategoryRepository;
+import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.RestaurantMenuRepository;
 import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.repository.entity.MenuCategory;
+import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.RestaurantMenu;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.IngredientMapper;
-import com.codecool.gastro.service.mapper.MenuCategoryMapper;
 import com.codecool.gastro.service.mapper.RestaurantMenuMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +25,19 @@ public class RestaurantMenuService {
     private final RestaurantMenuMapper restaurantMenuMapper;
     private final IngredientRepository ingredientRepository;
     private final IngredientMapper ingredientMapper;
-    private final MenuCategoryRepository menuCategoryRepository;
-    private final MenuCategoryMapper menuCategoryMapper;
+    private final DishCategoryRepository menuCategoryRepository;
+    private final DishCategoryMapper dishCategoryMapper;
 
     public RestaurantMenuService(RestaurantMenuRepository restaurantMenuRepository,
                                  RestaurantMenuMapper restaurantMenuMapper, IngredientMapper ingredientMapper,
-                                 IngredientRepository ingredientRepository, MenuCategoryRepository menuCategoryRepository,
-                                 MenuCategoryMapper menuCategoryMapper) {
+                                 IngredientRepository ingredientRepository, DishCategoryRepository menuCategoryRepository,
+                                 DishCategoryMapper dishCategoryMapper) {
         this.restaurantMenuRepository = restaurantMenuRepository;
         this.restaurantMenuMapper = restaurantMenuMapper;
         this.ingredientRepository = ingredientRepository;
         this.ingredientMapper = ingredientMapper;
         this.menuCategoryRepository = menuCategoryRepository;
-        this.menuCategoryMapper = menuCategoryMapper;
+        this.dishCategoryMapper = dishCategoryMapper;
     }
 
     public List<RestaurantMenuDto> getAllRestaurantMenus() {
@@ -78,7 +78,7 @@ public class RestaurantMenuService {
         restaurantMenuRepository.save(menu);
     }
 
-    public void assignMenuCategoryToMenu(UUID restaurantMenuId, Set<NewMenuCategoryDto> categories) {
+    public void assignMenuCategoryToMenu(UUID restaurantMenuId, Set<NewDishCategoryDto> categories) {
         RestaurantMenu menu = restaurantMenuRepository.findById(restaurantMenuId)
                 .orElseThrow(() -> new ObjectNotFoundException(restaurantMenuId, RestaurantMenu.class));
 
@@ -104,11 +104,11 @@ public class RestaurantMenuService {
             }
         }
     }
-    private void addMenuCategoriesToMenu(Set<NewMenuCategoryDto> categories, RestaurantMenu menu) {
-        for (NewMenuCategoryDto category : categories) {
+    private void addMenuCategoriesToMenu(Set<NewDishCategoryDto> categories, RestaurantMenu menu) {
+        for (NewDishCategoryDto category : categories) {
 
-            Optional<MenuCategory> menuCategory = menuCategoryRepository.findBy(category.category());
-            MenuCategory mappedMenuCategory = menuCategoryMapper.dtoToMenuCategory(category);
+            Optional<DishCategory> menuCategory = menuCategoryRepository.findBy(category.category());
+            DishCategory mappedMenuCategory = dishCategoryMapper.dtoToDishCategory(category);
 
             if (menuCategory.isEmpty()) {
 

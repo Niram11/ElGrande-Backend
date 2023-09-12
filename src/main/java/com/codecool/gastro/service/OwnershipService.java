@@ -3,7 +3,7 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.dto.ownership.OwnershipDto;
 import com.codecool.gastro.repository.OwnershipRepository;
-import com.codecool.gastro.repository.entity.MenuCategory;
+import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ownership;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.OwnershipMapper;
@@ -30,7 +30,7 @@ public class OwnershipService {
     public OwnershipDto getOwnership(UUID id) {
         return ownershipRepository.findById(id)
                 .map(ownershipMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, MenuCategory.class));
+                .orElseThrow(() -> new ObjectNotFoundException(id, DishCategory.class));
     }
 
     public OwnershipDto saveOwnership(NewOwnershipDto newOwnershipDto) {

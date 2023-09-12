@@ -1,8 +1,8 @@
-package com.codecool.gastro.dto.menucategory;
+package com.codecool.gastro.dto.dishcategory;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record NewMenuCategoryDto(
+public record NewDishCategoryDto(
         @NotBlank(message = "Menu category cannot be empty")
         String category
 ) {

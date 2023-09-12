@@ -1,9 +1,9 @@
 package com.codecool.gastro.controller;
 
 
-import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
-import com.codecool.gastro.dto.menucategory.NewMenuCategoryDto;
-import com.codecool.gastro.service.MenuCategoryService;
+import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
+import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
+import com.codecool.gastro.service.DishCategoryService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,36 +13,36 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/menu-categories")
 public class MenuCategoryController {
-    private final MenuCategoryService menuCategoryService;
+    private final DishCategoryService menuCategoryService;
 
-    public MenuCategoryController(MenuCategoryService menuCategoryService) {
+    public MenuCategoryController(DishCategoryService menuCategoryService) {
         this.menuCategoryService = menuCategoryService;
     }
 
     @GetMapping
-    public List<MenuCategoryDto> getCategories() {
-        return menuCategoryService.getAllMenuCategories();
+    public List<DishCategoryDto> getCategories() {
+        return menuCategoryService.getAllDishCategories();
     }
 
     @GetMapping("/{id}")
-    public MenuCategoryDto getCategory(@PathVariable UUID id) {
-        return menuCategoryService.getMenuCategoryById(id);
+    public DishCategoryDto getCategory(@PathVariable UUID id) {
+        return menuCategoryService.getDishCategoryById(id);
     }
 
     @PostMapping
-    public MenuCategoryDto createMenuCategory(@Valid @RequestBody NewMenuCategoryDto newMenuCategoryDto) {
-        return menuCategoryService.saveMenuCategory(newMenuCategoryDto);
+    public DishCategoryDto createMenuCategory(@Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
+        return menuCategoryService.saveDishCategory(newDishCategoryDto);
     }
 
 
     @PutMapping("/{id}")
-    public MenuCategoryDto updateMenuCategory(@PathVariable UUID id,
-                                              @Valid @RequestBody NewMenuCategoryDto newMenuCategoryDto) {
-        return menuCategoryService.updateMenuCategory(id, newMenuCategoryDto);
+    public DishCategoryDto updateMenuCategory(@PathVariable UUID id,
+                                              @Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
+        return menuCategoryService.updateDishCategory(id, newDishCategoryDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteMenuCategory(@PathVariable UUID id) {
-        menuCategoryService.deleteMenuCategory(id);
+        menuCategoryService.deleteDishCategory(id);
     }
 }

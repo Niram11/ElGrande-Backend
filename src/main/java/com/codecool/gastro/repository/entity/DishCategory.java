@@ -8,8 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class MenuCategory {
-    // TODO: Change name to "DishCategory"
+public class DishCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -20,12 +19,12 @@ public class MenuCategory {
     @ManyToMany(mappedBy = "categories")
     private final Set<RestaurantMenu> restaurantMenus = new HashSet<>();
 
-    public MenuCategory(UUID id, String category) {
+    public DishCategory(UUID id, String category) {
         this.id = id;
         this.category = category;
     }
 
-    public MenuCategory() {
+    public DishCategory() {
     }
 
     public UUID getId() {

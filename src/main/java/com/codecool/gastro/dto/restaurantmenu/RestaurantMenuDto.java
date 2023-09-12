@@ -1,7 +1,7 @@
 package com.codecool.gastro.dto.restaurantmenu;
 
 import com.codecool.gastro.dto.ingredient.IngredientDto;
-import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
+import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -13,6 +13,6 @@ public record RestaurantMenuDto(
         BigDecimal price,
         UUID restaurantId,
         Set<IngredientDto> ingredients,
-        Set<MenuCategoryDto> categories
+        Set<DishCategoryDto> categories
 ) {
 }
