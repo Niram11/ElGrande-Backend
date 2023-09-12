@@ -1,10 +1,9 @@
 package com.codecool.gastro.repository;
 
 
-import com.codecool.gastro.repository.entity.RestaurantMenu;
+import com.codecool.gastro.repository.entity.Dish;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,12 +11,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface RestaurantMenuRepository extends JpaRepository<RestaurantMenu, UUID> {
+public interface DishRepository extends JpaRepository<Dish, UUID> {
 
     @EntityGraph(attributePaths = {"ingredients", "categories"})
-    List<RestaurantMenu> findAll();
+    List<Dish> findAll();
 
 
     @EntityGraph(attributePaths = {"ingredients", "categories"})
-    Optional<RestaurantMenu> findById(UUID id);
+    Optional<Dish> findById(UUID id);
+
+    @EntityGraph(attributePaths = {"restaurant"})
+    List<Dish> findByRestaurantId(UUID restaurantId);
 }

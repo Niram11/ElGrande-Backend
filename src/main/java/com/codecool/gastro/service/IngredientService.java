@@ -4,7 +4,7 @@ import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.repository.entity.RestaurantMenu;
+import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.IngredientMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class IngredientService {
     public IngredientDto getIngredientBy(UUID id) {
         return ingredientRepository.findById(id)
                 .map(ingredientMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, RestaurantMenu.class));
+                .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
     }
 
     public IngredientService(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {

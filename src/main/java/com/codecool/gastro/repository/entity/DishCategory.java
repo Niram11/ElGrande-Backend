@@ -17,7 +17,7 @@ public class DishCategory {
     private String category;
 
     @ManyToMany(mappedBy = "categories")
-    private final Set<RestaurantMenu> restaurantMenus = new HashSet<>();
+    private final Set<Dish> dishes = new HashSet<>();
 
     public DishCategory(UUID id, String category) {
         this.id = id;
@@ -43,7 +43,7 @@ public class DishCategory {
         this.category = category;
     }
 
-    public Set<RestaurantMenu> getRestaurantMenu() {
-        return restaurantMenus;
+    public Set<Dish> getRestaurantMenu() {
+        return dishes;
     }
 }

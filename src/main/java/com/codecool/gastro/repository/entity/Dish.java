@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class RestaurantMenu {
+public class Dish {
     // TODO: Change name to "Dish"
     public static final String REGEX_FOR_MENU = "^[a-zA-Z][a-zA-Z' ]*$";
 
@@ -43,10 +43,10 @@ public class RestaurantMenu {
             inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
     private final Set<DishCategory> categories = new HashSet<>();
 
-    public RestaurantMenu() {
+    public Dish() {
     }
 
-    public RestaurantMenu(UUID id, String dishName, BigDecimal price, Restaurant restaurant) {
+    public Dish(UUID id, String dishName, BigDecimal price, Restaurant restaurant) {
         this.id = id;
         this.dishName = dishName;
         this.price = price;
