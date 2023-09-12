@@ -14,5 +14,7 @@ public interface BusinessHourRepository extends JpaRepository<BusinessHour, UUID
     @Query("SELECT bh FROM BusinessHour bh")
     List<BusinessHour> findAll();
     @Query("SELECT bh FROM BusinessHour bh WHERE bh.id = :id")
-    Optional<BusinessHour> findBy(UUID id);
+    Optional<BusinessHour> findById(UUID id);
+    @Query("SELECT bh from BusinessHour bh where bh.restaurant.id = :restaurantId")
+    List<BusinessHour> findAllByRestaurantId(UUID restaurantId);
 }

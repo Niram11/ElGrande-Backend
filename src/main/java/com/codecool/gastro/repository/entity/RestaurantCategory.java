@@ -15,6 +15,9 @@ public class RestaurantCategory {
     private UUID id;
     @NotBlank(message = "Category cannot be empty")
     private String category;
+    @ManyToMany
+    @JoinTable(name = "restaurant_restaurant_category", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "restaurant_category_id"))
+    private final Set<Restaurant> restaurants = new HashSet<>();
 
     public RestaurantCategory() {
     }
@@ -40,4 +43,7 @@ public class RestaurantCategory {
         this.category = category;
     }
 
+    public Set<Restaurant> getRestaurants() {
+        return restaurants;
+    }
 }

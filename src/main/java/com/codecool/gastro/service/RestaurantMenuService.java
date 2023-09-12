@@ -48,7 +48,7 @@ public class RestaurantMenuService {
     }
 
     public RestaurantMenuDto getRestaurantMenuBy(UUID id) { 
-        return restaurantMenuRepository.findOneBy(id)
+        return restaurantMenuRepository.findById(id)
                 .map(restaurantMenuMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, RestaurantMenu.class));
     }
@@ -70,7 +70,7 @@ public class RestaurantMenuService {
     }
 
     public void assignIngredientToMenu(UUID restaurantMenuId, Set<NewIngredientDto> ingredients) {
-        RestaurantMenu menu = restaurantMenuRepository.findOneBy(restaurantMenuId)
+        RestaurantMenu menu = restaurantMenuRepository.findById(restaurantMenuId)
                 .orElseThrow(() -> new ObjectNotFoundException(restaurantMenuId, RestaurantMenu.class));
 
 
@@ -79,7 +79,7 @@ public class RestaurantMenuService {
     }
 
     public void assignMenuCategoryToMenu(UUID restaurantMenuId, Set<NewMenuCategoryDto> categories) {
-        RestaurantMenu menu = restaurantMenuRepository.findOneBy(restaurantMenuId)
+        RestaurantMenu menu = restaurantMenuRepository.findById(restaurantMenuId)
                 .orElseThrow(() -> new ObjectNotFoundException(restaurantMenuId, RestaurantMenu.class));
 
 

@@ -28,6 +28,11 @@ public class AddressController {
         return addressService.getAddressBy(id);
     }
 
+    @GetMapping(params = {"restaurantId"})
+    public AddressDto getAddressByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+        return addressService.getAddressByRestaurantId(restaurantId);
+    }
+
     @PostMapping
     public AddressDto createNewAddress(@Valid @RequestBody NewAddressDto newAddressDto) {
         return addressService.saveAddress(newAddressDto);

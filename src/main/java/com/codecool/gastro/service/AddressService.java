@@ -28,9 +28,15 @@ public class AddressService {
     }
 
     public AddressDto getAddressBy(UUID id) {
-        return addressRepository.findOneBy(id)
+        return addressRepository.findById(id)
                 .map(addressMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Address.class));
+    }
+
+    public AddressDto getAddressByRestaurantId(UUID restaurantId) {
+        return addressRepository.findByRestaurantId(restaurantId)
+                .map(addressMapper::toDto)
+                .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Address.class));
     }
 
     public AddressDto saveAddress(NewAddressDto newAddressDto) {
@@ -46,5 +52,6 @@ public class AddressService {
     public void deleteAddress(UUID id) {
         addressRepository.delete(addressMapper.dtoToAddress(id));
     }
+
 
 }

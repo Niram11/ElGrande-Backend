@@ -1,6 +1,7 @@
 package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
+import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
@@ -8,7 +9,10 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,8 +26,9 @@ public class CustomerService {
     }
 
     public CustomerDto saveCustomer(NewCustomerDto newCustomerDto) {
-        Customer savedCustomer = customerRepository.save(customerMapper.dtoToCustomer(newCustomerDto));
-        return customerMapper.toDto(savedCustomer);
+        Customer customerToSave = customerMapper.dtoToCustomer(newCustomerDto);
+        customerToSave.setSubmissionTime(LocalDate.now());
+        return customerMapper.toDto(customerRepository.save(customerToSave));
     }
 
     public List<CustomerDto> getCustomers() {
@@ -39,14 +44,22 @@ public class CustomerService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
     }
 
+    public DetailedCustomerDto getDetailedCustomerBy(UUID id) {
+        return customerRepository.findDetailedById(id)
+                .map(customerMapper::toDetailedDto)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
+    }
+
     public CustomerDto updateCustomer(UUID id, NewCustomerDto updateDto) {
+        customerRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
         Customer updatedCustomer = customerRepository.save(customerMapper.dtoToCustomer(id, updateDto));
         return customerMapper.toDto(updatedCustomer);
     }
 
 
     public void softDelete(UUID id) {
-        Customer customer = customerRepository.findBy(id)
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
 
         obfuscateData(customer);
@@ -67,4 +80,6 @@ public class CustomerService {
 
         customer.setDeleted(true);
     }
+
+
 }

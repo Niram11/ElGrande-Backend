@@ -10,6 +10,8 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -33,18 +35,22 @@ public class Customer {
 
     @NotBlank
     private String passwordHash;
+    @OneToMany
+    private final Set<Restaurant> restaurants = new HashSet<>();
 
     private Boolean isDeleted = false;
 
     public Customer() {
     }
 
-    public Customer(UUID id, String name, String surname, String email, String passwordHash) {
+    public Customer(UUID id, String name, String surname, String email, LocalDate submissionTime, String passwordHash, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.submissionTime = submissionTime;
         this.passwordHash = passwordHash;
+        this.isDeleted = isDeleted;
     }
 
     public UUID getId() {
@@ -79,12 +85,24 @@ public class Customer {
         this.email = email;
     }
 
+    public LocalDate getSubmissionTime() {
+        return submissionTime;
+    }
+
+    public void setSubmissionTime(LocalDate submissionTime) {
+        this.submissionTime = submissionTime;
+    }
+
     public String getPasswordHash() {
         return passwordHash;
     }
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public Set<Restaurant> getRestaurants() {
+        return restaurants;
     }
 
     public Boolean getDeleted() {

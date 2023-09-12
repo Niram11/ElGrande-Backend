@@ -13,6 +13,11 @@ import java.util.UUID;
 public interface AddressRepository extends JpaRepository<Address, UUID> {
     @Query("select a from Address a")
     List<Address> findAll();
+
     @Query("select a from Address a where a.id = :id")
-    Optional<Address> findOneBy(UUID id);
+    Optional<Address> findById(UUID id);
+
+    @Query("select a from Address a where a.restaurant.id = :restaurantId")
+    Optional<Address> findByRestaurantId(UUID restaurantId);
+
 }

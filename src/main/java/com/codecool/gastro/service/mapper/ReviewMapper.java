@@ -12,7 +12,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    @Mapping(source = "customer.name", target = "customerName")
     ReviewDto toDto(Review review);
 
     @Mapping(source = "customerId", target = "customer.id")

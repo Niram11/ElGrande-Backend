@@ -15,7 +15,7 @@ public class Location {
     private UUID id;
     private BigDecimal latitude;
     private BigDecimal longitude;
-    @OneToMany(mappedBy = "location")
+    @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
 
     public Location() {

@@ -28,6 +28,11 @@ public class BusinessHourController {
         return businessHourService.getBusinessHourBy(id);
     }
 
+    @GetMapping(params = {"restaurantId"})
+    public List<BusinessHourDto> getBusinessHoursByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+        return businessHourService.getBusinessHoursByRestaurantId(restaurantId);
+    }
+
     @PostMapping
     public BusinessHourDto createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
         return businessHourService.saveNewBusinessHour(newBusinessHourDto);

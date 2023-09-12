@@ -15,8 +15,7 @@ public record NewRestaurantDto(
         @Digits(integer = 9, fraction = 0, message = "Number must be 9 digits long")
         Integer contactNumber,
         @Email(message = "Invalid email")
-        String contactEmail,
-        UUID customerId
+        String contactEmail
 ) {
 
 }

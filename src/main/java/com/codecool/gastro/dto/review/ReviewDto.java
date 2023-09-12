@@ -9,7 +9,6 @@ public record ReviewDto(
         UUID id,
         String comment,
         BigDecimal grade,
-        LocalDate submissionTime,
-        String customerName
+        LocalDate submissionTime
 ) {
 }

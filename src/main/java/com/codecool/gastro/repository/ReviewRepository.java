@@ -16,5 +16,5 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> findAll();
 
     @Query("select rev from Review rev where rev.id = :id")
-    Optional<Review> findOneBy(UUID id);
+    Optional<Review> findById(UUID id);
 }

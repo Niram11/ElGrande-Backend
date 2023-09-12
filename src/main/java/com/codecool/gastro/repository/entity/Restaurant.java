@@ -1,7 +1,10 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +12,6 @@ import java.util.UUID;
 
 @Entity
 public class Restaurant {
-    //TODO: Value objects hibernate
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -23,38 +25,11 @@ public class Restaurant {
     @Email(message = "Invalid email")
     private String contactEmail;
     private Boolean isDeleted = false;
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Customer customer;
-    @ManyToOne
-    @JoinColumn
-    private Location location;
-    @ManyToOne
-    @JoinColumn
-    private Ownership ownership;
-    @OneToOne(mappedBy = "restaurant")
-    private Address address;
-    @OneToOne(mappedBy = "restaurant")
-    private PromotedLocal promotedLocal;
-    @ManyToMany
-    @JoinTable(name = "restaurant_restaurant_category",
-            joinColumns = @JoinColumn(name = "restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_category_id"))
-    private final Set<RestaurantCategory> categories = new HashSet<>();
-
-    @OneToMany(mappedBy = "restaurant")
-    private final Set<BusinessHour> businessHours = new HashSet<>();
-    @OneToMany(mappedBy = "restaurant")
-    private final Set<Image> images = new HashSet<>();
-    @OneToMany(mappedBy = "restaurant")
-    private final Set<RestaurantMenu> restaurantMenus = new HashSet<>();
-    @OneToMany(mappedBy = "restaurant")
-    private final Set<Review> reviews = new HashSet<>();
 
     public Restaurant() {
     }
 
-    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail, Boolean isDeleted, Customer customer, Location location, Ownership ownership, Address address, PromotedLocal promotedLocal) {
+    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,11 +37,6 @@ public class Restaurant {
         this.contactNumber = contactNumber;
         this.contactEmail = contactEmail;
         this.isDeleted = isDeleted;
-        this.customer = customer;
-        this.location = location;
-        this.ownership = ownership;
-        this.address = address;
-        this.promotedLocal = promotedLocal;
     }
 
     public UUID getId() {
@@ -123,67 +93,6 @@ public class Restaurant {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Ownership getOwnership() {
-        return ownership;
-    }
-
-    public void setOwnership(Ownership ownership) {
-        this.ownership = ownership;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public PromotedLocal getPromotedLocal() {
-        return promotedLocal;
-    }
-
-    public void setPromotedLocal(PromotedLocal promotedLocal) {
-        this.promotedLocal = promotedLocal;
-    }
-
-
-    public Set<RestaurantCategory> getCategories() {
-        return categories;
-    }
-
-    public Set<BusinessHour> getBusinessHours() {
-        return businessHours;
-    }
-
-    public Set<Image> getImages() {
-        return images;
-    }
-
-    public Set<RestaurantMenu> getRestaurantMenus() {
-        return restaurantMenus;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
     }
 
 }

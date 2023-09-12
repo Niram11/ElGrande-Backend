@@ -13,45 +13,38 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class OwnershipService
-{
+public class OwnershipService {
     private final OwnershipMapper ownershipMapper;
     private final OwnershipRepository ownershipRepository;
 
-    public OwnershipService(OwnershipMapper ownershipMapper, OwnershipRepository ownershipRepository)
-    {
+    public OwnershipService(OwnershipMapper ownershipMapper, OwnershipRepository ownershipRepository) {
         this.ownershipMapper = ownershipMapper;
         this.ownershipRepository = ownershipRepository;
     }
 
-    public OwnershipDto saveOwnership(NewOwnershipDto newOwnershipDto)
-    {
-        Ownership savedOwnership = ownershipRepository.save(
-                ownershipMapper.dtoToOwnership(newOwnershipDto));
-        return ownershipMapper.toDto(savedOwnership);
+
+    public List<OwnershipDto> getAllOwnerships() {
+        return ownershipRepository.findAll().stream().map(ownershipMapper::toDto).toList();
     }
 
-    public List<OwnershipDto> getAllOwnerships()
-    {
-        return ownershipRepository.findALl().stream().map(ownershipMapper::toDto).toList();
-    }
-
-    public OwnershipDto getOwnership(UUID id)
-    {
-        return ownershipRepository.findOneBy(id)
+    public OwnershipDto getOwnership(UUID id) {
+        return ownershipRepository.findById(id)
                 .map(ownershipMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, MenuCategory.class));
     }
 
-    public OwnershipDto updateOwnership(UUID id, NewOwnershipDto newOwnershipDto)
-    {
+    public OwnershipDto saveOwnership(NewOwnershipDto newOwnershipDto) {
+        Ownership savedOwnership = ownershipRepository.save(ownershipMapper.dtoToOwnership(newOwnershipDto));
+        return ownershipMapper.toDto(savedOwnership);
+    }
+
+    public OwnershipDto updateOwnership(UUID id, NewOwnershipDto newOwnershipDto) {
         Ownership updateOwnership = ownershipRepository.save(
                 ownershipMapper.dtoToOwnership(newOwnershipDto, id));
         return ownershipMapper.toDto(updateOwnership);
     }
 
-    public void deleteOwnership(UUID id)
-    {
+    public void deleteOwnership(UUID id) {
         ownershipRepository.delete(ownershipMapper.dtoToOwnership(id));
     }
 }

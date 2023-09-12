@@ -11,7 +11,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface BusinessHourMapper {
 
-    @Mapping(target = "restaurantId", source = "restaurant.id")
     BusinessHourDto toDto(BusinessHour businessHour);
 
     @Mapping(source = "newBusinessHourDto.restaurantId", target = "restaurant.id")

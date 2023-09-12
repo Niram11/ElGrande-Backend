@@ -9,6 +9,7 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,17 +31,20 @@ public class ReviewService {
     }
 
     public ReviewDto getReviewBy(UUID id) {
-        return reviewRepository.findOneBy(id)
+        return reviewRepository.findById(id)
                 .map(reviewMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
     }
 
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        Review savedReview = reviewRepository.save(reviewMapper.dtoToReview(newReviewDTO));
-        return reviewMapper.toDto(savedReview);
+        Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
+        savedReview.setSubmissionTime(LocalDate.now());
+        return reviewMapper.toDto(reviewRepository.save(savedReview));
     }
 
     public ReviewDto updateReview(UUID id, NewReviewDto newReviewDTO) {
+        reviewRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
         Review updatedReview = reviewRepository.save(reviewMapper.dtoToReview(id, newReviewDTO));
         return reviewMapper.toDto(updatedReview);
     }

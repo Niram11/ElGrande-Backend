@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/restaurantCategory")
+@RequestMapping("/api/v1/restaurant-categories")
 public class RestaurantCategoryController {
 
     private final RestaurantCategoryService restaurantCategoryService;

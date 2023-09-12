@@ -1,6 +1,5 @@
 package com.codecool.gastro.repository.entity;
 
-import com.codecool.gastro.dto.menucategory.MenuCategoryDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 public class RestaurantMenu {
-
+    // TODO: Change name to "Dish"
     public static final String REGEX_FOR_MENU = "^[a-zA-Z][a-zA-Z' ]*$";
 
     @Id
@@ -40,8 +39,8 @@ public class RestaurantMenu {
 
     @ManyToMany
     @JoinTable(name = "restaurant_menu_category",
-    joinColumns = @JoinColumn(name = "restaurant_menu_id"),
-    inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
+            joinColumns = @JoinColumn(name = "restaurant_menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
     private final Set<MenuCategory> categories = new HashSet<>();
 
     public RestaurantMenu() {
@@ -97,6 +96,7 @@ public class RestaurantMenu {
     public void assignIngredient(Ingredient addedIngredients) {
         ingredients.add(addedIngredients);
     }
+
     public void assignCategories(MenuCategory addedIngredients) {
         categories.add(addedIngredients);
     }

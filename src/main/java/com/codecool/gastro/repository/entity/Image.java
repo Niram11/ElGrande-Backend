@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Entity
 public class Image {
-    //TODO: Need to implement method to work directly with ftp server
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
+import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.validation.Valid;
@@ -24,16 +25,21 @@ public class CustomerController {
     public List<CustomerDto> getAllCustomers() {
         return customerService.getCustomers();
     }
+    @GetMapping("/{id}")
+    public CustomerDto getCustomer(@PathVariable UUID id) {
+        return customerService.getCustomerBy(id);
+    }
+
+    @GetMapping("/{id}/details")
+    public DetailedCustomerDto getDetailedCustomer(@PathVariable UUID id) {
+        return customerService.getDetailedCustomerBy(id);
+    }
 
     @PostMapping
     public CustomerDto createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto) {
         return customerService.saveCustomer(newCustomerDto);
     }
 
-    @GetMapping("/{id}")
-    public CustomerDto getAllCustomers(@PathVariable UUID id) {
-        return customerService.getCustomerBy(id);
-    }
 
     @PutMapping("/{id}")
     public CustomerDto updateCustomer(@PathVariable UUID id,

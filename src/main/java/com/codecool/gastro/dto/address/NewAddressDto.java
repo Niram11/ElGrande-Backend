@@ -15,6 +15,7 @@ public record NewAddressDto(
         String street,
         @NotBlank(message = "Street number cannot be empty")
         String streetNumber,
-        String additionalDetails
+        String additionalDetails,
+        UUID restaurantId
 ) {
 }

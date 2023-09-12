@@ -7,8 +7,7 @@ public record BusinessHourDto(
         UUID id,
         Integer dayOfWeek,
         LocalTime openingHour,
-        LocalTime closingHour,
-        UUID restaurantId
+        LocalTime closingHour
 ) {
 
 }

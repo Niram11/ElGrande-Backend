@@ -33,6 +33,13 @@ public class BusinessHourService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
     }
 
+    public List<BusinessHourDto> getBusinessHoursByRestaurantId(UUID restaurantId) {
+        return businessHourRepository.findAllByRestaurantId(restaurantId)
+                .stream()
+                .map(businessHourMapper::toDto)
+                .toList();
+    }
+
     public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
         BusinessHour savedBusinessHour = businessHourRepository
                 .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
@@ -48,5 +55,6 @@ public class BusinessHourService {
     public void deleteBusinessHour(UUID id) {
         businessHourRepository.delete(businessHourMapper.dtoToBusinessHour(id));
     }
+
 
 }

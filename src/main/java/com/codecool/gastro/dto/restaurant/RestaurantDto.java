@@ -15,18 +15,7 @@ public record RestaurantDto(
         String description,
         String website,
         Integer contactNumber,
-        String contactEmail,
-        UUID customerId,
-        UUID locationId,
-        UUID addressId,
-        UUID promotedLocalId,
-        UUID ownershipId,
-        Set<RestaurantCategoryDto> categories,
-        Set<BusinessHourDto> businessHours,
-        Set<ImageDto> images,
-        Set<RestaurantMenuDto> restaurantMenus,
-        Set<ReviewDto> reviews
-
+        String contactEmail
 ) {
 
 }
