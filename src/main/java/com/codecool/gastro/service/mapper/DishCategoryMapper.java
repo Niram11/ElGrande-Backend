@@ -10,12 +10,12 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface DishCategoryMapper
 {
-    DishCategoryDto toDto(DishCategory menuCategory);
+    DishCategoryDto toDto(DishCategory dishCategory);
 
-    DishCategory dtoToDishCategory(NewDishCategoryDto menuCategoryDto);
+    DishCategory dtoToDishCategory(NewDishCategoryDto dishCategoryDto);
 
     DishCategory dtoToDishCategory(UUID id);
 
-    DishCategory dtoToDishCategory(NewDishCategoryDto menuCategoryDto, UUID id);
+    DishCategory dtoToDishCategory(NewDishCategoryDto dishCategoryDto, UUID id);
 
 }

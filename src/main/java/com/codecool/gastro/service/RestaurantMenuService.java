@@ -25,7 +25,7 @@ public class RestaurantMenuService {
     private final RestaurantMenuMapper restaurantMenuMapper;
     private final IngredientRepository ingredientRepository;
     private final IngredientMapper ingredientMapper;
-    private final DishCategoryRepository menuCategoryRepository;
+    private final DishCategoryRepository dishCategoryRepository;
     private final DishCategoryMapper dishCategoryMapper;
 
     public RestaurantMenuService(RestaurantMenuRepository restaurantMenuRepository,
@@ -36,7 +36,7 @@ public class RestaurantMenuService {
         this.restaurantMenuMapper = restaurantMenuMapper;
         this.ingredientRepository = ingredientRepository;
         this.ingredientMapper = ingredientMapper;
-        this.menuCategoryRepository = menuCategoryRepository;
+        this.dishCategoryRepository = menuCategoryRepository;
         this.dishCategoryMapper = dishCategoryMapper;
     }
 
@@ -107,12 +107,12 @@ public class RestaurantMenuService {
     private void addMenuCategoriesToMenu(Set<NewDishCategoryDto> categories, RestaurantMenu menu) {
         for (NewDishCategoryDto category : categories) {
 
-            Optional<DishCategory> menuCategory = menuCategoryRepository.findBy(category.category());
+            Optional<DishCategory> menuCategory = dishCategoryRepository.findBy(category.category());
             DishCategory mappedMenuCategory = dishCategoryMapper.dtoToDishCategory(category);
 
             if (menuCategory.isEmpty()) {
 
-                menuCategoryRepository.save(mappedMenuCategory);
+                dishCategoryRepository.save(mappedMenuCategory);
                 menu.assignCategories(mappedMenuCategory);
 
             } else if (!menu.getCategories().contains(menuCategory.get())) {
