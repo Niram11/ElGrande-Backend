@@ -10,18 +10,13 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank
+    @NotBlank(message = "PathToImage cannot be empty")
     private String pathToImage;
     @ManyToOne
     @JoinColumn(nullable = false)
     private Restaurant restaurant;
 
     public Image() {
-    }
-
-    public Image(UUID id, String pathToImage) {
-        this.id = id;
-        this.pathToImage = pathToImage;
     }
 
     public UUID getId() {

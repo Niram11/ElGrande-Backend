@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/business-hours")
 public class BusinessHourController {
     private final BusinessHourService businessHourService;

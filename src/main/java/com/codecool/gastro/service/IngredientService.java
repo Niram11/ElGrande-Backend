@@ -19,7 +19,8 @@ public class IngredientService {
     private final IngredientMapper ingredientMapper;
 
     public List<IngredientDto> getAllIngredients() {
-        return ingredientRepository.findAll().stream()
+        return ingredientRepository.findAll()
+                .stream()
                 .map(ingredientMapper::toDto)
                 .toList();
     }
@@ -35,13 +36,13 @@ public class IngredientService {
         this.ingredientMapper = ingredientMapper;
     }
 
-    public IngredientDto saveNewIngredient(NewIngredientDto ingredientDto) {
-        Ingredient newIngredient = ingredientMapper.dtoToIngredient(ingredientDto);
-        return ingredientMapper.toDto(ingredientRepository.save(parseToLowerCase(newIngredient)));
+    public IngredientDto saveNewIngredient(NewIngredientDto newIngredientDto) {
+        Ingredient savedIngredient = ingredientMapper.dtoToIngredient(newIngredientDto);
+        return ingredientMapper.toDto(ingredientRepository.save(parseToLowerCase(savedIngredient)));
     }
 
-    public IngredientDto updateIngredient(UUID id, NewIngredientDto newIngredientDto ){
-        Ingredient updatedIngredient = ingredientMapper.dtoToIngredient(id,newIngredientDto);
+    public IngredientDto updateIngredient(UUID id, NewIngredientDto newIngredientDto) {
+        Ingredient updatedIngredient = ingredientMapper.dtoToIngredient(id, newIngredientDto);
         return ingredientMapper.toDto(ingredientRepository.save(parseToLowerCase(updatedIngredient)));
     }
 

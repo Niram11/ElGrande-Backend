@@ -29,16 +29,6 @@ public class Restaurant {
     public Restaurant() {
     }
 
-    public Restaurant(UUID id, String name, String description, String website, Integer contactNumber, String contactEmail, Boolean isDeleted) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.website = website;
-        this.contactNumber = contactNumber;
-        this.contactEmail = contactEmail;
-        this.isDeleted = isDeleted;
-    }
-
     public UUID getId() {
         return id;
     }

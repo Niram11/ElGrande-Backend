@@ -4,6 +4,7 @@ import com.codecool.gastro.dto.address.AddressDto;
 import com.codecool.gastro.dto.address.NewAddressDto;
 import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.entity.Address;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.AddressMapper;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class AddressService {
     public AddressDto getAddressByRestaurantId(UUID restaurantId) {
         return addressRepository.findByRestaurantId(restaurantId)
                 .map(addressMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Address.class));
+                .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Restaurant.class));
     }
 
     public AddressDto saveAddress(NewAddressDto newAddressDto) {
@@ -52,6 +53,5 @@ public class AddressService {
     public void deleteAddress(UUID id) {
         addressRepository.delete(addressMapper.dtoToAddress(id));
     }
-
 
 }

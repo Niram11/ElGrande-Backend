@@ -14,6 +14,7 @@ public class RestaurantCategory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotBlank(message = "Category cannot be empty")
+    @Column(unique = true)
     private String category;
     @ManyToMany
     @JoinTable(name = "restaurant_restaurant_category", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "restaurant_category_id"))
@@ -22,10 +23,6 @@ public class RestaurantCategory {
     public RestaurantCategory() {
     }
 
-    public RestaurantCategory(UUID id, String category) {
-        this.id = id;
-        this.category = category;
-    }
 
     public UUID getId() {
         return id;

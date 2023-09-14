@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
     private final ReviewService reviewService;

@@ -1,12 +1,10 @@
 package com.codecool.gastro.repository.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.UUID;
 
@@ -23,6 +21,7 @@ public class Ingredient {
     @Size(min = 3, message = "Field must have at least 3 characters")
     @Pattern(regexp = REGEX_FOR_INGREDIENT,
             message = "Field must contain only letters and not start with number or whitespace")
+    @Column(unique = true)
     private String name;
 
     public Ingredient() {

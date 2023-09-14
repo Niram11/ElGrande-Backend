@@ -28,13 +28,6 @@ public class BusinessHour {
     public BusinessHour() {
     }
 
-    public BusinessHour(UUID id, Integer dayOfWeek, LocalTime openingHour, LocalTime closingHour) {
-        this.id = id;
-        this.dayOfWeek = dayOfWeek;
-        this.openingHour = openingHour;
-        this.closingHour = closingHour;
-    }
-
     public UUID getId() {
         return id;
     }

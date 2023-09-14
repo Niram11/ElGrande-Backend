@@ -2,6 +2,7 @@ package com.codecool.gastro.repository;
 
 
 import com.codecool.gastro.repository.entity.Dish;
+import com.codecool.gastro.repository.entity.Restaurant;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,5 @@ public interface DishRepository extends JpaRepository<Dish, UUID> {
             "left join fetch dish.ingredients left join fetch dish.restaurant " +
             "WHERE dish.restaurant.id = :restaurantId")
     List<Dish> findByRestaurantId(UUID restaurantId);
+
 }
