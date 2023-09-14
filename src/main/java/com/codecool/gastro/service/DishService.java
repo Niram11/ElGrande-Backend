@@ -10,6 +10,7 @@ import com.codecool.gastro.repository.DishRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.Ingredient;
 import com.codecool.gastro.repository.entity.DishCategory;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
@@ -61,14 +62,12 @@ public class DishService {
     }
 
     public DishDto saveNewDish(NewDishDto newDishDto) {
-        Dish savedDish = dishRepository
-                .save(dishMapper.dtoToDish(newDishDto));
+        Dish savedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto));
         return dishMapper.toDto(savedDish);
     }
 
     public DishDto updateDish(UUID id, NewDishDto newDishDto) {
-        Dish updatedDish = dishRepository
-                .save(dishMapper.dtoToDish(newDishDto, id));
+        Dish updatedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto, id));
         return dishMapper.toDto(updatedDish);
     }
 
@@ -129,6 +128,5 @@ public class DishService {
             }
         }
     }
-
 
 }

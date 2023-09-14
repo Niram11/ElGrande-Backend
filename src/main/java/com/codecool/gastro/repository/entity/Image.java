@@ -10,7 +10,7 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank
+    @NotBlank(message = "PathToImage cannot be empty")
     private String pathToImage;
     @ManyToOne
     @JoinColumn(nullable = false)

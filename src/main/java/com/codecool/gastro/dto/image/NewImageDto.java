@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record NewImageDto(
 
-        @NotBlank
+        @NotBlank(message = "PathToImage cannot be empty")
         String pathToImage,
 
         UUID restaurantId
