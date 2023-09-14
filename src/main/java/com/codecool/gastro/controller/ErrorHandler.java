@@ -15,13 +15,13 @@ public class ErrorHandler {
 
     @ExceptionHandler(value = ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNoDeveloper(ObjectNotFoundException ex) {
+    public ErrorResponse handleNotObjectFound(ObjectNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequest(MethodArgumentNotValidException ex) {
+    public ErrorResponse handleNotValidArgument(MethodArgumentNotValidException ex) {
         String errMsg = ex.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(" | "));

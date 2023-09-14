@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/promoted-locals")
 public class PromotedLocalController {
     private final PromotedLocalService promotedLocalService;
