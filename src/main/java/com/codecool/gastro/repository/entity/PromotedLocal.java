@@ -21,13 +21,6 @@ public class PromotedLocal {
     public PromotedLocal() {
     }
 
-    public PromotedLocal(UUID id, LocalTime startDate, LocalTime endDate, Restaurant restaurant) {
-        this.id = id;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.restaurant = restaurant;
-    }
-
     public UUID getId() {
         return id;
     }

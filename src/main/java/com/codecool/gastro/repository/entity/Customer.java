@@ -43,16 +43,6 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(UUID id, String name, String surname, String email, LocalDate submissionTime, String passwordHash, Boolean isDeleted) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.submissionTime = submissionTime;
-        this.passwordHash = passwordHash;
-        this.isDeleted = isDeleted;
-    }
-
     public UUID getId() {
         return id;
     }

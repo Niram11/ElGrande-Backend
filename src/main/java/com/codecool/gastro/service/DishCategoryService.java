@@ -12,48 +12,47 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class DishCategoryService
-{
+public class DishCategoryService {
     private final DishCategoryMapper dishCategoryMapper;
     private final DishCategoryRepository dishCategoryRepository;
 
 
     public DishCategoryService(DishCategoryMapper dishCategoryMapper,
-                               DishCategoryRepository dishCategoryRepository)
-    {
+                               DishCategoryRepository dishCategoryRepository) {
         this.dishCategoryMapper = dishCategoryMapper;
         this.dishCategoryRepository = dishCategoryRepository;
     }
 
-    public DishCategoryDto saveDishCategory(NewDishCategoryDto newDishCategoryDto)
-    {
-        DishCategory savedDishCategory = dishCategoryRepository.save(dishCategoryMapper.
-                dtoToDishCategory(newDishCategoryDto));
-        return dishCategoryMapper.toDto(savedDishCategory);
-    }
 
-    public List<DishCategoryDto> getAllDishCategories()
-    {
+    public List<DishCategoryDto> getAllDishCategories() {
         return dishCategoryRepository.findAll()
                 .stream().map(dishCategoryMapper::toDto).toList();
     }
 
-    public DishCategoryDto getDishCategoryById(UUID id)
-    {
+    public DishCategoryDto getDishCategoryById(UUID id) {
         return dishCategoryRepository.findBy(id)
                 .map(dishCategoryMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, DishCategory.class));
     }
 
-    public DishCategoryDto updateDishCategory(UUID id, NewDishCategoryDto newDishCategoryDto)
-    {
-        DishCategory updatedDishCategory = dishCategoryRepository.save(dishCategoryMapper.
-                dtoToDishCategory(newDishCategoryDto, id));
-        return dishCategoryMapper.toDto(updatedDishCategory);
+    public DishCategoryDto saveDishCategory(NewDishCategoryDto newDishCategoryDto) {
+        DishCategory savedDishCategory = dishCategoryRepository.save(dishCategoryMapper.
+                dtoToDishCategory(newDishCategoryDto));
+        return dishCategoryMapper.toDto(parseToLowerCase(savedDishCategory));
     }
 
-    public void deleteDishCategory(UUID id)
-    {
+    public DishCategoryDto updateDishCategory(UUID id, NewDishCategoryDto newDishCategoryDto) {
+        DishCategory updatedDishCategory = dishCategoryRepository.save(dishCategoryMapper.
+                dtoToDishCategory(newDishCategoryDto, id));
+        return dishCategoryMapper.toDto(parseToLowerCase(updatedDishCategory));
+    }
+
+    public void deleteDishCategory(UUID id) {
         dishCategoryRepository.delete(dishCategoryMapper.dtoToDishCategory(id));
+    }
+
+    private DishCategory parseToLowerCase(DishCategory dishCategory) {
+        dishCategory.setCategory(dishCategory.getCategory().toLowerCase());
+        return dishCategory;
     }
 }

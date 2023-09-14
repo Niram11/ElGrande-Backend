@@ -33,15 +33,6 @@ public class Review {
     public Review() {
     }
 
-    public Review(UUID id, String comment, BigDecimal grade, LocalDate submissionTime, Customer customer, Restaurant restaurant) {
-        this.id = id;
-        this.comment = comment;
-        this.grade = grade;
-        this.submissionTime = submissionTime;
-        this.customer = customer;
-        this.restaurant = restaurant;
-    }
-
     public UUID getId() {
         return id;
     }

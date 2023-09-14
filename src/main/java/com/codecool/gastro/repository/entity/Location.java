@@ -21,12 +21,6 @@ public class Location {
     public Location() {
     }
 
-    public Location(UUID id, BigDecimal latitude, BigDecimal longitude) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public UUID getId() {
         return id;
     }

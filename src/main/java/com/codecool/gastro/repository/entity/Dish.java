@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Entity
 public class Dish {
-    // TODO: Change name to "Dish"
     public static final String REGEX_FOR_DISH = "^[a-zA-Z][a-zA-Z' ]*$";
 
     @Id
@@ -44,13 +43,6 @@ public class Dish {
     private final Set<DishCategory> categories = new HashSet<>();
 
     public Dish() {
-    }
-
-    public Dish(UUID id, String dishName, BigDecimal price, Restaurant restaurant) {
-        this.id = id;
-        this.dishName = dishName;
-        this.price = price;
-        this.restaurant = restaurant;
     }
 
     public UUID getId() {

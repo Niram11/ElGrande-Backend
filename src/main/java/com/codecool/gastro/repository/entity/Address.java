@@ -28,17 +28,6 @@ public class Address {
     public Address() {
     }
 
-    public Address(UUID id, String country, String city, String postalCode, String street, String streetNumber, String additionalDetails, Restaurant restaurant) {
-        this.id = id;
-        this.country = country;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.street = street;
-        this.streetNumber = streetNumber;
-        this.additionalDetails = additionalDetails;
-        this.restaurant = restaurant;
-    }
-
     public UUID getId() {
         return id;
     }

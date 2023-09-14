@@ -22,11 +22,6 @@ public class Ownership {
     public Ownership() {
     }
 
-    public Ownership(UUID id, Customer customer) {
-        this.id = id;
-        this.customer = customer;
-    }
-
     public UUID getId() {
         return id;
     }

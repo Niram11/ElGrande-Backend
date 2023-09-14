@@ -45,7 +45,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String errMsg = "Operation cannot be completed due to incorrect data";
         return new ErrorResponse(errMsg);

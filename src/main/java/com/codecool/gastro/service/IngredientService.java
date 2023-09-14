@@ -36,9 +36,9 @@ public class IngredientService {
         this.ingredientMapper = ingredientMapper;
     }
 
-    public IngredientDto saveNewIngredient(NewIngredientDto ingredientDto) {
-        Ingredient newIngredient = ingredientMapper.dtoToIngredient(ingredientDto);
-        return ingredientMapper.toDto(ingredientRepository.save(parseToLowerCase(newIngredient)));
+    public IngredientDto saveNewIngredient(NewIngredientDto newIngredientDto) {
+        Ingredient savedIngredient = ingredientMapper.dtoToIngredient(newIngredientDto);
+        return ingredientMapper.toDto(ingredientRepository.save(parseToLowerCase(savedIngredient)));
     }
 
     public IngredientDto updateIngredient(UUID id, NewIngredientDto newIngredientDto) {

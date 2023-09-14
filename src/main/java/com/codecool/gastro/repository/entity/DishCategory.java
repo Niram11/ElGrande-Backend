@@ -14,15 +14,8 @@ public class DishCategory {
     private UUID id;
 
     @NotBlank(message = "dish category cannot be empty")
+    @Column(unique = true)
     private String category;
-
-    @ManyToMany(mappedBy = "categories")
-    private final Set<Dish> dishes = new HashSet<>();
-
-    public DishCategory(UUID id, String category) {
-        this.id = id;
-        this.category = category;
-    }
 
     public DishCategory() {
     }
@@ -43,7 +36,4 @@ public class DishCategory {
         this.category = category;
     }
 
-    public Set<Dish> getDishes() {
-        return dishes;
-    }
 }

@@ -19,11 +19,6 @@ public class Image {
     public Image() {
     }
 
-    public Image(UUID id, String pathToImage) {
-        this.id = id;
-        this.pathToImage = pathToImage;
-    }
-
     public UUID getId() {
         return id;
     }
