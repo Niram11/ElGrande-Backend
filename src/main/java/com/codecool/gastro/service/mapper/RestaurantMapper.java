@@ -6,6 +6,7 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
@@ -17,4 +18,5 @@ public interface RestaurantMapper {
 
     Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto, UUID id);
 
+    Restaurant dtoToRestaurant(Optional<Restaurant> restaurant);
 }

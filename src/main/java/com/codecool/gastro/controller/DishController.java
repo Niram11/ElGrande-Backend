@@ -46,18 +46,19 @@ public class DishController {
         return dishService.updateDish(id, newDishDto);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteDish(@PathVariable UUID id) {
-        dishService.deleteDish(id);
-    }
-
     @PutMapping("/{id}/ingredients")
     public void assignIngredientToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewIngredientDto> ingredients) {
         dishService.assignIngredientToDish(id, ingredients);
     }
+
     @PutMapping("/{id}/dish-categories")
     public void assignDishCategoryToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewDishCategoryDto> categories) {
         dishService.assignDishCategoryToDish(id, categories);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteDish(@PathVariable UUID id) {
+        dishService.deleteDish(id);
     }
 
 }

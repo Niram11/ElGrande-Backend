@@ -2,10 +2,14 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
+import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
+import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +39,11 @@ public class LocationController {
     @PutMapping("/{id}")
     public LocationDto updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
         return locationsService.updateLocation(id, newLocationDTO);
+    }
+
+    @PutMapping ("/{id}/restaurants")
+    public void addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
+        locationsService.assignRestaurantToLocation(id, restaurants);
     }
 
     @DeleteMapping("/{id}")

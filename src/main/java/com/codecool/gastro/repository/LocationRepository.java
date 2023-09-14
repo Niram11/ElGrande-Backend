@@ -14,8 +14,9 @@ import java.util.UUID;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, UUID> {
 
-    @EntityGraph(value = "location_entity_graph", type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"restaurants"})
+    @Query("select location from Location location left join fetch location.restaurants")
     List<Location> findAll();
-    @EntityGraph(value = "location_entity_graph", type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"restaurants"})
+
+    @Query("select location from Location location left join fetch location.restaurants where location.id =:id")
     Optional<Location> findById(UUID id);
 }

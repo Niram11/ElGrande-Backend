@@ -54,4 +54,8 @@ public class Location {
     public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    public void assignRestaurant(Restaurant restaurant) {
+        restaurants.add(restaurant);
+    }
 }
