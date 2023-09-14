@@ -13,7 +13,7 @@ public class DishCategory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "menu category cannot be empty")
+    @NotBlank(message = "dish category cannot be empty")
     private String category;
 
     @ManyToMany(mappedBy = "categories")
@@ -43,7 +43,7 @@ public class DishCategory {
         this.category = category;
     }
 
-    public Set<Dish> getRestaurantMenu() {
+    public Set<Dish> getDishes() {
         return dishes;
     }
 }

@@ -11,8 +11,8 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface DishMapper {
 
-    @Mapping(source = "restaurant.id", target = "restaurantId")
-    DishDto toDto(Dish menu);
+
+    DishDto toDto(Dish dish);
 
     @Mapping(source = "restaurantId", target = "restaurant.id")
     Dish dtoToDish(NewDishDto newDishDto);

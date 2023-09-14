@@ -15,7 +15,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/dishes")
 public class DishController {
-
     private final DishService dishService;
 
     public DishController(DishService dishService) {
@@ -23,42 +22,42 @@ public class DishController {
     }
 
     @GetMapping
-    public List<DishDto> getAllRestaurantMenus() {
+    public List<DishDto> getDishes() {
         return dishService.getAllDishes();
     }
 
     @GetMapping("/{id}")
-    public DishDto getRestaurantMenu(@PathVariable UUID id) {
+    public DishDto getDish(@PathVariable UUID id) {
         return dishService.getDishBy(id);
     }
 
-    @GetMapping
-    public List<DishDto> getDishesByRestaurant(@RequestBody UUID id) {
-        return dishService.getDishesByRestaurant(id);
+    @GetMapping(params = {"restaurantId"})
+    public List<DishDto> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
+        return dishService.getDishesByRestaurant(restaurantId);
     }
 
     @PostMapping
-    public DishDto createNewRestaurantMenu(@Valid @RequestBody NewDishDto newRestaurantMenu) {
-        return dishService.saveNewDish(newRestaurantMenu);
+    public DishDto createNewDish(@Valid @RequestBody NewDishDto newDishDto) {
+        return dishService.saveNewDish(newDishDto);
     }
 
     @PutMapping("/{id}")
-    public DishDto updateRestaurantMenu(@PathVariable UUID id, @Valid @RequestBody NewDishDto newDishDto) {
+    public DishDto updateDish(@PathVariable UUID id, @Valid @RequestBody NewDishDto newDishDto) {
         return dishService.updateDish(id, newDishDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRestaurantMenu(@PathVariable UUID id) {
+    public void deleteDish(@PathVariable UUID id) {
         dishService.deleteDish(id);
     }
 
     @PutMapping("/{id}/ingredients")
-    public void assignIngredientToMenu(@PathVariable UUID id, @RequestBody Set<NewIngredientDto> ingredients) {
-        dishService.assignIngredientToMenu(id, ingredients);
+    public void assignIngredientToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewIngredientDto> ingredients) {
+        dishService.assignIngredientToDish(id, ingredients);
     }
-    @PutMapping("/{id}/menu-categories")
-    public void assignMenuCategoriesToMenu(@PathVariable UUID id, @RequestBody Set<NewDishCategoryDto> categories) {
-        dishService.assignMenuCategoryToMenu(id, categories);
+    @PutMapping("/{id}/dish-categories")
+    public void assignDishCategoryToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewDishCategoryDto> categories) {
+        dishService.assignDishCategoryToDish(id, categories);
     }
 
 }

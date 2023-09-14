@@ -1,6 +1,8 @@
 package com.codecool.gastro.repository;
 
+import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.Image;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,4 +18,8 @@ public interface ImageRepository extends JpaRepository<Image, UUID> {
     List<Image> findALl();
     @Query("SELECT image FROM Image image WHERE image.id = :id")
     Optional<Image> findOneBy(UUID id);
+
+    @Query("SELECT image FROM Image image WHERE image.restaurant.id = :id")
+    List<Image> findImagesByRestaurant(UUID id);
+
 }

@@ -4,6 +4,7 @@ import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.repository.entity.Image;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.UUID;
 
@@ -11,8 +12,10 @@ import java.util.UUID;
 public interface ImageMapper {
     ImageDto toDto(Image image);
 
+    @Mapping(source = "restaurantId", target = "restaurant.id")
     Image dtoToImage(NewImageDto newImageDto);
 
+    @Mapping(source = "newImageDto.restaurantId", target = "restaurant.id")
     Image dtoToImage(NewImageDto newImageDto, UUID id);
 
     Image dtoToImage(UUID id);

@@ -28,6 +28,11 @@ public class ImageController {
         return imageService.getImageBy(id);
     }
 
+    @GetMapping(params = {"restaurantId"})
+    public List<ImageDto> getImagesByRestaurant(@RequestParam("restaurantId") UUID restaurantId){
+        return imageService.getImagesByRestaurant(restaurantId);
+    }
+
     @PostMapping
     public ImageDto createNewImage(@Valid @RequestBody NewImageDto newImageDto) {
         return imageService.saveNewImage(newImageDto);

@@ -30,13 +30,13 @@ public class DishService {
 
     public DishService(DishRepository dishRepository,
                        DishMapper dishMapper, IngredientMapper ingredientMapper,
-                       IngredientRepository ingredientRepository, DishCategoryRepository menuCategoryRepository,
+                       IngredientRepository ingredientRepository, DishCategoryRepository dishCategoryRepository,
                        DishCategoryMapper dishCategoryMapper) {
         this.dishRepository = dishRepository;
         this.dishMapper = dishMapper;
         this.ingredientRepository = ingredientRepository;
         this.ingredientMapper = ingredientMapper;
-        this.dishCategoryRepository = menuCategoryRepository;
+        this.dishCategoryRepository = dishCategoryRepository;
         this.dishCategoryMapper = dishCategoryMapper;
     }
 
@@ -76,25 +76,25 @@ public class DishService {
         dishRepository.delete(dishMapper.dtoToDish(id));
     }
 
-    public void assignIngredientToMenu(UUID dishId, Set<NewIngredientDto> ingredients) {
-        Dish menu = dishRepository.findById(dishId)
+    public void assignIngredientToDish(UUID dishId, Set<NewIngredientDto> ingredients) {
+        Dish dish = dishRepository.findById(dishId)
                 .orElseThrow(() -> new ObjectNotFoundException(dishId, Dish.class));
 
 
-        addIngredientsToMenu(ingredients, menu);
-        dishRepository.save(menu);
+        addIngredientsToDish(ingredients, dish);
+        dishRepository.save(dish);
     }
 
-    public void assignMenuCategoryToMenu(UUID dishId, Set<NewDishCategoryDto> categories) {
-        Dish menu = dishRepository.findById(dishId)
+    public void assignDishCategoryToDish(UUID dishId, Set<NewDishCategoryDto> categories) {
+        Dish dish = dishRepository.findById(dishId)
                 .orElseThrow(() -> new ObjectNotFoundException(dishId, Dish.class));
 
 
-        addMenuCategoriesToMenu(categories, menu);
-        dishRepository.save(menu);
+        addDishCategoryToDish(categories, dish);
+        dishRepository.save(dish);
     }
 
-    private void addIngredientsToMenu(Set<NewIngredientDto> ingredients, Dish menu) {
+    private void addIngredientsToDish(Set<NewIngredientDto> ingredients, Dish dish) {
         for (NewIngredientDto ingredient : ingredients) {
 
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name());
@@ -103,29 +103,29 @@ public class DishService {
             if (ingredientOptional.isEmpty()) {
 
                 ingredientRepository.save(mappedIngredient);
-                menu.assignIngredient(mappedIngredient);
+                dish.assignIngredient(mappedIngredient);
 
-            } else if (!menu.getIngredients().contains(ingredientOptional.get())) {
+            } else if (!dish.getIngredients().contains(ingredientOptional.get())) {
 
-                menu.assignIngredient(ingredientOptional.get());
+                dish.assignIngredient(ingredientOptional.get());
             }
         }
     }
 
-    private void addMenuCategoriesToMenu(Set<NewDishCategoryDto> categories, Dish menu) {
+    private void addDishCategoryToDish(Set<NewDishCategoryDto> categories, Dish dish) {
         for (NewDishCategoryDto category : categories) {
 
-            Optional<DishCategory> menuCategory = dishCategoryRepository.findBy(category.category());
-            DishCategory mappedMenuCategory = dishCategoryMapper.dtoToDishCategory(category);
+            Optional<DishCategory> dishCategory = dishCategoryRepository.findBy(category.category());
+            DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
 
-            if (menuCategory.isEmpty()) {
+            if (dishCategory.isEmpty()) {
 
-                dishCategoryRepository.save(mappedMenuCategory);
-                menu.assignCategories(mappedMenuCategory);
+                dishCategoryRepository.save(mappedDishCategory);
+                dish.assignCategories(mappedDishCategory);
 
-            } else if (!menu.getCategories().contains(menuCategory.get())) {
+            } else if (!dish.getCategories().contains(dishCategory.get())) {
 
-                menu.assignCategories(menuCategory.get());
+                dish.assignCategories(dishCategory.get());
             }
         }
     }

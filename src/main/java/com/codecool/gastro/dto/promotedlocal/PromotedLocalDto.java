@@ -6,9 +6,7 @@ import java.util.UUID;
 public record PromotedLocalDto(
         UUID id,
         LocalTime startDate,
-        LocalTime endDate,
-        UUID restaurantId
-
+        LocalTime endDate
 ) {
 
 }

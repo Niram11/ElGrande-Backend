@@ -11,7 +11,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface PromotedLocalMapper {
 
-    @Mapping(target = "restaurantId", source = "restaurant.id")
     PromotedLocalDto toDto(PromotedLocal promotedLocal);
 
     @Mapping(target = "restaurant.id", source = "newPromotedLocalDto.restaurantId")

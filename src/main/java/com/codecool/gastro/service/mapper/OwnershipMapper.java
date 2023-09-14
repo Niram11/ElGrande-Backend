@@ -11,7 +11,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface OwnershipMapper
 {
-    @Mapping(source = "customer.id", target = "customerId")
     OwnershipDto toDto(Ownership ownership);
 
     @Mapping(source = "customerId", target = "customer.id")

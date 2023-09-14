@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public record OwnershipDto(
         UUID id,
-        UUID customerId,
         Set<RestaurantDto> restaurants
 ) {
 }

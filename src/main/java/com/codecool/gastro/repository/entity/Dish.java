@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 public class Dish {
     // TODO: Change name to "Dish"
-    public static final String REGEX_FOR_MENU = "^[a-zA-Z][a-zA-Z' ]*$";
+    public static final String REGEX_FOR_DISH = "^[a-zA-Z][a-zA-Z' ]*$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,7 +19,7 @@ public class Dish {
 
     @NotBlank(message = "Field cannot be empty")
     @Size(min = 3, message = "Field must have at least 3 characters")
-    @Pattern(regexp = REGEX_FOR_MENU,
+    @Pattern(regexp = REGEX_FOR_DISH,
             message = "Field must contain only letters and not start with number or whitespace")
     private String dishName;
 
@@ -32,15 +32,15 @@ public class Dish {
     private Restaurant restaurant;
 
     @ManyToMany
-    @JoinTable(name = "restaurant_menu_ingredients",
-            joinColumns = @JoinColumn(name = "restaurantMenuId"),
+    @JoinTable(name = "dish_ingredients",
+            joinColumns = @JoinColumn(name = "dishId"),
             inverseJoinColumns = @JoinColumn(name = "ingredientId"))
     private final Set<Ingredient> ingredients = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "restaurant_menu_category",
-            joinColumns = @JoinColumn(name = "restaurant_menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_category_id"))
+    @JoinTable(name = "dish_dish_category",
+            joinColumns = @JoinColumn(name = "dishId"),
+            inverseJoinColumns = @JoinColumn(name = "dishCategoryId"))
     private final Set<DishCategory> categories = new HashSet<>();
 
     public Dish() {
