@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.RestaurantService;
@@ -31,6 +32,11 @@ public class RestaurantController {
     @GetMapping("/{id}/business-hours")
     public RestaurantDto getRestaurantBusinessHours(@PathVariable UUID id) {
         return restaurantService.getRestaurantBy(id);
+    }
+
+    @GetMapping(params = "top")
+    public List<DetailedRestaurantDto> getTopRestaurantsDetailed(@RequestParam("top") int quantity) {
+        return restaurantService.getTopRestaurants(quantity);
     }
 
     @PostMapping

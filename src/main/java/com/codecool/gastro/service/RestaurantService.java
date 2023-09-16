@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
@@ -33,6 +34,14 @@ public class RestaurantService {
                 .map(restaurantMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
+
+    public List<DetailedRestaurantDto> getTopRestaurants(int quantity) {
+        return restaurantRepository.getTopRestaurants(quantity)
+                .stream()
+                .map(restaurantMapper::toDetailedDto)
+                .toList();
+    }
+
 
     public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
         Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto));
