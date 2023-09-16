@@ -18,5 +18,4 @@ public interface RestaurantMapper {
 
     Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto, UUID id);
 
-    Restaurant dtoToRestaurant(Optional<Restaurant> restaurant);
 }
