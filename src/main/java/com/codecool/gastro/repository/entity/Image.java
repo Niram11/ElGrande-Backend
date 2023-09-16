@@ -11,6 +11,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotBlank(message = "PathToImage cannot be empty")
+    @JoinColumn(unique = true)
     private String pathToImage;
     @ManyToOne
     @JoinColumn(nullable = false)

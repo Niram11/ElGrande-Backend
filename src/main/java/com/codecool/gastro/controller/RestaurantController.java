@@ -42,8 +42,8 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpStatus softDeleteRestaurant(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantDto> softDeleteRestaurant(@PathVariable UUID id) {
         restaurantService.softDelete(id);
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
