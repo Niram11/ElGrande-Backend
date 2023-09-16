@@ -28,7 +28,7 @@ public class RestaurantService {
                 .toList();
     }
 
-    public RestaurantDto getRestaurantBy(UUID id) {
+    public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
                 .map(restaurantMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));

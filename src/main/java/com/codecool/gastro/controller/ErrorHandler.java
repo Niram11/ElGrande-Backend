@@ -51,7 +51,7 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    public record ErrorResponse(String info) {
+    public record ErrorResponse(String errorMessage) {
 
     }
 }
