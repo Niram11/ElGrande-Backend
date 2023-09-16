@@ -26,6 +26,7 @@ public class CustomerController {
     public List<CustomerDto> getAllCustomers() {
         return customerService.getCustomers();
     }
+
     @GetMapping("/{id}")
     public CustomerDto getCustomer(@PathVariable UUID id) {
         return customerService.getCustomerBy(id);

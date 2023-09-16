@@ -36,6 +36,13 @@ public class ReviewService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
     }
 
+    public List<ReviewDto> getReviewsByRestaurant(UUID id) {
+        return reviewRepository.getReviewsByRestaurant(id)
+                .stream()
+                .map(reviewMapper::toDto)
+                .toList();
+    }
+
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());

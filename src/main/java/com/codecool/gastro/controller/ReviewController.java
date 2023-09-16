@@ -30,6 +30,11 @@ public class ReviewController {
         return reviewService.getReviewBy(id);
     }
 
+    @GetMapping(params = "restaurantId")
+    public List<ReviewDto> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
+        return reviewService.getReviewsByRestaurant(restaurantId);
+    }
+
     @PostMapping
     public ReviewDto createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return reviewService.saveReview(newReviewDTO);

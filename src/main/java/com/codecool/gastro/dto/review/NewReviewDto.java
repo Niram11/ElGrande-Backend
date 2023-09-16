@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public record NewReviewDto(
         @NotBlank(message = "Review cannot be empty")
-        String review,
+        String comment,
         @Min(value = 1, message = "Grade must be greater then or equal 1")
         @Max(value = 10, message = "Grade must be less then or equal 10")
         Integer grade,
