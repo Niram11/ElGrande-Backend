@@ -23,22 +23,32 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query("select res from Restaurant res where res.name = :name")
     Optional<Restaurant> findByName(String name);
 
-    @Query(value = "SELECT " +
-            "restaurant.id AS id, restaurant.name, restaurant.description, restaurant.website," +
-            "restaurant.contact_number AS contactNumber, restaurant.contact_email AS contactEmail," +
-            "ARRAY_AGG(image.path_to_image) AS imagesPaths ," +
-            "ROUND(AVG(review.grade),2) AS averageGrade " +
-            "FROM " +
-            "restaurant restaurant " +
-            "LEFT JOIN " +
-            "image image ON restaurant.id = image.restaurant_id " +
-            "LEFT JOIN " +
-            "review review ON restaurant.id = review.restaurant_id " +
-            "GROUP BY " +
-            "review.grade, restaurant.id, restaurant.contact_number, restaurant.is_deleted " +
-            "ORDER BY " +
-            "CASE WHEN review.grade IS NULL THEN 1 ELSE 0 END, " +
-            "averageGrade DESC " +
-            "LIMIT :quantity", nativeQuery = true)
+    @Query(value =
+            "SELECT " +
+                    "    res_data.id, res_data.name, res_data.description, res_data.website," +
+                    "    res_data.contactNumber, res_data.contactEmail," +
+                    "    COALESCE(res_data.imagesPaths, '{}') AS imagesPaths," +
+                    "    COALESCE(rev_data.averageGrade, NULL) AS averageGrade " +
+                    "FROM (" +
+                    "    SELECT " +
+                    "        res.id, res.name, res.description, res.website," +
+                    "        res.contact_number AS contactNumber, res.contact_email AS contactEmail," +
+                    "        ARRAY_AGG(DISTINCT ima.path_to_image) FILTER (WHERE ima.path_to_image IS NOT NULL) AS imagesPaths " +
+                    "    FROM restaurant res " +
+                    "    LEFT JOIN image ima ON res.id = ima.restaurant_id " +
+                    "    GROUP BY res.id " +
+                    ") AS res_data " +
+                    "LEFT JOIN (" +
+                    "    SELECT " +
+                    "        res.id AS id, AVG(rev.grade) AS averageGrade " +
+                    "    FROM restaurant res " +
+                    "    LEFT JOIN review rev ON res.id = rev.restaurant_id " +
+                    "    GROUP BY res.id " +
+                    ") AS rev_data ON res_data.id = rev_data.id " +
+                    "ORDER BY " +
+                    "    CASE WHEN averageGrade IS NULL THEN 1 ELSE 0 END, " +
+                    "    averageGrade DESC " +
+                    "LIMIT :quantity", nativeQuery = true)
     List<DetailedRestaurantProjection> getTopRestaurants(@Param("quantity") int quantity);
+
 }
