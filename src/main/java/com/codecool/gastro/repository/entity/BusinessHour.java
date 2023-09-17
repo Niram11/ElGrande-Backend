@@ -20,10 +20,10 @@ public class BusinessHour {
     @NotNull(message = "Day of week cannot be null")
     private Integer dayOfWeek;
 
-    @NotBlank(message = "Opening hour cannot be empty")
+    @NotNull(message = "Opening hour cannot be empty")
     private LocalTime openingHour;
 
-    @NotBlank(message = "Closing hour cannot be empty")
+    @NotNull(message = "Closing hour cannot be empty")
     private LocalTime closingHour;
     @ManyToOne
     @JoinColumn(nullable = false)
