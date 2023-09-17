@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -14,12 +15,15 @@ public class BusinessHour {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Min(value = 1, message = "Number must be greater then or equal 1")
-    @Max(value = 7, message = "Number must be less then or equal 10")
+    @Min(value = 1, message = "Day of week must be greater then or equal 1")
+    @Max(value = 7, message = "Day of week must be less then or equal 7")
+    @NotNull(message = "Day of week cannot be null")
     private Integer dayOfWeek;
 
+    @NotBlank(message = "Opening hour cannot be empty")
     private LocalTime openingHour;
 
+    @NotBlank(message = "Closing hour cannot be empty")
     private LocalTime closingHour;
     @ManyToOne
     @JoinColumn(nullable = false)

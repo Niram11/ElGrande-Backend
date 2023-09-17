@@ -66,21 +66,6 @@ public class LocationService {
     public void addRestaurantToLocation(Set<RestaurantDto> restaurants, Location location) {
         restaurants.forEach(restaurantDto -> restaurantRepository.findById(restaurantDto.id())
                 .ifPresent(location::assignRestaurant));
-
-//        for (RestaurantDto restaurant : restaurants) {
-//
-//            Optional<Restaurant> selectedRestaurant = restaurantRepository.findById(restaurant.id());
-//            Restaurant mappedRestaurant = restaurantMapper.dtoToRestaurant(selectedRestaurant);
-//
-//            if (selectedRestaurant.isEmpty()) {
-//                restaurantRepository.save(mappedRestaurant);
-//                location.assignRestaurant(mappedRestaurant);
-//
-//            } else if (!location.getRestaurants().contains(selectedRestaurant.get())) {
-//                location.assignRestaurant(selectedRestaurant.get());
-//
-//            }
-//        }
     }
 
     public void deleteLocation(UUID id) {

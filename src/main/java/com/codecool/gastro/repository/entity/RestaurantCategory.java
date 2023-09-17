@@ -17,7 +17,9 @@ public class RestaurantCategory {
     @Column(unique = true)
     private String category;
     @ManyToMany
-    @JoinTable(name = "restaurant_restaurant_category", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "restaurant_category_id"))
+    @JoinTable(name = "restaurant_restaurant_category",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_category_id"))
     private final Set<Restaurant> restaurants = new HashSet<>();
 
     public RestaurantCategory() {

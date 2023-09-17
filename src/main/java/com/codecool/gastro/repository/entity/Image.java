@@ -10,8 +10,8 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank(message = "PathToImage cannot be empty")
-    @JoinColumn(unique = true)
+    @NotBlank(message = "Path to image cannot be empty")
+    @Column(unique = true)
     private String pathToImage;
     @ManyToOne
     @JoinColumn(nullable = false)

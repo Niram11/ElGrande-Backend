@@ -19,6 +19,9 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     @Query("SELECT cus FROM Customer cus left join fetch cus.restaurants WHERE cus.id = :id AND cus.isDeleted = false ")
     Optional<Customer> findById(UUID id);
 
+    @Query("select cus from Customer cus left join fetch cus.restaurants where cus.email = :email and cus.isDeleted = false ")
+    Optional<Customer> findByEmail(String email);
+
     @Query(nativeQuery = true, value = "select cus.id, cus.name, cus.surname, cus.email, " +
             "array_agg(cr.restaurants_id) as restaurants, ow.id as ownershipId " +
             "from customer as cus left join ownership as ow on cus.id = ow.customer_id " +

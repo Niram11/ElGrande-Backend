@@ -19,6 +19,4 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query("SELECT res from Restaurant res where res.id = :id and res.isDeleted = false ")
     Optional<Restaurant> findById(UUID id);
 
-    @Query("select res from Restaurant res where res.name = :name")
-    Optional<Restaurant> findByName(String name);
 }

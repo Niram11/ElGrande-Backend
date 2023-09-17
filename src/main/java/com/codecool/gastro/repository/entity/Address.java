@@ -18,7 +18,7 @@ public class Address {
     private String postalCode;
     @NotBlank(message = "Street cannot be empty")
     private String street;
-    @NotBlank(message = "Street Number cannot be empty")
+    @NotBlank(message = "Street number cannot be empty")
     private String streetNumber;
     private String additionalDetails;
     @OneToOne

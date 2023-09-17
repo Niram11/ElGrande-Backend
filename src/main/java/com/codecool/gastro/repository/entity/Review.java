@@ -16,7 +16,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @NotBlank(message = "Review cannot be empty")
+    @NotBlank(message = "Comment cannot be empty")
     private String comment;
     @Min(value = 1, message = "Grade must be greater then or equal 1")
     @Max(value = 10, message = "Grade must be less then or equal 10")
