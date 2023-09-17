@@ -135,6 +135,7 @@ public class RestaurantControllerTest {
     @Test
     void testCreateNewRestaurantAndUpdateRestaurant_ShouldThrowIllegalArgumentException_WhenProvidingInvalidJson() throws Exception {
         // given
+
         String content = """
                 {
                 "name": "",
@@ -149,10 +150,8 @@ public class RestaurantControllerTest {
         mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
-                .andExpect(status().isBadRequest())
-                .andExpectAll(
+                .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must be between 4 and 100 characters long")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Contact Number must be a 9-digit integer")),
                         jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
@@ -161,13 +160,43 @@ public class RestaurantControllerTest {
         mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
-                .andExpect(status().isBadRequest())
-                .andExpectAll(
+                .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must be between 4 and 100 characters long")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Contact Number must be a 9-digit integer")),
                         jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
+                );
+
+        mockMvc.perform(post("/api/v1/restaurants")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
+                                "description": "",
+                                "website": "Website.pl",
+                                "contactNumber": 1231231231,
+                                "contactEmail": "Emailwp.pl"
+                                }
+                                """))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
+                );
+
+        mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
+                                "description": "",
+                                "website": "Website.pl",
+                                "contactNumber": 1231231231,
+                                "contactEmail": "Emailwp.pl"
+                                }
+                                """))
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
                 );
     }
 

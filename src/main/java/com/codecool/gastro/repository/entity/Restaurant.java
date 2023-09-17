@@ -16,7 +16,7 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotBlank(message = "Name cannot be empty")
-    @Size(max = 100, message = "Name must be between 4 and 100 characters long")
+    @Size(max = 100, message = "Name must be max 100 characters long")
     private String name;
     @NotBlank(message = "Description cannot be empty")
     private String description;
