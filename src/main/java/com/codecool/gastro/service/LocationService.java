@@ -23,14 +23,12 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
     private final RestaurantRepository restaurantRepository;
-    private final RestaurantMapper restaurantMapper;
 
     public LocationService(LocationRepository locationRepository, LocationMapper locationMapper,
-                           RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
+                           RestaurantRepository restaurantRepository) {
         this.locationRepository = locationRepository;
         this.locationMapper = locationMapper;
         this.restaurantRepository = restaurantRepository;
-        this.restaurantMapper = restaurantMapper;
     }
 
     public List<LocationDto> getLocations() {
