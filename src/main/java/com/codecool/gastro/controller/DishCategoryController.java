@@ -5,6 +5,8 @@ import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.service.DishCategoryService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,29 +23,29 @@ public class DishCategoryController {
     }
 
     @GetMapping
-    public List<DishCategoryDto> getCategories() {
-        return dishCategoryService.getAllDishCategories();
+    public ResponseEntity<List<DishCategoryDto>> getCategories() {
+        return ResponseEntity.status(HttpStatus.OK).body(dishCategoryService.getAllDishCategories());
     }
 
     @GetMapping("/{id}")
-    public DishCategoryDto getCategory(@PathVariable UUID id) {
-        return dishCategoryService.getDishCategoryById(id);
+    public ResponseEntity<DishCategoryDto> getCategory(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(dishCategoryService.getDishCategoryById(id));
     }
 
     @PostMapping
-    public DishCategoryDto createDishCategory(@Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
-        return dishCategoryService.saveDishCategory(newDishCategoryDto);
+    public ResponseEntity<DishCategoryDto> createDishCategory(@Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dishCategoryService.saveDishCategory(newDishCategoryDto));
     }
 
 
     @PutMapping("/{id}")
-    public DishCategoryDto updateDishCategory(@PathVariable UUID id,
-                                              @Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
-        return dishCategoryService.updateDishCategory(id, newDishCategoryDto);
+    public ResponseEntity<DishCategoryDto> updateDishCategory(@PathVariable UUID id, @Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dishCategoryService.updateDishCategory(id, newDishCategoryDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDishCategory(@PathVariable UUID id) {
+    public ResponseEntity<DishCategoryDto> deleteDishCategory(@PathVariable UUID id) {
         dishCategoryService.deleteDishCategory(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

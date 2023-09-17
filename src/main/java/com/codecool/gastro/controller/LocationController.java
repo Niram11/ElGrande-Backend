@@ -6,6 +6,8 @@ import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.LocationService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,32 +25,34 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<LocationDto> getAllLocation() {
-        return locationsService.getLocations();
+    public ResponseEntity<List<LocationDto>> getAllLocation() {
+        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocations());
     }
 
     @GetMapping("/{id}")
-    public LocationDto getLocation(@PathVariable UUID id) {
-        return locationsService.getLocationBy(id);
+    public ResponseEntity<LocationDto> getLocation(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(locationsService.getLocationBy(id));
     }
 
     @PostMapping
-    public LocationDto createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
-        return locationsService.saveLocation(newLocationDTO);
+    public ResponseEntity<LocationDto> createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.saveLocation(newLocationDTO));
     }
 
     @PutMapping("/{id}")
-    public LocationDto updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
-        return locationsService.updateLocation(id, newLocationDTO);
+    public ResponseEntity<LocationDto> updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }
 
     @PutMapping ("/{id}/restaurants")
-    public void addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
+    public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
         locationsService.assignRestaurantToLocation(id, restaurants);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteLocations(@PathVariable UUID id) {
+    public ResponseEntity<LocationDto> deleteLocations(@PathVariable UUID id) {
         locationsService.deleteLocation(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

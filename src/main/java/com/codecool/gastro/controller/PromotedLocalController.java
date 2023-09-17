@@ -4,6 +4,8 @@ import com.codecool.gastro.dto.promotedlocal.NewPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.PromotedLocalDto;
 import com.codecool.gastro.service.PromotedLocalService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,28 +22,29 @@ public class PromotedLocalController {
     }
 
     @GetMapping
-    public List<PromotedLocalDto> getAllPromotedLocals() {
-        return promotedLocalService.getPromotedLocals();
+    public ResponseEntity<List<PromotedLocalDto>> getAllPromotedLocals() {
+        return ResponseEntity.status(HttpStatus.OK).body(promotedLocalService.getPromotedLocals());
     }
 
     @GetMapping("/{id}")
-    public PromotedLocalDto getPromotedLocal(@PathVariable UUID id) {
-        return promotedLocalService.getPromotedLocalBy(id);
+    public ResponseEntity<PromotedLocalDto> getPromotedLocal(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(promotedLocalService.getPromotedLocalBy(id));
     }
 
     @PostMapping
-    public PromotedLocalDto createNewPromotedLocal(@Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
-        return promotedLocalService.saveNewPromotedLocal(newPromotedLocalDto);
+    public ResponseEntity<PromotedLocalDto> createNewPromotedLocal(@Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.saveNewPromotedLocal(newPromotedLocalDto));
     }
 
     @PutMapping("/{id}")
-    public PromotedLocalDto updatePromotedLocal(@PathVariable UUID id,
+    public ResponseEntity<PromotedLocalDto> updatePromotedLocal(@PathVariable UUID id,
                                                 @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
-        return promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deletePromotedLocal(@PathVariable UUID id) {
+    public ResponseEntity<PromotedLocalDto> deletePromotedLocal(@PathVariable UUID id) {
         promotedLocalService.deletePromotedLocal(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

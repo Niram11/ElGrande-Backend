@@ -4,6 +4,8 @@ import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.service.ImageService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,32 +22,33 @@ public class ImageController {
     }
 
     @GetMapping
-    public List<ImageDto> getAllImages() {
-        return imageService.getImages();
+    public ResponseEntity<List<ImageDto>> getAllImages() {
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImages());
     }
 
     @GetMapping("/{id}")
-    public ImageDto getImage(@PathVariable UUID id) {
-        return imageService.getImageBy(id);
+    public ResponseEntity<ImageDto> getImage(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(imageService.getImageBy(id));
     }
 
     @GetMapping(params = {"restaurantId"})
-    public List<ImageDto> getImagesByRestaurant(@RequestParam("restaurantId") UUID restaurantId){
-        return imageService.getImagesByRestaurant(restaurantId);
+    public ResponseEntity<List<ImageDto>> getImagesByRestaurant(@RequestParam("restaurantId") UUID restaurantId){
+        return ResponseEntity.status(HttpStatus.FOUND).body(imageService.getImagesByRestaurant(restaurantId));
     }
 
     @PostMapping
-    public ImageDto createNewImage(@Valid @RequestBody NewImageDto newImageDto) {
-        return imageService.saveNewImage(newImageDto);
+    public ResponseEntity<ImageDto> createNewImage(@Valid @RequestBody NewImageDto newImageDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveNewImage(newImageDto));
     }
 
     @PutMapping("/{id}")
-    public ImageDto updateImage(@PathVariable UUID id, @Valid @RequestBody NewImageDto newImageDto) {
-        return imageService.updateImage(id , newImageDto);
+    public ResponseEntity<ImageDto> updateImage(@PathVariable UUID id, @Valid @RequestBody NewImageDto newImageDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.updateImage(id , newImageDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteImage(@PathVariable UUID id) {
+    public ResponseEntity<ImageDto> deleteImage(@PathVariable UUID id) {
         imageService.deleteImage(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

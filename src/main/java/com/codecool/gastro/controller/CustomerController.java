@@ -6,6 +6,8 @@ import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,34 +25,34 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity<List<CustomerDto>> getAllCustomers() {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomers());
     }
 
     @GetMapping("/{id}")
-    public CustomerDto getCustomer(@PathVariable UUID id) {
-        return customerService.getCustomerBy(id);
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getCustomerBy(id));
     }
 
     @GetMapping("/{id}/details")
-    public DetailedCustomerDto getDetailedCustomer(@PathVariable UUID id) {
-        return customerService.getDetailedCustomerBy(id);
+    public ResponseEntity<DetailedCustomerDto> getDetailedCustomer(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getDetailedCustomerBy(id));
     }
 
     @PostMapping
-    public CustomerDto createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto) {
-        return customerService.saveCustomer(newCustomerDto);
+    public ResponseEntity<CustomerDto> createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.saveCustomer(newCustomerDto));
     }
 
 
     @PutMapping("/{id}")
-    public CustomerDto updateCustomer(@PathVariable UUID id,
-                                      @Valid @RequestBody NewCustomerDto updateDto) {
-        return customerService.updateCustomer(id, updateDto);
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @Valid @RequestBody NewCustomerDto updateDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(id, updateDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable UUID id) {
+    public ResponseEntity<CustomerDto> deleteCustomer(@PathVariable UUID id) {
         customerService.softDelete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
