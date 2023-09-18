@@ -64,21 +64,23 @@ public class LocationService {
     }
 
     public void addRestaurantToLocation(Set<RestaurantDto> restaurants, Location location) {
-        for (RestaurantDto restaurant : restaurants) {
-
-            Optional<Restaurant> selectedRestaurant = restaurantRepository.findById(restaurant.id());
-            Restaurant mappedRestaurant = restaurantMapper.dtoToRestaurant(selectedRestaurant);
-
-            if (selectedRestaurant.isEmpty()) {
-                restaurantRepository.save(mappedRestaurant);
-                location.assignRestaurant(mappedRestaurant);
-
-            } else if (!location.getRestaurants().contains(selectedRestaurant.get())) {
-                location.assignRestaurant(selectedRestaurant.get());
-
-            }
-        }
+        restaurants.stream()
+                .map(this::getOrSaveRestaurant)
+                .filter(restaurant -> !location.getRestaurants().contains(restaurant))
+                .forEach(location::assignRestaurant);
     }
+
+    private Restaurant getOrSaveRestaurant(RestaurantDto restaurantDto) {
+        return restaurantRepository.findById(restaurantDto.id())
+                .orElseGet(() -> {
+                    Restaurant newRestaurant = restaurantMapper.dtoToRestaurant(restaurantDto);
+                    restaurantRepository.save(newRestaurant);
+                    return newRestaurant;
+                });
+    }
+
+
+
 
     public void deleteLocation(UUID id) {
         locationRepository.delete(locationMapper.dtoToLocation(id));
