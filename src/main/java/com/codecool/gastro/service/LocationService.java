@@ -2,19 +2,15 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
-import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Location;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.LocationMapper;
-import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 

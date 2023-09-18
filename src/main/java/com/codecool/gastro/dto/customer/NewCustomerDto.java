@@ -4,7 +4,6 @@ import com.codecool.gastro.controller.validation.Unoccupied;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 

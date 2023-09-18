@@ -2,7 +2,6 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.businesshour.BusinessHourDto;
 import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
@@ -10,7 +9,6 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
