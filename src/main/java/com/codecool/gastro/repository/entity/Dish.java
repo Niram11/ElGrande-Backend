@@ -16,13 +16,12 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Field cannot be empty")
-    @Size(min = 3, message = "Field must have at least 3 characters")
+    @NotBlank(message = "Dish name cannot be empty")
     @Pattern(regexp = REGEX_FOR_DISH,
-            message = "Field must contain only letters and not start with number or whitespace")
+            message = "Dish must contain only letters and not start with number or whitespace")
     private String dishName;
 
-    @NotNull(message = "Field must not be null")
+    @NotNull(message = "Price cannot be null")
     @Positive(message = "Price must be a positive number")
     private BigDecimal price;
 

@@ -1,6 +1,8 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -13,7 +15,9 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @NotNull(message = "Latitude cannot be null")
     private BigDecimal latitude;
+    @NotNull(message = "Longitude cannot be null")
     private BigDecimal longitude;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();

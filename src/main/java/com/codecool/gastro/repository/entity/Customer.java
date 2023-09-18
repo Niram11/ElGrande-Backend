@@ -24,16 +24,17 @@ public class Customer {
     @Size(min=3)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Surname cannot be empty")
     private String surname;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email")
+    @Column(unique = true)
     private String email;
 
     private LocalDate submissionTime;
 
-    @NotBlank
+    @NotBlank(message = "Password hash cannot be empty")
     private String passwordHash;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();

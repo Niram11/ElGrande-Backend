@@ -6,6 +6,8 @@ import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.service.DishService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,43 +25,46 @@ public class DishController {
     }
 
     @GetMapping
-    public List<DishDto> getDishes() {
-        return dishService.getAllDishes();
+    public ResponseEntity<List<DishDto>> getDishes() {
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getAllDishes());
     }
 
     @GetMapping("/{id}")
-    public DishDto getDish(@PathVariable UUID id) {
-        return dishService.getDishBy(id);
+    public ResponseEntity<DishDto> getDish(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(dishService.getDishBy(id));
     }
 
     @GetMapping(params = {"restaurantId"})
-    public List<DishDto> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return dishService.getDishesByRestaurant(restaurantId);
+    public ResponseEntity<List<DishDto>> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(dishService.getDishesByRestaurant(restaurantId));
     }
 
     @PostMapping
-    public DishDto createNewDish(@Valid @RequestBody NewDishDto newDishDto) {
-        return dishService.saveNewDish(newDishDto);
+    public ResponseEntity<DishDto> createNewDish(@Valid @RequestBody NewDishDto newDishDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dishService.saveNewDish(newDishDto));
     }
 
     @PutMapping("/{id}")
-    public DishDto updateDish(@PathVariable UUID id, @Valid @RequestBody NewDishDto newDishDto) {
-        return dishService.updateDish(id, newDishDto);
+    public ResponseEntity<DishDto> updateDish(@PathVariable UUID id, @Valid @RequestBody NewDishDto newDishDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dishService.updateDish(id, newDishDto));
     }
 
     @PutMapping("/{id}/ingredients")
-    public void assignIngredientToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewIngredientDto> ingredients) {
+    public ResponseEntity<DishDto> assignIngredientToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewIngredientDto> ingredients) {
         dishService.assignIngredientToDish(id, ingredients);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{id}/dish-categories")
-    public void assignDishCategoryToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewDishCategoryDto> categories) {
+    public ResponseEntity<DishDto> assignDishCategoryToDish(@PathVariable UUID id, @Valid @RequestBody Set<NewDishCategoryDto> categories) {
         dishService.assignDishCategoryToDish(id, categories);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDish(@PathVariable UUID id) {
+    public ResponseEntity<DishDto> deleteDish(@PathVariable UUID id) {
         dishService.deleteDish(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

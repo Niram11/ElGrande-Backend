@@ -13,7 +13,7 @@ public class DishCategory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "dish category cannot be empty")
+    @NotBlank(message = "Dish category cannot be empty")
     @Column(unique = true)
     private String category;
 

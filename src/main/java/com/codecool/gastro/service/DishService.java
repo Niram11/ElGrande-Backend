@@ -3,14 +3,14 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
+import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.DishRepository;
 import com.codecool.gastro.repository.entity.Dish;
-import com.codecool.gastro.repository.entity.Ingredient;
 import com.codecool.gastro.repository.entity.DishCategory;
-import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.Ingredient;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
@@ -100,7 +100,7 @@ public class DishService {
             Ingredient mappedIngredient = ingredientMapper.dtoToIngredient(ingredient);
 
             if (ingredientOptional.isEmpty()) {
-
+                mappedIngredient.setName(mappedIngredient.getName().toLowerCase());
                 ingredientRepository.save(mappedIngredient);
                 dish.assignIngredient(mappedIngredient);
 
@@ -118,7 +118,7 @@ public class DishService {
             DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
 
             if (dishCategory.isEmpty()) {
-
+                mappedDishCategory.setCategory(mappedDishCategory.getCategory().toLowerCase());
                 dishCategoryRepository.save(mappedDishCategory);
                 dish.assignCategories(mappedDishCategory);
 

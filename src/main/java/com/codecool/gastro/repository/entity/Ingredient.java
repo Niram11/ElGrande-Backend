@@ -17,10 +17,9 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Field cannot be empty")
-    @Size(min = 3, message = "Field must have at least 3 characters")
+    @NotBlank(message = "Name cannot be empty")
     @Pattern(regexp = REGEX_FOR_INGREDIENT,
-            message = "Field must contain only letters and not start with number or whitespace")
+            message = "Name must contain only letters and not start with number or whitespace")
     @Column(unique = true)
     private String name;
 

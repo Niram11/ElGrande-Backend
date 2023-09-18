@@ -25,7 +25,8 @@ public class ErrorHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidArgument(MethodArgumentNotValidException ex) {
-        String errMsg = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(" | "));
+        String errMsg = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(" | "));
 
         return new ErrorResponse(errMsg);
     }
@@ -51,7 +52,7 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    public record ErrorResponse(String info) {
+    public record ErrorResponse(String errorMessage) {
 
     }
 }

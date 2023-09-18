@@ -5,6 +5,8 @@ import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.RestaurantService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +23,13 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantDto> getAllRestaurants() {
-        return restaurantService.getRestaurants();
+    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurants());
     }
 
     @GetMapping("/{id}")
-    public RestaurantDto getRestaurant(@PathVariable UUID id) {
-        return restaurantService.getRestaurantBy(id);
-    }
-    @GetMapping("/{id}/business-hours")
-    public RestaurantDto getRestaurantBusinessHours(@PathVariable UUID id) {
-        return restaurantService.getRestaurantBy(id);
+    public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(restaurantService.getRestaurantById(id));
     }
 
     @GetMapping(params = "top")
@@ -40,17 +38,18 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public RestaurantDto createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
-        return restaurantService.saveNewRestaurant(newRestaurantDto);
+    public ResponseEntity<RestaurantDto> createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.saveNewRestaurant(newRestaurantDto));
     }
 
     @PutMapping("/{id}")
-    public RestaurantDto updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {
-        return restaurantService.updateRestaurant(id, newRestaurantDto);
+    public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.updateRestaurant(id, newRestaurantDto));
     }
 
     @DeleteMapping("/{id}")
-    public void softDeleteRestaurant(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantDto> softDeleteRestaurant(@PathVariable UUID id) {
         restaurantService.softDelete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

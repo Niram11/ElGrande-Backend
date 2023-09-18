@@ -2,9 +2,9 @@ package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,8 +20,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query("SELECT res from Restaurant res where res.id = :id and res.isDeleted = false ")
     Optional<Restaurant> findById(UUID id);
 
-    @Query("select res from Restaurant res where res.name = :name")
-    Optional<Restaurant> findByName(String name);
 
     @Query(value =
             "SELECT " +

@@ -4,6 +4,8 @@ import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.service.IngredientService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,27 +23,28 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<IngredientDto> getAllIngredients() {
-        return ingredientService.getAllIngredients();
+    public ResponseEntity<List<IngredientDto>> getAllIngredients() {
+        return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getAllIngredients());
     }
 
     @GetMapping("/{id}")
-    public IngredientDto getIngredient(@PathVariable UUID id) {
-        return ingredientService.getIngredientBy(id);
+    public ResponseEntity<IngredientDto> getIngredient(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(ingredientService.getIngredientBy(id));
     }
 
     @PostMapping
-    public IngredientDto createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
-        return ingredientService.saveNewIngredient(newIngredientDto);
+    public ResponseEntity<IngredientDto> createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.saveNewIngredient(newIngredientDto));
     }
 
     @PutMapping("/{id}")
-    public IngredientDto updateIngredient(@PathVariable UUID id, @Valid @RequestBody NewIngredientDto newIngredientDto){
-        return ingredientService.updateIngredient(id, newIngredientDto);
+    public ResponseEntity<IngredientDto> updateIngredient(@PathVariable UUID id, @Valid @RequestBody NewIngredientDto newIngredientDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.updateIngredient(id, newIngredientDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteIngredient(@PathVariable UUID id) {
+    public ResponseEntity<IngredientDto> deleteIngredient(@PathVariable UUID id) {
         ingredientService.deleteIngredient(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

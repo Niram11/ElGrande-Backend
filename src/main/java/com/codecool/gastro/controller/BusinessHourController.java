@@ -4,6 +4,8 @@ import com.codecool.gastro.dto.businesshour.BusinessHourDto;
 import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.service.BusinessHourService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,33 +22,34 @@ public class BusinessHourController {
     }
 
     @GetMapping
-    public List<BusinessHourDto> getAllBusinessHours() {
-        return businessHourService.getBusinessHours();
+    public ResponseEntity<List<BusinessHourDto>> getAllBusinessHours() {
+        return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHours());
     }
 
     @GetMapping("/{id}")
-    public BusinessHourDto getBusinessHour(@PathVariable UUID id) {
-        return businessHourService.getBusinessHourBy(id);
+    public ResponseEntity<BusinessHourDto> getBusinessHour(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(businessHourService.getBusinessHourBy(id));
     }
 
     @GetMapping(params = {"restaurantId"})
-    public List<BusinessHourDto> getBusinessHoursByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
-        return businessHourService.getBusinessHoursByRestaurantId(restaurantId);
+    public ResponseEntity<List<BusinessHourDto>> getBusinessHoursByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(businessHourService.getBusinessHoursByRestaurantId(restaurantId));
     }
 
     @PostMapping
-    public BusinessHourDto createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
-        return businessHourService.saveNewBusinessHour(newBusinessHourDto);
+    public ResponseEntity<BusinessHourDto> createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveNewBusinessHour(newBusinessHourDto));
     }
 
     @PutMapping("/{id}")
-    public BusinessHourDto updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
-        return businessHourService.updateBusinessHour(id, newBusinessHourDto);
+    public ResponseEntity<BusinessHourDto> updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.updateBusinessHour(id, newBusinessHourDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBusinessHour(@PathVariable UUID id) {
+    public ResponseEntity<BusinessHourDto> deleteBusinessHour(@PathVariable UUID id) {
         businessHourService.deleteBusinessHour(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
