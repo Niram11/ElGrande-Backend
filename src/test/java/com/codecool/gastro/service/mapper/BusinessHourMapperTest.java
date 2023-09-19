@@ -3,7 +3,6 @@ package com.codecool.gastro.service.mapper;
 import com.codecool.gastro.dto.businesshour.BusinessHourDto;
 import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.repository.entity.BusinessHour;
-import com.codecool.gastro.repository.entity.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
