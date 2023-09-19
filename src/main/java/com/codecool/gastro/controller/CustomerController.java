@@ -30,12 +30,12 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getCustomerBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerBy(id));
     }
 
     @GetMapping("/{id}/details")
     public ResponseEntity<DetailedCustomerDto> getDetailedCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getDetailedCustomerBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerBy(id));
     }
 
     @PostMapping

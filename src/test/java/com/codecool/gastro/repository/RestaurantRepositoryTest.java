@@ -23,7 +23,7 @@ class RestaurantRepositoryTest {
         List<Restaurant> list = repository.findAll();
 
         // test
-        assertEquals(list.size(), 2);
+        assertEquals(list.size(), 3);
     }
 
     @Test
@@ -68,7 +68,7 @@ class RestaurantRepositoryTest {
 
 
     @Test
-    void testSave_ShouldReturnSameEntityAndRestaurant_WhenSavingValidRestaurant() {
+    void testSave_ShouldReturnSameEntity_WhenProvidingValidData() {
         // given
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Kacper");

@@ -29,7 +29,7 @@ public class DishCategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DishCategoryDto> getCategory(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(dishCategoryService.getDishCategoryById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(dishCategoryService.getDishCategoryById(id));
     }
 
     @PostMapping

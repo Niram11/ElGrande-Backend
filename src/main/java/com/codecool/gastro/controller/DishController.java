@@ -31,12 +31,12 @@ public class DishController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DishDto> getDish(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(dishService.getDishBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishBy(id));
     }
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<DishDto>> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(dishService.getDishesByRestaurant(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishesByRestaurant(restaurantId));
     }
 
     @PostMapping

@@ -27,7 +27,7 @@ public class BusinessHourService {
                 .toList();
     }
 
-    public BusinessHourDto getBusinessHourBy(UUID id) {
+    public BusinessHourDto getBusinessHourById(UUID id) {
         return businessHourRepository.findById(id)
                 .map(businessHourMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));

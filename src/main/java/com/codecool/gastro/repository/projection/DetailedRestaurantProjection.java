@@ -12,4 +12,12 @@ public interface DetailedRestaurantProjection {
     String getContactEmail();
     String[] getImagesPaths();
     BigDecimal getAverageGrade();
+    void setId(UUID id);
+    void setName(String name);
+    void setDescription(String description);
+    void setWebsite(String website);
+    void setContactNumber(Integer contactNumber);
+    void setContactEmail(String contactEmail);
+    void setImagesPaths(String[] imagesPaths);
+    void setAverageGrade(BigDecimal averageGrade);
 }

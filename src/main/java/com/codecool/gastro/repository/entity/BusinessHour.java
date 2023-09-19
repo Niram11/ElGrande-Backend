@@ -17,12 +17,15 @@ public class BusinessHour {
     @Min(value = 1, message = "Day of week must be greater then or equal 1")
     @Max(value = 7, message = "Day of week must be less then or equal 7")
     @NotNull(message = "Day of week cannot be null")
+    @Column(nullable = false)
     private Integer dayOfWeek;
 
     @NotNull(message = "Opening hour cannot be empty")
+    @Column(nullable = false)
     private LocalTime openingHour;
 
     @NotNull(message = "Closing hour cannot be empty")
+    @Column(nullable = false)
     private LocalTime closingHour;
     @ManyToOne
     @JoinColumn(nullable = false)

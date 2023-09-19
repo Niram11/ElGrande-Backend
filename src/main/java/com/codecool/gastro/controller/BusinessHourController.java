@@ -28,12 +28,12 @@ public class BusinessHourController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BusinessHourDto> getBusinessHour(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(businessHourService.getBusinessHourBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHourById(id));
     }
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<BusinessHourDto>> getBusinessHoursByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(businessHourService.getBusinessHoursByRestaurantId(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHoursByRestaurantId(restaurantId));
     }
 
     @PostMapping

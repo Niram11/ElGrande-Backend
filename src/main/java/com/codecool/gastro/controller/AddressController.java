@@ -28,17 +28,18 @@ public class AddressController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.getAddressBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddressById(id));
     }
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<AddressDto> getAddressByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.getAddressByRestaurantId(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddressByRestaurantId(restaurantId));
     }
 
     @PostMapping
     public ResponseEntity<AddressDto> createNewAddress(@Valid @RequestBody NewAddressDto newAddressDto) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.saveAddress(newAddressDto));
+        AddressDto addressDto = addressService.saveNewAddress(newAddressDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
     }
 
     @PutMapping("/{id}")

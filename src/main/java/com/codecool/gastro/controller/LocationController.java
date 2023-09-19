@@ -30,7 +30,7 @@ public class LocationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LocationDto> getLocation(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(locationsService.getLocationBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocationBy(id));
     }
 
     @PostMapping

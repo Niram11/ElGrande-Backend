@@ -29,12 +29,12 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(restaurantService.getRestaurantById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
 
     @GetMapping(params = "top")
-    public List<DetailedRestaurantDto> getTopRestaurantsDetailed(@RequestParam("top") int quantity) {
-        return restaurantService.getTopRestaurants(quantity);
+    public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(@RequestParam("top") int quantity) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getTopRestaurants(quantity));
     }
 
     @PostMapping
