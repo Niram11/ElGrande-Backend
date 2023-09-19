@@ -29,12 +29,12 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(reviewService.getReviewBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewBy(id));
     }
 
     @GetMapping(params = "restaurantId")
     public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(reviewService.getReviewsByRestaurant(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByRestaurant(restaurantId));
     }
 
     @PostMapping
