@@ -1,9 +1,11 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -195,5 +200,49 @@ public class RestaurantServiceTest {
     void testSoftDelete_ShouldThrowObjectNotFoundException_WhenSavingNotExistingRestaurant() {
         // test
         assertThrows(ObjectNotFoundException.class, () -> service.softDelete(UUID.randomUUID()));
+    }
+
+    @Test
+    void testGetTopRestaurants_ShouldReturnListOfDetailedRestaurantDto_WhenCalled() {
+        // given
+        int quantity = 2;
+
+        ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+
+        DetailedRestaurantProjection restaurantOne = factory.createProjection(DetailedRestaurantProjection.class);
+        DetailedRestaurantProjection restaurantTwo = factory.createProjection(DetailedRestaurantProjection.class);
+
+        DetailedRestaurantDto restaurantDtoOne = new DetailedRestaurantDto(
+                UUID.randomUUID(),
+                "Name1",
+                "Desc1",
+                "Website1",
+                321321321,
+                "Email@wp.pl1",
+                new String[]{"image1", "image2"},
+                BigDecimal.valueOf(9.3)
+        );
+
+        DetailedRestaurantDto restaurantDtoTwo = new DetailedRestaurantDto(
+                UUID.randomUUID(),
+                "Name2",
+                "Desc2",
+                "Website2",
+                123123123,
+                "Email@wp.pl2",
+                new String[]{"image3", "image4"},
+                BigDecimal.valueOf(9.3)
+        );
+
+        // when
+        when(repository.getTopRestaurants(quantity)).thenReturn(List.of(restaurantOne, restaurantTwo));
+        when(mapper.toDetailedDto(restaurantOne)).thenReturn(restaurantDtoOne);
+        when(mapper.toDetailedDto(restaurantTwo)).thenReturn(restaurantDtoTwo);
+
+        // then
+        List<DetailedRestaurantDto> list = service.getTopRestaurants(2);
+
+        // test
+        assertEquals(2, list.size());
     }
 }
