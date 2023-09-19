@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,10 +41,12 @@ public class AddressControllerTest {
     @Test
     void testGetAllAddresses_ShouldReturnStatusOk_WhenCalled() throws Exception {
         // when
-        when(service.getAddresses()).thenReturn(new ArrayList<>());
+        when(service.getAddresses()).thenReturn(List.of());
 
         // test
-        mockMvc.perform(get("/api/v1/addresses")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/v1/addresses"))
+                .andExpectAll(status().isOk(),
+                        content().json("[]"));
     }
 
     @Test
@@ -62,7 +64,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    void testGetAddressById_ShouldReturnStatusFoundAndAddressDto_WhenAddressExist() throws Exception {
+    void testGetAddressById_ShouldReturnStatusOkAndAddressDto_WhenAddressExist() throws Exception {
         // given
         UUID id = UUID.randomUUID();
         AddressDto addressDto = new AddressDto(id,
@@ -78,7 +80,7 @@ public class AddressControllerTest {
 
         // test
         mockMvc.perform(get("/api/v1/addresses/" + id))
-                .andExpectAll(status().isFound(),
+                .andExpectAll(status().isOk(),
                         jsonPath("$.id").value(addressDto.id().toString()),
                         jsonPath("$.country").value(addressDto.country()),
                         jsonPath("$.city").value(addressDto.city()),
@@ -104,7 +106,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    void testGetAddressByRestaurantId_ShouldReturnStatusFoundAndAddressDto_WhenAddressWithValidRestaurantIdExist() throws Exception {
+    void testGetAddressByRestaurantId_ShouldReturnStatusOkAndAddressDto_WhenAddressWithValidRestaurantIdExist() throws Exception {
         // given
         UUID id = UUID.randomUUID();
         AddressDto addressDto = new AddressDto(id,
@@ -120,7 +122,7 @@ public class AddressControllerTest {
 
         // test
         mockMvc.perform(get("/api/v1/addresses?restaurantId=" + id))
-                .andExpectAll(status().isFound(),
+                .andExpectAll(status().isOk(),
                         jsonPath("$.id").value(addressDto.id().toString()),
                         jsonPath("$.country").value(addressDto.country()),
                         jsonPath("$.city").value(addressDto.city()),
@@ -241,7 +243,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    void testDeleteAddress_ShouldReturnErrorMessage_WhenNoAddress() throws Exception {
+    void testDeleteAddress_ShouldReturnStatusNotFound_WhenNoAddress() throws Exception {
         // given
         UUID id = UUID.randomUUID();
         // when

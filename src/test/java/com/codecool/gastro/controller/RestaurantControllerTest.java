@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -56,7 +57,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testGetRestaurantById_ShouldReturnStatusFoundAndRestaurantDto_WhenRestaurantExist() throws Exception {
+    void testGetRestaurantById_ShouldReturnStatusOkAndRestaurantDto_WhenRestaurantExist() throws Exception {
         // given
         RestaurantDto restaurantDto = new RestaurantDto(
                 UUID.randomUUID(),
@@ -72,7 +73,7 @@ public class RestaurantControllerTest {
 
         // test
         mockMvc.perform(get("/api/v1/restaurants/" + restaurantDto.id()))
-                .andExpectAll(status().isFound(),
+                .andExpectAll(status().isOk(),
                         jsonPath(("$.id")).value(restaurantDto.id().toString()),
                         jsonPath(("$.name")).value(restaurantDto.name()),
                         jsonPath(("$.description")).value(restaurantDto.description()),
@@ -83,7 +84,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testCreateNewRestaurant_ShouldReturnStatusCreatedAndRestaurantDto_WhenProvidedValidDataInBody() throws Exception {
+    void testCreateNewRestaurant_ShouldReturnStatusOkAndRestaurantDto_WhenProvidedValidDataInBody() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
@@ -210,5 +211,20 @@ public class RestaurantControllerTest {
         // test
         mockMvc.perform(delete("/api/v1/restaurants/" + id))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testGetTopRestaurantsDetailed_ShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
+        // given
+        int quantity = 3;
+
+        // when
+        when(service.getTopRestaurants(quantity)).thenReturn(List.of());
+
+        // test
+        mockMvc.perform(get("/api/v1/restaurants?top=" + quantity))
+                .andExpectAll(status().isOk(),
+                        content().json("[]")
+                );
     }
 }
