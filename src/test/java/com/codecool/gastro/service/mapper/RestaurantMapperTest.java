@@ -27,8 +27,10 @@ public class RestaurantMapperTest {
         restaurant.setContactNumber(123123123);
         restaurant.setContactEmail("Email@wp.pl");
 
+        // when
         RestaurantDto restaurantDto = mapper.toDto(restaurant);
 
+        // test
         assertEquals(restaurantDto.id(), restaurant.getId());
         assertEquals(restaurantDto.name(), restaurant.getName());
         assertEquals(restaurantDto.description(), restaurant.getDescription());

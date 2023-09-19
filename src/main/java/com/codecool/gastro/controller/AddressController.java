@@ -28,7 +28,7 @@ public class AddressController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.getAddressBy(id));
+        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.getAddressById(id));
     }
 
     @GetMapping(params = {"restaurantId"})
@@ -38,7 +38,8 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<AddressDto> createNewAddress(@Valid @RequestBody NewAddressDto newAddressDto) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(addressService.saveAddress(newAddressDto));
+        AddressDto addressDto = addressService.saveNewAddress(newAddressDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
     }
 
     @PutMapping("/{id}")

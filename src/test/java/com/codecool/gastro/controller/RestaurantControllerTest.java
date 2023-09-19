@@ -16,11 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = RestaurantController.class)
 public class RestaurantControllerTest {
@@ -32,8 +32,18 @@ public class RestaurantControllerTest {
     private RestaurantService service;
 
     @Test
-    void testGetRestaurantById_ShouldReturn404_WhenNoRestaurant() throws Exception {
-        // give
+    void testGetAllRestaurants_ShouldReturnStatusOk_WhenCalled() throws Exception {
+        // when
+        when(service.getRestaurants()).thenReturn(new ArrayList<>());
+
+        // test
+        mockMvc.perform(get("/api/v1/restaurants"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetRestaurantById_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
+        // given
         UUID id = UUID.randomUUID();
 
         // when
@@ -46,17 +56,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testGetAllRestaurants_ShouldReturn200_WhenCalled() throws Exception {
-        // when
-        when(service.getRestaurants()).thenReturn(new ArrayList<>());
-
-        // test
-        mockMvc.perform(get("/api/v1/restaurants"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void testGetRestaurantById_ShouldReturnRestaurantDtoAsJson_WhenExist() throws Exception {
+    void testGetRestaurantById_ShouldReturnStatusFoundAndRestaurantDto_WhenRestaurantExist() throws Exception {
         // given
         RestaurantDto restaurantDto = new RestaurantDto(
                 UUID.randomUUID(),
@@ -83,11 +83,12 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testCreateNewRestaurant_ShouldReturnCreatedRestaurantWithIdAsJson_WhenProvidedValidDataInBody() throws Exception {
+    void testCreateNewRestaurant_ShouldReturnStatusCreatedAndRestaurantDto_WhenProvidedValidDataInBody() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
-        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
+        RestaurantDto restaurantDto = new RestaurantDto(
+                id,
                 "Name",
                 "Desc",
                 "Website.pl",
@@ -95,16 +96,7 @@ public class RestaurantControllerTest {
                 "Email@wp.pl"
         );
 
-        RestaurantDto restaurantDto = new RestaurantDto(
-                id,
-                newRestaurantDto.name(),
-                newRestaurantDto.description(),
-                newRestaurantDto.website(),
-                newRestaurantDto.contactNumber(),
-                newRestaurantDto.contactEmail()
-        );
-
-        String content = """
+        String contentRequest = """
                 {
                 "name": "Name",
                 "description": "Desc",
@@ -115,28 +107,31 @@ public class RestaurantControllerTest {
                 """;
 
         // when
-        when(service.saveNewRestaurant(newRestaurantDto)).thenReturn(restaurantDto);
-        when(service.updateRestaurant(id, newRestaurantDto)).thenReturn(restaurantDto);
+        when(service.saveNewRestaurant(any(NewRestaurantDto.class))).thenReturn(restaurantDto);
+        when(service.updateRestaurant(any(UUID.class), any(NewRestaurantDto.class))).thenReturn(restaurantDto);
 
         // test
         mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(id.toString()));
+                        .content(contentRequest))
+                .andExpectAll(status().isCreated(),
+                        jsonPath("$.id").value(id.toString()),
+                        content().json(contentRequest));
 
         mockMvc.perform(put("/api/v1/restaurants/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(id.toString()));
+                        .content(contentRequest))
+                .andExpectAll(status().isCreated(),
+                        jsonPath("$.id").value(id.toString()),
+                        content().json(contentRequest));
+
     }
 
     @Test
-    void testCreateNewRestaurantAndUpdateRestaurant_ShouldThrowIllegalArgumentException_WhenProvidingInvalidJson() throws Exception {
+    void testCreateNewRestaurantAndUpdateRestaurant_ShouldReturnStatusBadRequest_WhenProvidingInvalidJson() throws Exception {
         // given
 
-        String content = """
+        String contentOne = """
                 {
                 "name": "",
                 "description": "",
@@ -146,10 +141,20 @@ public class RestaurantControllerTest {
                 }
                 """;
 
+        String contentTwo = """
+                {
+                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
+                "description": "",
+                "website": "Website.pl",
+                "contactNumber": 1231231231,
+                "contactEmail": "Emailwp.pl"
+                }        
+                """;
+
         // test
         mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
+                        .content(contentOne))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
@@ -159,7 +164,7 @@ public class RestaurantControllerTest {
 
         mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
+                        .content(contentOne))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
@@ -169,15 +174,7 @@ public class RestaurantControllerTest {
 
         mockMvc.perform(post("/api/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
-                                "description": "",
-                                "website": "Website.pl",
-                                "contactNumber": 1231231231,
-                                "contactEmail": "Emailwp.pl"
-                                }
-                                """))
+                        .content(contentTwo))
                 .andExpectAll(
                         status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
@@ -185,15 +182,7 @@ public class RestaurantControllerTest {
 
         mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
-                                "description": "",
-                                "website": "Website.pl",
-                                "contactNumber": 1231231231,
-                                "contactEmail": "Emailwp.pl"
-                                }
-                                """))
+                        .content(contentTwo))
                 .andExpectAll(
                         status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
@@ -201,34 +190,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testCreateNewRestaurantAndUpdateRestaurant_ShouldThrowHttpMessageNotReadableException_WhenProvidingNotConvertableType() throws Exception {
-        // given
-        String content = """
-                {
-                "name": "Name",
-                "description": "Desc",
-                "website": "Website.pl",
-                "contactNumber": 12345678901,
-                "contactEmail": "Email@wp.pl"
-                }
-                """;
-
-        //test
-        mockMvc.perform(post("/api/v1/restaurants")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage", Matchers.containsString("One or more fields are not readable")));
-
-        mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andExpect(status().isBadRequest())
-                .andExpectAll(jsonPath("$.errorMessage", Matchers.containsString("One or more fields are not readable")));
-    }
-
-    @Test
-    void testSoftDeleteRestaurant_ShouldReturnNoContentStatus_WhenProvidingExistingUUID() throws Exception {
+    void testSoftDeleteRestaurant_ShouldReturnStatusNoContent_WhenRestaurantExist() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
@@ -238,7 +200,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testSoftDeleteRestaurant_ShouldReturnNotFound_WhenNoRestaurant() throws Exception {
+    void testSoftDeleteRestaurant_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 

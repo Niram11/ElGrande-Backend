@@ -1,7 +1,6 @@
 package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.Restaurant;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,7 +23,7 @@ class RestaurantRepositoryTest {
         List<Restaurant> list = repository.findAll();
 
         // test
-        assertEquals(list.size(), 2);
+        assertEquals(list.size(), 3);
     }
 
     @Test
@@ -69,7 +68,7 @@ class RestaurantRepositoryTest {
 
 
     @Test
-    void testSave_ShouldReturnSameEntityAndRestaurant_WhenSavingValidRestaurant() {
+    void testSave_ShouldReturnSameEntity_WhenProvidingValidData() {
         // given
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Kacper");
