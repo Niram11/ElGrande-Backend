@@ -1,10 +1,6 @@
 package com.codecool.gastro.dto.customer;
 
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.Set;

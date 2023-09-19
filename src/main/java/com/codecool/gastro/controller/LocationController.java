@@ -2,7 +2,6 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
-import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.LocationService;
 import jakarta.validation.Valid;

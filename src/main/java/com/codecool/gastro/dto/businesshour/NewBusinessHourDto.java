@@ -3,7 +3,6 @@ package com.codecool.gastro.dto.businesshour;
 import com.codecool.gastro.controller.validation.RestaurantExist;
 import com.codecool.gastro.controller.validation.TimeFormat;
 import jakarta.validation.constraints.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalTime;
 import java.util.UUID;

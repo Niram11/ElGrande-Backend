@@ -3,19 +3,14 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
-import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service

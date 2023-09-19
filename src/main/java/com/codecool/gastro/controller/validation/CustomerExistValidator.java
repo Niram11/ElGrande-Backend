@@ -1,7 +1,6 @@
 package com.codecool.gastro.controller.validation;
 
 import com.codecool.gastro.repository.CustomerRepository;
-import com.codecool.gastro.repository.RestaurantRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,5 @@
 package com.codecool.gastro.repository;
 
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
 import com.codecool.gastro.repository.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

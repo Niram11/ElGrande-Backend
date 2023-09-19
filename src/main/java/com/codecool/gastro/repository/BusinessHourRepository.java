@@ -1,8 +1,6 @@
 package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.BusinessHour;
-import com.codecool.gastro.repository.entity.Location;
-import com.codecool.gastro.repository.entity.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
