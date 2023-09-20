@@ -5,10 +5,12 @@ import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 
+import java.util.List;
+
 public record NewFormDto(
-        NewRestaurantDto newRestaurantDto,
-        NewLocationDto newLocationDto,
-        NewBusinessHourDto newBusinessHourDto,
-        NewAddressDto newAddressDto
+        NewRestaurantDto restaurant,
+        NewLocationDto location,
+        List<NewBusinessHourDto> businessHour,
+        NewAddressDto address
 ) {
 }
