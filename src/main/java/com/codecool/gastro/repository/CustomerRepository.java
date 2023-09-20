@@ -25,7 +25,7 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
             "array_agg(cr.restaurants_id) as restaurants, ow.id as ownershipId " +
             "from customer as cus left join ownership as ow on cus.id = ow.customer_id " +
             "left join public.customer_restaurants cr on cus.id = cr.customer_id " +
-            "group by cus.id, ow.id")
+            "where cus.id = :id group by cus.id, ow.id")
     Optional<DetailedCustomerProjection> findDetailedById(UUID id);
 
 }

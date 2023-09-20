@@ -149,7 +149,7 @@ public class RestaurantControllerTest {
                 "website": "Website.pl",
                 "contactNumber": 1231231231,
                 "contactEmail": "Emailwp.pl"
-                }        
+                }    
                 """;
 
         // test

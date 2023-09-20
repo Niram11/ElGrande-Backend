@@ -12,7 +12,6 @@ public record CustomerDto(
         String surname,
         String email,
         LocalDate submissionTime,
-        String passwordHash,
         Set<RestaurantDto> restaurants
 ) {
 }
