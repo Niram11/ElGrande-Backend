@@ -29,7 +29,7 @@ public class IngredientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<IngredientDto> getIngredient(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(ingredientService.getIngredientBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getIngredientBy(id));
     }
 
     @PostMapping

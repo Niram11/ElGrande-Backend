@@ -1,9 +1,11 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +26,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith({MockitoExtension.class})
+@ExtendWith(MockitoExtension.class)
 public class RestaurantServiceTest {
     @InjectMocks
     RestaurantService service;
@@ -33,7 +38,7 @@ public class RestaurantServiceTest {
     RestaurantMapper mapper;
 
     @Test
-    void testGetRestaurant_ShouldReturnEmptyList_WhenNoRestaurant() {
+    void testGetRestaurants_ShouldReturnEmptyList_WhenNoRestaurant() {
         // when
         when(repository.findAll()).thenReturn(List.of());
 
@@ -42,44 +47,32 @@ public class RestaurantServiceTest {
 
         // test
         assertEquals(0, list.size());
+        verify(repository, times(1)).findAll();
     }
 
     @Test
     void testGetRestaurants_ShouldReturnListOfRestaurantDto_WhenRestaurantsExist() {
         // given
-        Restaurant restaurantOne = new Restaurant();
-        restaurantOne.setId(UUID.randomUUID());
-        restaurantOne.setName("Kacper");
-        restaurantOne.setDescription("KacperT");
-        restaurantOne.setWebsite("Kacper.com");
-        restaurantOne.setContactNumber(123123123);
-        restaurantOne.setContactEmail("kacper@wp.pl");
-
-        Restaurant restaurantTwo = new Restaurant();
-        restaurantOne.setId(UUID.randomUUID());
-        restaurantTwo.setName("Tomek");
-        restaurantTwo.setDescription("TomekK");
-        restaurantTwo.setWebsite("Tomek.com");
-        restaurantTwo.setContactNumber(789789789);
-        restaurantTwo.setContactEmail("tomek@gmail.com");
-
         RestaurantDto restaurantDtoOne = new RestaurantDto(
-                restaurantOne.getId(),
-                restaurantOne.getName(),
-                restaurantOne.getDescription(),
-                restaurantOne.getWebsite(),
-                restaurantOne.getContactNumber(),
-                restaurantOne.getContactEmail()
+                UUID.randomUUID(),
+                "Tomek",
+                "test2",
+                "test.pl",
+                321,
+                "test@wp.pl"
         );
 
         RestaurantDto restaurantDtoTwo = new RestaurantDto(
-                restaurantTwo.getId(),
-                restaurantTwo.getName(),
-                restaurantTwo.getDescription(),
-                restaurantTwo.getWebsite(),
-                restaurantTwo.getContactNumber(),
-                restaurantTwo.getContactEmail()
+                UUID.randomUUID(),
+                "Kacper",
+                "test",
+                "test.www",
+                123,
+                "test@gmial.com"
         );
+
+        Restaurant restaurantOne = new Restaurant();
+        Restaurant restaurantTwo = new Restaurant();
 
         // when
         when(repository.findAll()).thenReturn(List.of(restaurantOne, restaurantTwo));
@@ -93,12 +86,11 @@ public class RestaurantServiceTest {
         assertEquals(List.of(restaurantDtoOne, restaurantDtoTwo), restaurantList);
 
         verify(repository, times(1)).findAll();
-        verify(mapper, times(1)).toDto(restaurantOne);
-        verify(mapper, times(1)).toDto(restaurantTwo);
+        verify(mapper, times(2)).toDto(any(Restaurant.class));
     }
 
     @Test
-    void testGetRestaurantById_ShouldReturnRestaurantDto_WhenCalledWithValidUUID() {
+    void testGetRestaurantById_ShouldReturnRestaurantDto_WhenRestaurantExist() {
         // given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(UUID.randomUUID());
@@ -113,15 +105,17 @@ public class RestaurantServiceTest {
         );
 
         // when
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(restaurant));
+        when(repository.findById(restaurant.getId())).thenReturn(Optional.of(restaurant));
         when(mapper.toDto(any(Restaurant.class))).thenReturn(restaurantDto);
 
         // test
         assertEquals(restaurant.getId(), service.getRestaurantById(restaurant.getId()).id());
+        verify(repository, times(1)).findById(any(UUID.class));
+        verify(mapper, times(1)).toDto(any(Restaurant.class));
     }
 
     @Test
-    void testGetRestaurantById_ShouldThrowObjectNotFoundException_WhenCalledWithInvalidUUID() {
+    void testGetRestaurantById_ShouldThrowObjectNotFoundException_WhenNoRestaurant() {
         // test
         assertThrows(ObjectNotFoundException.class, () -> service.getRestaurantById(UUID.randomUUID()));
     }
@@ -166,7 +160,9 @@ public class RestaurantServiceTest {
 
         // test
         assertEquals(savedNewRestaurant, restaurantDto);
-        verify(repository, times(1)).save(restaurant);
+        verify(mapper, times(1)).dtoToRestaurant(any(NewRestaurantDto.class));
+        verify(repository, times(1)).save(any(Restaurant.class));
+        verify(mapper, times(1)).toDto(any(Restaurant.class));
     }
 
     @Captor
@@ -191,6 +187,7 @@ public class RestaurantServiceTest {
 
         // test
         verify(repository, times(1)).save(captor.capture());
+        verify(repository, times(1)).findById(restaurant.getId());
         assertEquals(captor.getValue().getName(), "*".repeat(restaurant.getName().length()));
         assertEquals(captor.getValue().getDescription(), "*".repeat(restaurant.getDescription().length()));
         assertEquals(captor.getValue().getWebsite(), "*".repeat(restaurant.getWebsite().length()));
@@ -203,5 +200,49 @@ public class RestaurantServiceTest {
     void testSoftDelete_ShouldThrowObjectNotFoundException_WhenSavingNotExistingRestaurant() {
         // test
         assertThrows(ObjectNotFoundException.class, () -> service.softDelete(UUID.randomUUID()));
+    }
+
+    @Test
+    void testGetTopRestaurants_ShouldReturnListOfDetailedRestaurantDto_WhenCalled() {
+        // given
+        int quantity = 2;
+
+        ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+
+        DetailedRestaurantProjection restaurantOne = factory.createProjection(DetailedRestaurantProjection.class);
+        DetailedRestaurantProjection restaurantTwo = factory.createProjection(DetailedRestaurantProjection.class);
+
+        DetailedRestaurantDto restaurantDtoOne = new DetailedRestaurantDto(
+                UUID.randomUUID(),
+                "Name1",
+                "Desc1",
+                "Website1",
+                321321321,
+                "Email@wp.pl1",
+                new String[]{"image1", "image2"},
+                BigDecimal.valueOf(9.3)
+        );
+
+        DetailedRestaurantDto restaurantDtoTwo = new DetailedRestaurantDto(
+                UUID.randomUUID(),
+                "Name2",
+                "Desc2",
+                "Website2",
+                123123123,
+                "Email@wp.pl2",
+                new String[]{"image3", "image4"},
+                BigDecimal.valueOf(9.3)
+        );
+
+        // when
+        when(repository.getTopRestaurants(quantity)).thenReturn(List.of(restaurantOne, restaurantTwo));
+        when(mapper.toDetailedDto(restaurantOne)).thenReturn(restaurantDtoOne);
+        when(mapper.toDetailedDto(restaurantTwo)).thenReturn(restaurantDtoTwo);
+
+        // then
+        List<DetailedRestaurantDto> list = service.getTopRestaurants(2);
+
+        // test
+        assertEquals(2, list.size());
     }
 }

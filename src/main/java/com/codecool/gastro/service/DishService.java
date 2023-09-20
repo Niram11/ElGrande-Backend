@@ -3,7 +3,6 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
-import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.DishCategoryRepository;

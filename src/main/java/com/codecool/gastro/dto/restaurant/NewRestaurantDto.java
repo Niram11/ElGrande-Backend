@@ -1,9 +1,6 @@
 package com.codecool.gastro.dto.restaurant;
 
 import jakarta.validation.constraints.*;
-import org.springframework.format.annotation.NumberFormat;
-
-import java.util.UUID;
 
 public record NewRestaurantDto(
 

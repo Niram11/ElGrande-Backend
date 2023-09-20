@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +30,12 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getCustomerBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerBy(id));
     }
 
     @GetMapping("/{id}/details")
     public ResponseEntity<DetailedCustomerDto> getDetailedCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(customerService.getDetailedCustomerBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerBy(id));
     }
 
     @PostMapping

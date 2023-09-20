@@ -2,9 +2,6 @@ package com.codecool.gastro.dto.review;
 
 import com.codecool.gastro.controller.validation.CustomerExist;
 import com.codecool.gastro.controller.validation.RestaurantExist;
-import com.codecool.gastro.repository.entity.Restaurant;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

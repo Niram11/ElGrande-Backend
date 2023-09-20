@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.entity.Location;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.UUID;
 

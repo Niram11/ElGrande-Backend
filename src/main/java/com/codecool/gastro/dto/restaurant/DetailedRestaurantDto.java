@@ -1,7 +1,5 @@
 package com.codecool.gastro.dto.restaurant;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.validation.constraints.Email;
 
 import java.math.BigDecimal;
 import java.util.UUID;

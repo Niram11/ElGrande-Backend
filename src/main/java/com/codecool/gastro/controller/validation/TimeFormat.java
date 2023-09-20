@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TimeFormat {
-    String message() default "Time must be in format HH:MM";
+    String message() default "Time must be in format HH:mm";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -28,7 +28,7 @@ public class PromotedLocalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PromotedLocalDto> getPromotedLocal(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(promotedLocalService.getPromotedLocalBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(promotedLocalService.getPromotedLocalBy(id));
     }
 
     @PostMapping

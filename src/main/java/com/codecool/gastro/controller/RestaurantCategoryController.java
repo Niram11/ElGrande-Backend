@@ -30,7 +30,7 @@ public class RestaurantCategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantCategoryDto> getRestaurantCategory(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(restaurantCategoryService.getRestaurantCategory(id));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantCategoryService.getRestaurantCategory(id));
     }
 
     @PostMapping

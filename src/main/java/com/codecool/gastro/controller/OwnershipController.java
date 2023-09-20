@@ -28,7 +28,7 @@ public class OwnershipController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OwnershipDto> getOwnership(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(ownershipService.getOwnership(id));
+        return ResponseEntity.status(HttpStatus.OK).body(ownershipService.getOwnership(id));
     }
 
     @PostMapping

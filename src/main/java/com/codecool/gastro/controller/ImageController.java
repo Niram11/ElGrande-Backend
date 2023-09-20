@@ -28,12 +28,12 @@ public class ImageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ImageDto> getImage(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(imageService.getImageBy(id));
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageBy(id));
     }
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<ImageDto>> getImagesByRestaurant(@RequestParam("restaurantId") UUID restaurantId){
-        return ResponseEntity.status(HttpStatus.FOUND).body(imageService.getImagesByRestaurant(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImagesByRestaurant(restaurantId));
     }
 
     @PostMapping
