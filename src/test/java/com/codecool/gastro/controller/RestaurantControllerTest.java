@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.entity.Restaurant;
@@ -10,9 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -216,15 +221,49 @@ public class RestaurantControllerTest {
     @Test
     void testGetTopRestaurantsDetailed_ShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
         // given
-        int quantity = 3;
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
+
+        DetailedRestaurantDto detailedRestaurantDto = new DetailedRestaurantDto(
+                UUID.fromString("080aec50-4978-46ae-b7ce-a92cf804e688"),
+                "Przemek",
+                "PrzemekToJa",
+                "Przemek.pl",
+                312312312,
+                "Przemek@xd.pl",
+                new String[]{"xd", "xd1", "xd12", "xd123"},
+                BigDecimal.valueOf(5.7500000000000000)
+        );
+
+        String contentRespond = """
+                [
+                    {
+                        "id": "080aec50-4978-46ae-b7ce-a92cf804e688",
+                        "name": "Przemek",
+                        "description": "PrzemekToJa",
+                        "website": "Przemek.pl",
+                        "contactNumber": 312312312,
+                        "contactEmail": "Przemek@xd.pl",
+                        "imagesPaths": [
+                            "xd",
+                            "xd1",
+                            "xd12",
+                            "xd123"
+                        ],
+                        "averageGrade": 5.7500000000000000
+                    }
+                ]
+                """;
 
         // when
-        when(service.getTopRestaurants(quantity)).thenReturn(List.of());
+        when(service.getDetailedRestaurants(pageable)).thenReturn(List.of(detailedRestaurantDto));
 
         // test
-        mockMvc.perform(get("/api/v1/restaurants?top=" + quantity))
+        mockMvc.perform(get("/api/v1/restaurants")
+                        .param("size", "1")
+                        .param("page", "0")
+                        .param("sort", "name"))
                 .andExpectAll(status().isOk(),
-                        content().json("[]")
+                        content().json(contentRespond)
                 );
     }
 }

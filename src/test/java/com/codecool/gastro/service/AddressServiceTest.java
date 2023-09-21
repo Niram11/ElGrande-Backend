@@ -6,6 +6,7 @@ import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.entity.Address;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.AddressMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,13 +26,36 @@ import static org.mockito.Mockito.*;
 public class AddressServiceTest {
 
     @InjectMocks
-    AddressService service;
+    private AddressService service;
 
     @Mock
-    AddressRepository repository;
+    private AddressRepository repository;
 
     @Mock
-    AddressMapper mapper;
+    private AddressMapper mapper;
+
+
+    private UUID addressId;
+    private UUID restaurantId;
+    private AddressDto addressDto;
+    private Address address;
+    @BeforeEach
+    void setUp() {
+        addressId = UUID.fromString("5d0c91c3-9d20-4e24-84a2-04d420b86bc0");
+        restaurantId = UUID.fromString("88cb2c8d-3156-47be-a81f-b0566c26c5c3");
+
+        addressDto = new AddressDto(
+                addressId,
+                "Poland",
+                "Łódź",
+                "34-450",
+                "Łużycka",
+                "55/2",
+                ""
+        );
+
+        address = new Address();
+    }
 
     @Test
     void testGetAddresses_ShouldReturnEmptyList_WhenNoAddresses() {
@@ -49,15 +73,7 @@ public class AddressServiceTest {
     @Test
     void testGetAddresses_ShouldReturnListOfAddressesDto_WhenAddressesExist() {
         // given
-        AddressDto addressDtoOne = new AddressDto(
-                UUID.randomUUID(),
-                "Poland",
-                "Łódź",
-                "34-450",
-                "Łużycka",
-                "55/2",
-                ""
-        );
+        AddressDto addressDtoOne = addressDto;
 
         AddressDto addressDtoTwo = new AddressDto(
                 UUID.randomUUID(),
@@ -69,7 +85,7 @@ public class AddressServiceTest {
                 ""
         );
 
-        Address addressOne = new Address();
+        Address addressOne = address;
         Address addressTwo = new Address();
 
         // when
@@ -89,18 +105,7 @@ public class AddressServiceTest {
     @Test
     void testGetAddressById_ShouldReturnAddressDto_WhenAddressExist() {
         // given
-        Address address = new Address();
-        address.setId(UUID.randomUUID());
-
-        AddressDto addressDto = new AddressDto(
-                address.getId(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+        address.setId(addressId);
 
         // when
         when(repository.findById(address.getId())).thenReturn(Optional.of(address));
@@ -124,19 +129,7 @@ public class AddressServiceTest {
     @Test
     void testGetAddressByRestaurantId_ShouldReturnAddressDto_WhenAddressExist() {
         // given
-        UUID restaurantId = UUID.randomUUID();
-        Address address = new Address();
-        address.setId(UUID.randomUUID());
-
-        AddressDto addressDto = new AddressDto(
-                address.getId(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+        address.setId(addressId);
 
         // when
         when(repository.findByRestaurantId(restaurantId)).thenReturn(Optional.of(address));
@@ -161,9 +154,6 @@ public class AddressServiceTest {
     @Test
     void testSaveNewAddressAndUpdateAddress_ShouldReturnAddressDto_WhenSavingAnInstance() {
         // given
-        UUID restaurantId = UUID.randomUUID();
-        UUID addressId = UUID.randomUUID();
-
         NewAddressDto newAddressDto = new NewAddressDto(
                 "Poland",
                 "Gdańsk",
@@ -173,18 +163,6 @@ public class AddressServiceTest {
                 "",
                 restaurantId
         );
-
-        AddressDto addressDto = new AddressDto(
-                addressId,
-                "Poland",
-                "Gdańsk",
-                "12-345",
-                "Warszawska",
-                "13B/3",
-                ""
-        );
-
-        Address address = new Address();
 
         // when
         when(mapper.dtoToAddress(newAddressDto)).thenReturn(address);
@@ -204,19 +182,16 @@ public class AddressServiceTest {
     @Test
     void testDeleteAddress_ShouldDeleteAddress_WhenCalled() {
         // given
-        UUID id = UUID.randomUUID();
-
-        Address address = new Address();
-        address.setId(id);
+        address.setId(addressId);
 
         // when
-        when(mapper.dtoToAddress(id)).thenReturn(address);
+        when(mapper.dtoToAddress(addressId)).thenReturn(address);
 
         // then
-        service.deleteAddress(id);
+        service.deleteAddress(addressId);
 
         // test
-        verify(mapper, times(1)).dtoToAddress(id);
+        verify(mapper, times(1)).dtoToAddress(addressId);
         verify(repository, times(1)).delete(address);
     }
 

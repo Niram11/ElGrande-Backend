@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CustomerRepositoryTest {
 
     @Autowired
-    CustomerRepository repository;
+    private CustomerRepository repository;
 
     private UUID customerId;
     private String customerEmail;

@@ -37,13 +37,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CustomerControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    CustomerService service;
+    private CustomerService service;
 
     @MockBean
-    CustomerRepository repository;
+    private CustomerRepository repository;
 
     private UUID customerId;
     private UUID restaurantId;

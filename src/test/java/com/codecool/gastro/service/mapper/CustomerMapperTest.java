@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CustomerMapperTest {
 
-    CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
+    private CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
     private UUID customerId;
     private final Customer customer = new Customer();
 

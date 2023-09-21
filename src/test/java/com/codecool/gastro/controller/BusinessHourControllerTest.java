@@ -30,17 +30,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BusinessHourControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    BusinessHourService service;
+    private BusinessHourService service;
 
     @MockBean
-    RestaurantRepository restaurantRepository;
+    private RestaurantRepository restaurantRepository;
 
     private UUID businessHourId;
     private UUID restaurantId;
     private BusinessHourDto businessHourDto;
+    private NewBusinessHourDto newBusinessHourDto;
+    private String contentResponse;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +55,22 @@ public class BusinessHourControllerTest {
                 LocalTime.of(12, 30),
                 LocalTime.of(17, 30)
         );
+
+        newBusinessHourDto = new NewBusinessHourDto(
+                2,
+                LocalTime.of(13, 30),
+                LocalTime.of(18, 30),
+                restaurantId
+        );
+
+        contentResponse = """
+                {
+                    "id": "e7b0b987-fcbd-4ea4-8f97-a1244cb81904",
+                    "dayOfWeek": 1,
+                    "openingHour": "12:30:00",
+                    "closingHour": "17:30:00"
+                }
+                """;
     }
 
     @Test
@@ -124,7 +142,7 @@ public class BusinessHourControllerTest {
                 LocalTime.of(18, 30)
         );
 
-        String contentRespond = """
+        contentResponse = """
                 [
                     {
                         "id": "5ca6ea83-966a-4b4d-8a3a-416bbc5ce567",
@@ -147,35 +165,19 @@ public class BusinessHourControllerTest {
         //test
         mockMvc.perform(get("/api/v1/business-hours?restaurantId=" + restaurantId))
                 .andExpectAll(status().isOk(),
-                        content().json(contentRespond)
+                        content().json(contentResponse)
                 );
     }
 
     @Test
     void testCreateNewBusinessHourAndUpdateBusinessHour_ShouldReturnStatusCreatedAndBusinessHourDto_WhenCalled() throws Exception {
         // given
-        NewBusinessHourDto newBusinessHourDto = new NewBusinessHourDto(
-                2,
-                LocalTime.of(13, 30),
-                LocalTime.of(18, 30),
-                restaurantId
-        );
-
         String contentRequest = """
                 {
                     "dayOfWeek": 2,
                     "openingHour": "13:30",
                     "closingHour": "18:30",
                     "restaurantId": "180d99e9-0dcc-4f64-9ea6-32604f8ffd09"
-                }
-                """;
-
-        String contentResponse = """
-                {
-                    "id": "e7b0b987-fcbd-4ea4-8f97-a1244cb81904",
-                    "dayOfWeek": 1,
-                    "openingHour": "12:30:00",
-                    "closingHour": "17:30:00"
                 }
                 """;
 
@@ -304,5 +306,41 @@ public class BusinessHourControllerTest {
     }
 
     @Test
-    void testCreateMultipleNewBusinessHour_Should
+    void testCreateMultipleNewBusinessHour_ShouldReturnStatusCreatedAndListOfBusinessHour_WhenCalled() throws Exception {
+        // given
+        String contentRequest = """
+                [
+                    {
+                        "dayOfWeek": 2,
+                        "openingHour": "13:30",
+                        "closingHour": "18:30",
+                        "restaurantId": "180d99e9-0dcc-4f64-9ea6-32604f8ffd09"
+                    }
+                ]
+                """;
+
+        contentResponse = """
+                [
+                    {
+                        "id": "e7b0b987-fcbd-4ea4-8f97-a1244cb81904",
+                        "dayOfWeek": 1,
+                        "openingHour": "12:30:00",
+                        "closingHour": "17:30:00"
+                    }
+                ]
+                """;
+
+        // when
+        when(service.saveMultipleNewBusinessHour(List.of(newBusinessHourDto)))
+                .thenReturn(List.of(businessHourDto));
+
+        // test
+        mockMvc.perform(post("/api/v1/business-hours/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentRequest))
+                .andExpectAll(status().isCreated(),
+                        content().json(contentResponse)
+                );
+    }
+
 }

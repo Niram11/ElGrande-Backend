@@ -5,6 +5,8 @@ import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -113,9 +115,9 @@ class RestaurantRepositoryTest {
     }
 
     @Test
-    void testGetTopRestaurants_ShouldReturnListOfDetailedRestaurantProjection_WhenExist() {
+    void testFindAllDetailedRestaurants_ShouldReturnListOfDetailedRestaurantProjection_WhenExist() {
         // then
-        List<DetailedRestaurantProjection> projection = repository.getTopRestaurants(3);
+        List<DetailedRestaurantProjection> projection = repository.findAllDetailedRestaurants(PageRequest.of(0, 3, Sort.by("name")));
 
         // test
         assertEquals(3, projection.size());

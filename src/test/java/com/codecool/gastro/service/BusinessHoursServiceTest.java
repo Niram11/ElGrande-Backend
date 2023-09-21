@@ -7,12 +7,15 @@ import com.codecool.gastro.repository.entity.BusinessHour;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
+import jakarta.transaction.TransactionalException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.xml.transform.TransformerException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,14 +29,42 @@ import static org.mockito.Mockito.*;
 public class BusinessHoursServiceTest {
 
     @InjectMocks
-    BusinessHourService service;
+    private BusinessHourService service;
 
     @Mock
-    BusinessHourRepository repository;
+    private BusinessHourRepository repository;
 
     @Mock
-    BusinessHourMapper mapper;
+    private BusinessHourMapper mapper;
 
+
+    private UUID businessHourId;
+    private UUID restaurantId;
+    private BusinessHourDto businessHourDto;
+    private NewBusinessHourDto newBusinessHourDto;
+    private BusinessHour businessHour;
+
+    @BeforeEach
+    void setUp() {
+        businessHourId = UUID.fromString("62cb7e9e-c7c9-48d5-9b64-c9d399bb6790");
+        restaurantId = UUID.fromString("7d4733cb-f739-4dcc-bce1-40ef0f5cc073");
+
+        businessHourDto = new BusinessHourDto(
+                businessHourId,
+                1,
+                LocalTime.of(12, 30),
+                LocalTime.of(15, 50)
+        );
+
+        newBusinessHourDto = new NewBusinessHourDto(
+                1,
+                LocalTime.of(12, 30),
+                LocalTime.of(15, 50),
+                restaurantId
+        );
+
+        businessHour = new BusinessHour();
+    }
 
     @Test
     void testGetBusinessHours_ShouldReturnEmptyList_WhenNoBusinessHour() {
@@ -49,57 +80,35 @@ public class BusinessHoursServiceTest {
     }
 
     @Test
-    void testGetBusinessHoursById_ShouldReturnBusinessHourDto_WhenExist() {
-        // given
-        Optional<BusinessHour> businessHour = Optional.of(new BusinessHour());
-        UUID bhId = UUID.randomUUID();
-        BusinessHourDto businessHourDto = new BusinessHourDto(
-                bhId,
-                1,
-                LocalTime.of(12, 30),
-                LocalTime.of(15, 50)
-        );
+    void testGetBusinessHourById_ShouldReturnBusinessHourDto_WhenExist() {
 
         // when
-        when(repository.findById(bhId)).thenReturn(businessHour);
-        when(mapper.toDto(businessHour.get())).thenReturn(businessHourDto);
+        when(repository.findById(businessHourId)).thenReturn(Optional.of(businessHour));
+        when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
 
         // then
-        BusinessHourDto businessHourDtoFromDB = service.getBusinessHourById(bhId);
+        BusinessHourDto businessHourDtoFromDB = service.getBusinessHourById(businessHourId);
 
         // test
         assertEquals(businessHourDto, businessHourDtoFromDB);
-        verify(repository, times(1)).findById(bhId);
-        verify(mapper, times(1)).toDto(businessHour.get());
+        verify(repository, times(1)).findById(businessHourId);
+        verify(mapper, times(1)).toDto(businessHour);
     }
 
     @Test
     void testGetBusinessHourById_ShouldThrowObjectNotFoundException_WhenNoBusinessHours() {
-        // given
-        UUID bhId = UUID.randomUUID();
-
-        // when
-        assertThrows(ObjectNotFoundException.class, () -> service.getBusinessHourById(bhId));
+        // test
+        assertThrows(ObjectNotFoundException.class, () -> service.getBusinessHourById(businessHourId));
     }
 
     @Test
     void testGetBusinessHoursByRestaurantId_ShouldReturnListOfBusinessHourDto_WhenExist() {
-        // given
-        UUID restaurantId = UUID.randomUUID();
-        UUID bhId = UUID.randomUUID();
-
-        BusinessHour businessHourOne = new BusinessHour();
+        BusinessHour businessHourOne = businessHour;
         BusinessHour businessHourTwo = new BusinessHour();
 
-        BusinessHourDto businessHourDtoOne = new BusinessHourDto(
-                bhId,
-                1,
-                LocalTime.of(12, 30),
-                LocalTime.of(15, 50)
-        );
-
+        BusinessHourDto businessHourDtoOne = businessHourDto;
         BusinessHourDto businessHourDtoTwo = new BusinessHourDto(
-                bhId,
+                businessHourId,
                 2,
                 LocalTime.of(13, 30),
                 LocalTime.of(16, 50)
@@ -122,9 +131,6 @@ public class BusinessHoursServiceTest {
 
     @Test
     void testGetBusinessHourByRestaurantId_ShouldReturnEmptyList_WhenNoBusinessHours() {
-        // given
-        UUID restaurantId = UUID.randomUUID();
-
         // when
         when(repository.findAllByRestaurantId(restaurantId)).thenReturn(List.of());
 
@@ -139,28 +145,10 @@ public class BusinessHoursServiceTest {
     @Test
     void testSaveNewBusinessHoursAndUpdate_ShouldReturnBusinessHoursDto_WhenCalledWithValidData() {
         // given
-        UUID bhId = UUID.randomUUID();
-        UUID restaurantId = UUID.randomUUID();
-
-        NewBusinessHourDto newBusinessHourDto = new NewBusinessHourDto(
-                1,
-                LocalTime.of(12, 30),
-                LocalTime.of(16, 50),
-                restaurantId
-        );
-
-        BusinessHourDto businessHourDto = new BusinessHourDto(
-                bhId,
-                newBusinessHourDto.dayOfWeek(),
-                newBusinessHourDto.openingHour(),
-                newBusinessHourDto.closingHour()
-        );
-
         Restaurant restaurant = new Restaurant();
         restaurant.setId(restaurantId);
 
-        BusinessHour businessHour = new BusinessHour();
-        businessHour.setId(bhId);
+        businessHour.setId(businessHourId);
         businessHour.setDayOfWeek(newBusinessHourDto.dayOfWeek());
         businessHour.setOpeningHour(newBusinessHourDto.openingHour());
         businessHour.setClosingHour(newBusinessHourDto.closingHour());
@@ -168,19 +156,19 @@ public class BusinessHoursServiceTest {
 
         // when
         when(repository.save(businessHour)).thenReturn(businessHour);
-        when(mapper.dtoToBusinessHour(newBusinessHourDto, bhId)).thenReturn(businessHour);
+        when(mapper.dtoToBusinessHour(newBusinessHourDto, businessHourId)).thenReturn(businessHour);
         when(mapper.dtoToBusinessHour(newBusinessHourDto)).thenReturn(businessHour);
         when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
 
         // then
         BusinessHourDto savedBusinessHourDto = service.saveNewBusinessHour(newBusinessHourDto);
-        BusinessHourDto updatedBusinessHourDto = service.updateBusinessHour(bhId, newBusinessHourDto);
+        BusinessHourDto updatedBusinessHourDto = service.updateBusinessHour(businessHourId, newBusinessHourDto);
 
         // test
         assertEquals(savedBusinessHourDto, businessHourDto);
         assertEquals(updatedBusinessHourDto, businessHourDto);
         verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto);
-        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto, bhId);
+        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto, businessHourId);
         verify(repository, times(2)).save(businessHour);
         verify(mapper, times(2)).toDto(businessHour);
     }
@@ -188,20 +176,45 @@ public class BusinessHoursServiceTest {
     @Test
     void testDeleteBusinessHour_ShouldDeleteBusinessHour_WhenCalled() {
         // given
-        UUID bhId = UUID.randomUUID();
-
-        BusinessHour businessHour = new BusinessHour();
-        businessHour.setId(bhId);
+        businessHour.setId(businessHourId);
 
         // when
-        when(mapper.dtoToBusinessHour(bhId)).thenReturn(businessHour);
+        when(mapper.dtoToBusinessHour(businessHourId)).thenReturn(businessHour);
 
         // then
-        service.deleteBusinessHour(bhId);
+        service.deleteBusinessHour(businessHourId);
 
         // test
-        verify(mapper, times(1)).dtoToBusinessHour(bhId);
+        verify(mapper, times(1)).dtoToBusinessHour(businessHourId);
         verify(repository, times(1)).delete(businessHour);
+    }
+
+    @Test
+    void testSaveMultipleNewBusinessHour_ShouldReturnListOfBusinessHours_WhenAllAreValid() {
+        // given
+        List<NewBusinessHourDto> list = List.of(newBusinessHourDto, newBusinessHourDto);
+
+        // then
+        List<BusinessHourDto> testedList = service.saveMultipleNewBusinessHour(list);
+
+        // test
+        assertEquals(2, testedList.size());
+    }
+
+    @Test
+    void testSaveMultipleNewBusinessHour_ShouldRollback_WhenOneIsInvalid() {
+        // given
+        List<NewBusinessHourDto> list = List.of(newBusinessHourDto, newBusinessHourDto);
+
+        // when
+        when(mapper.dtoToBusinessHour(newBusinessHourDto)).thenReturn(businessHour);
+        when(repository.save(businessHour)).thenThrow(TransactionalException.class);
+
+        // test
+        assertThrows(TransactionalException.class, () -> service.saveMultipleNewBusinessHour(list));
+        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto);
+        verify(repository, times(1)).save(businessHour);
+
     }
 }
 

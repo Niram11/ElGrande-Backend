@@ -31,13 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AddressControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    AddressService service;
+    private AddressService service;
 
     @MockBean
-    RestaurantRepository restaurantRepository;
+    private RestaurantRepository restaurantRepository;
 
     private UUID addressId;
     private UUID restaurantId;
