@@ -1,6 +1,9 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.address.NewAddressDto;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.dto.form.NewFormDto;
+import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.LocationRepository;
@@ -15,6 +18,8 @@ import com.codecool.gastro.service.mapper.LocationMapper;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class FormService {
@@ -43,19 +48,37 @@ public class FormService {
 
     @Transactional
     public void provideForm(NewFormDto newFormDto) {
-        Restaurant restaurant = restaurantMapper.dtoToRestaurant(newFormDto.newRestaurantDto());
-        Location location = locationMapper.dtoToLocation(newFormDto.newLocationDto());
-        BusinessHour businessHour = businessHourMapper.dtoToBusinessHour(newFormDto.newBusinessHourDto());
-        businessHour.setRestaurant(restaurant);
-        Address address = addressMapper.dtoToAddress(newFormDto.newAddressDto());
-        address.setRestaurant(restaurant);
-        saveForm(restaurant, location, businessHour, address);
+        Restaurant restaurant = restaurantMapper.dtoToRestaurant(newFormDto.restaurant());
+        Location location = handleLocation(newFormDto.location(), restaurant);
+        List<BusinessHour> businessHours = handleBusinessHours(newFormDto.businessHour(), restaurant);
+        Address address = handleAddress(newFormDto.address(), restaurant);
+        saveForm(restaurant, location, businessHours, address);
     }
 
-    private void saveForm(Restaurant restaurant, Location location, BusinessHour businessHour, Address address) {
+    private Location handleLocation(NewLocationDto locationDto, Restaurant restaurant){
+        Location location = locationMapper.dtoToLocation(locationDto);
+        location.assignRestaurant(restaurant);
+        return location;
+    }
+    private Address handleAddress(NewAddressDto addressDto, Restaurant restaurant) {
+        Address address = addressMapper.dtoToAddress(addressDto);
+        address.setRestaurant(restaurant);
+        return address;
+    }
+
+    private List<BusinessHour> handleBusinessHours(List<NewBusinessHourDto> businessHours, Restaurant restaurant) {
+        List<BusinessHour> mappedBusinessHours = businessHours
+            .stream()
+            .map(businessHourMapper::dtoToBusinessHour)
+            .toList();
+        mappedBusinessHours.forEach(bh -> bh.setRestaurant(restaurant));
+        return mappedBusinessHours;
+    }
+
+    private void saveForm(Restaurant restaurant, Location location, List<BusinessHour> businessHour, Address address) {
         restaurantRepository.save(restaurant);
         locationRepository.save(location);
-        businessHourRepository.save(businessHour);
         addressRepository.save(address);
+        businessHour.forEach(businessHourRepository::save);
     }
 }
