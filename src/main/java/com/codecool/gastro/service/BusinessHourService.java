@@ -7,7 +7,9 @@ import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +48,14 @@ public class BusinessHourService {
         return businessHourMapper.toDto(savedBusinessHour);
     }
 
+    @Transactional
+    public List<BusinessHourDto> saveMultipleNewBusinessHour(List<NewBusinessHourDto> newBusinessHourDtoList) {
+        List<BusinessHour> listOfSavedBusinessHours = new ArrayList<>();
+        newBusinessHourDtoList.forEach(businessHourDto -> listOfSavedBusinessHours
+                .add(businessHourRepository.save(businessHourMapper.dtoToBusinessHour(businessHourDto))));
+        return listOfSavedBusinessHours.stream().map(businessHourMapper::toDto).toList();
+    }
+
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
         BusinessHour savedBusinessHour = businessHourRepository
                 .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto, id));
@@ -55,5 +65,6 @@ public class BusinessHourService {
     public void deleteBusinessHour(UUID id) {
         businessHourRepository.delete(businessHourMapper.dtoToBusinessHour(id));
     }
+
 
 }
