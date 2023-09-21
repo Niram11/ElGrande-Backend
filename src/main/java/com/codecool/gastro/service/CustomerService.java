@@ -31,13 +31,13 @@ public class CustomerService {
                 .toList();
     }
 
-    public CustomerDto getCustomerBy(UUID id) {
+    public CustomerDto getCustomerById(UUID id) {
         return customerRepository.findById(id)
                 .map(customerMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
     }
 
-    public DetailedCustomerDto getDetailedCustomerBy(UUID id) {
+    public DetailedCustomerDto getDetailedCustomerById(UUID id) {
         return customerRepository.findDetailedById(id)
                 .map(customerMapper::toDetailedDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));

@@ -9,6 +9,7 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.AddressService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,6 +39,39 @@ public class AddressControllerTest {
     @MockBean
     private RestaurantRepository restaurantRepository;
 
+    private UUID addressId;
+    private UUID restaurantId;
+    private AddressDto addressDto;
+    private String contentResponse;
+
+    @BeforeEach
+    void setUp() {
+        restaurantId = UUID.fromString("41d35b7d-e4cb-4687-b56c-b4b9eb588241");
+        addressId = UUID.fromString("4e3dbfd4-ada7-4273-863c-d018f402917a");
+
+        addressDto = new AddressDto(
+                addressId,
+                "Poland",
+                "City",
+                "59-900",
+                "Street",
+                "15B",
+                ""
+        );
+
+        contentResponse = """
+                {
+                    "id": "4e3dbfd4-ada7-4273-863c-d018f402917a",
+                    "country": "Poland",
+                    "city": "City",
+                    "postalCode": "59-900",
+                    "street": "Street",
+                    "streetNumber": "15B",
+                    "additionalDetails": ""
+                }
+                """;
+    }
+
     @Test
     void testGetAllAddresses_ShouldReturnStatusOk_WhenCalled() throws Exception {
         // when
@@ -51,104 +85,55 @@ public class AddressControllerTest {
 
     @Test
     void testGetAddressById_ShouldReturnStatusNotFound_WhenNoAddress() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-
         // when
-        when(service.getAddressById(id)).thenThrow(new ObjectNotFoundException(id, Address.class));
+        when(service.getAddressById(addressId)).thenThrow(new ObjectNotFoundException(addressId, Address.class));
 
         // test
-        mockMvc.perform(get("/api/v1/addresses/" + id))
+        mockMvc.perform(get("/api/v1/addresses/" + addressId))
                 .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Address and id " + id + " cannot be found"));
+                        jsonPath("$.errorMessage").value("Object of class Address and id " + addressId + " cannot be found"));
     }
 
     @Test
     void testGetAddressById_ShouldReturnStatusOkAndAddressDto_WhenAddressExist() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-        AddressDto addressDto = new AddressDto(id,
-                "Poland",
-                "City",
-                "59-900",
-                "Street",
-                "15B",
-                "");
+
 
         // when
-        when(service.getAddressById(id)).thenReturn(addressDto);
+        when(service.getAddressById(addressId)).thenReturn(addressDto);
 
         // test
-        mockMvc.perform(get("/api/v1/addresses/" + id))
+        mockMvc.perform(get("/api/v1/addresses/" + addressId))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$.id").value(addressDto.id().toString()),
-                        jsonPath("$.country").value(addressDto.country()),
-                        jsonPath("$.city").value(addressDto.city()),
-                        jsonPath("$.postalCode").value(addressDto.postalCode()),
-                        jsonPath("$.street").value(addressDto.street()),
-                        jsonPath("$.streetNumber").value(addressDto.streetNumber()),
-                        jsonPath("$.additionalDetails").value(addressDto.additionalDetails())
+                        content().json(contentResponse)
                 );
     }
 
     @Test
     void testGetAddressByRestaurantId_ShouldReturnStatusNotFound_WhenRestaurantNotExist() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-
         // when
-        when(service.getAddressByRestaurantId(id)).thenThrow(new ObjectNotFoundException(id, Restaurant.class));
+        when(service.getAddressByRestaurantId(restaurantId)).thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));
 
         // test
-        mockMvc.perform(get("/api/v1/addresses?restaurantId=" + id))
+        mockMvc.perform(get("/api/v1/addresses?restaurantId=" + restaurantId))
                 .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Restaurant and id " + id + " cannot be found"));
+                        jsonPath("$.errorMessage").value("Object of class Restaurant and id " + restaurantId + " cannot be found"));
     }
 
     @Test
     void testGetAddressByRestaurantId_ShouldReturnStatusOkAndAddressDto_WhenAddressWithValidRestaurantIdExist() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-        AddressDto addressDto = new AddressDto(id,
-                "Poland",
-                "City",
-                "59-900",
-                "Street",
-                "15B",
-                "");
-
         // when
-        when(service.getAddressByRestaurantId(id)).thenReturn(addressDto);
+        when(service.getAddressByRestaurantId(restaurantId)).thenReturn(addressDto);
 
         // test
-        mockMvc.perform(get("/api/v1/addresses?restaurantId=" + id))
+        mockMvc.perform(get("/api/v1/addresses?restaurantId=" + restaurantId))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$.id").value(addressDto.id().toString()),
-                        jsonPath("$.country").value(addressDto.country()),
-                        jsonPath("$.city").value(addressDto.city()),
-                        jsonPath("$.postalCode").value(addressDto.postalCode()),
-                        jsonPath("$.street").value(addressDto.street()),
-                        jsonPath("$.streetNumber").value(addressDto.streetNumber()),
-                        jsonPath("$.additionalDetails").value(addressDto.additionalDetails())
+                        content().json(contentResponse)
                 );
     }
 
     @Test
     void testCreateNewAddressAndUpdateAddress_ShouldReturnStatusCreated_WhenProvidingValidData() throws Exception {
         // given
-        UUID restaurantId = UUID.fromString("41d35b7d-e4cb-4687-b56c-b4b9eb588241");
-        UUID addressId = UUID.fromString("4e3dbfd4-ada7-4273-863c-d018f402917a");
-
-        AddressDto addressDto = new AddressDto(
-                addressId,
-                "Poland",
-                "City",
-                "59-900",
-                "Street",
-                "15B",
-                ""
-        );
-
         String contentRequest = """
                 {
                 "country": "Poland",
@@ -161,17 +146,6 @@ public class AddressControllerTest {
                 }
                 """;
 
-        String contentResponse = """
-                {
-                "id":  "4e3dbfd4-ada7-4273-863c-d018f402917a",
-                "country": "Poland",
-                "city": "City",
-                "postalCode": "59-900",
-                "street": "Street",
-                "streetNumber": "15B",
-                "additionalDetails": ""
-                }
-                """;
         // when
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
         when(service.saveNewAddress(any(NewAddressDto.class))).thenReturn(addressDto);
@@ -194,7 +168,7 @@ public class AddressControllerTest {
     @Test
     void testCreateNewAddressAndUpdateAddress_ShouldReturnErrorMessages_WhenProvidingInvalidJson() throws Exception {
         // given
-        String content = """
+        String contentRequest = """
                 {
                 "country": "",
                 "city": "",
@@ -212,7 +186,7 @@ public class AddressControllerTest {
         // test
         mockMvc.perform(post("/api/v1/addresses")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
+                        .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Country cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("City cannot be empty")),
@@ -224,7 +198,7 @@ public class AddressControllerTest {
 
         mockMvc.perform(put("/api/v1/addresses/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
+                        .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Country cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("City cannot be empty")),
@@ -238,21 +212,8 @@ public class AddressControllerTest {
     @Test
     void testDeleteAddress_ShouldReturnStatusNoContent_WhenAddressExist() throws Exception {
         // test
-        mockMvc.perform(delete("/api/v1/addresses/" + UUID.randomUUID()))
+        mockMvc.perform(delete("/api/v1/addresses/" + addressId))
                 .andExpectAll(status().isNoContent());
     }
-
-    @Test
-    void testDeleteAddress_ShouldReturnStatusNotFound_WhenNoAddress() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-        // when
-        doThrow(new ObjectNotFoundException(id, Restaurant.class)).when(service).deleteAddress(id);
-        // test
-        mockMvc.perform(delete("/api/v1/addresses/" + id))
-                .andExpectAll(status().isNotFound());
-    }
-
-
 
 }

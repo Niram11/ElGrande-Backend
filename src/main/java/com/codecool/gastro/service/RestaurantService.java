@@ -7,6 +7,7 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,6 +30,12 @@ public class RestaurantService {
                 .map(restaurantMapper::toDto)
                 .toList();
     }
+    public List<RestaurantDto> getRestaurants(Pageable pageable) {
+        return restaurantRepository.findAll(pageable)
+                .stream()
+                .map(restaurantMapper::toDto)
+                .toList();
+    }
 
     public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
@@ -36,8 +43,8 @@ public class RestaurantService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
-    public List<DetailedRestaurantDto> getTopRestaurants(int quantity) {
-        return restaurantRepository.getTopRestaurants(quantity)
+    public List<DetailedRestaurantDto> getDetailedRestaurants(Pageable pageable) {
+        return restaurantRepository.findAllDetailedRestaurants(pageable)
                 .stream()
                 .map(restaurantMapper::toDetailedDto)
                 .toList();

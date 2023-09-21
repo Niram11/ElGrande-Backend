@@ -32,10 +32,10 @@ public class BusinessHourRepositoryTest {
     @Test
     void testFindById_ShouldReturnBusinessHour_WhenExist() {
         // given
-        UUID bhId = UUID.fromString("c56f5aec-de67-4698-b045-7e96ef64dad0");
+        UUID businessHourId = UUID.fromString("c56f5aec-de67-4698-b045-7e96ef64dad0");
 
         // then
-        Optional<BusinessHour> businessHour = repository.findById(bhId);
+        Optional<BusinessHour> businessHour = repository.findById(businessHourId);
 
         // test
         assertTrue(businessHour.isPresent());
@@ -44,10 +44,10 @@ public class BusinessHourRepositoryTest {
     @Test
     void testFindById_ShouldReturnEmptyOptional_WhenNoBusinessHours() {
         // given
-        UUID bhId = UUID.randomUUID();
+        UUID businessHourId = UUID.randomUUID();
 
         // then
-        Optional<BusinessHour> businessHour = repository.findById(bhId);
+        Optional<BusinessHour> businessHour = repository.findById(businessHourId);
 
         // test
         assertTrue(businessHour.isEmpty());

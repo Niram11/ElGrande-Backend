@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Repository
 public interface BusinessHourRepository extends JpaRepository<BusinessHour, UUID> {
-    @Query("SELECT bh FROM BusinessHour bh left join fetch bh.restaurant ")
+    @Query("SELECT bh FROM BusinessHour bh left join fetch bh.restaurant order by bh.dayOfWeek")
     List<BusinessHour> findAll();
 
     @Query("SELECT bh FROM BusinessHour bh left join fetch bh.restaurant WHERE bh.id = :id")
     Optional<BusinessHour> findById(UUID id);
 
-    @Query("SELECT bh from BusinessHour bh left join fetch bh.restaurant where bh.restaurant.id = :restaurantId")
+    @Query("SELECT bh from BusinessHour bh left join fetch bh.restaurant where bh.restaurant.id = :restaurantId order by bh.dayOfWeek ")
     List<BusinessHour> findAllByRestaurantId(UUID restaurantId);
 
 }

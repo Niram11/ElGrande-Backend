@@ -2,6 +2,7 @@ package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.Address;
 import com.codecool.gastro.repository.entity.Restaurant;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +19,13 @@ public class AddressRepositoryTest {
     @Autowired
     private AddressRepository repository;
 
+    private UUID addressId;
+
+    @BeforeEach
+    void setUp() {
+        addressId = UUID.fromString("8a814d44-51b4-4a9b-a3f2-ece1775c98e0");
+    }
+
     @Test
     void testFindAll_ShouldReturnListOfAddresses_WhenCallingMethod() {
         // when
@@ -29,11 +37,8 @@ public class AddressRepositoryTest {
 
     @Test
     void testFindById_ShouldReturnAddress_WhenExist() {
-        // given
-        UUID id = UUID.fromString("8a814d44-51b4-4a9b-a3f2-ece1775c98e0");
-
         // when
-        Optional<Address> address = repository.findById(id);
+        Optional<Address> address = repository.findById(addressId);
 
         // test
         assertTrue(address.isPresent());
@@ -41,11 +46,8 @@ public class AddressRepositoryTest {
 
     @Test
     void testFindById_ShouldReturnEmptyOptional_WhenNoAddress() {
-        // given
-        UUID id = UUID.fromString("7a814d44-51b4-4a9b-a3f2-ece1775c98e0");
-
         // when
-        Optional<Address> address = repository.findById(id);
+        Optional<Address> address = repository.findById(UUID.randomUUID());
 
         // test
         assertTrue(address.isEmpty());
@@ -105,7 +107,7 @@ public class AddressRepositoryTest {
         restaurant.setId(UUID.fromString("c728af54-0d03-4af1-a68e-6364db2370ee"));
 
         Address address = new Address();
-        address.setId(UUID.fromString("8a814d44-51b4-4a9b-a3f2-ece1775c98e0"));
+        address.setId(addressId);
         address.setCountry("PL");
         address.setCity("Wrocław");
         address.setPostalCode("66612");
@@ -117,12 +119,12 @@ public class AddressRepositoryTest {
         Address afterSaveAddress = repository.save(address);
 
         // test
-        assertEquals(afterSaveAddress.getId(), UUID.fromString("8a814d44-51b4-4a9b-a3f2-ece1775c98e0"));
+        assertEquals(afterSaveAddress.getId(), addressId);
         assertNotEquals(afterSaveAddress.getCountry(), "Germany");
         assertNotEquals(afterSaveAddress.getCity(), "Berlin");
         assertNotEquals(afterSaveAddress.getPostalCode(), "41579");
         assertNotEquals(afterSaveAddress.getStreet(), "street1");
         assertNotEquals(afterSaveAddress.getStreetNumber(), "16B");
-        assertNotEquals(afterSaveAddress.getRestaurant().getId(), "4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5");
+        assertNotEquals(afterSaveAddress.getRestaurant().getId(), UUID.fromString("4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5"));
     }
 }

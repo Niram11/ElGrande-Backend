@@ -19,7 +19,7 @@ public record NewCustomerDto(
         @Unoccupied
         String email,
 
-        @NotBlank(message = "Password Hash cannot be empty")
+        @NotBlank(message = "Password hash cannot be empty")
         String passwordHash,
         Set<RestaurantDto> restaurants
 ) {

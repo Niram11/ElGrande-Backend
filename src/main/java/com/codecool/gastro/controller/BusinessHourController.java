@@ -41,6 +41,12 @@ public class BusinessHourController {
         return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveNewBusinessHour(newBusinessHourDto));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<List<BusinessHourDto>> createMultipleNewBusinessHour(@Valid @RequestBody List<NewBusinessHourDto> newBusinessHourDtoList) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveMultipleNewBusinessHour(newBusinessHourDtoList));
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<BusinessHourDto> updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.updateBusinessHour(id, newBusinessHourDto));

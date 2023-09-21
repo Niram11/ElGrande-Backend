@@ -10,9 +10,9 @@ import org.mapstruct.Mapper;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
-public interface CustomerMapper
-{
+public interface CustomerMapper {
     CustomerDto toDto(Customer customer);
+
     DetailedCustomerDto toDetailedDto(DetailedCustomerProjection customer);
 
     Customer dtoToCustomer(NewCustomerDto customerDto);

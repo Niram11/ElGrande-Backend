@@ -16,7 +16,6 @@ import java.util.UUID;
 @CrossOrigin
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -29,13 +28,13 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerBy(id));
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerById(id));
     }
 
     @GetMapping("/{id}/details")
-    public ResponseEntity<DetailedCustomerDto> getDetailedCustomer(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerBy(id));
+    public ResponseEntity<DetailedCustomerDto> getDetailedCustomerById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerById(id));
     }
 
     @PostMapping

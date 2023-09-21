@@ -5,6 +5,7 @@ import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.service.RestaurantService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,9 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
 
-    @GetMapping(params = "top")
-    public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(@RequestParam("top") int quantity) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getTopRestaurants(quantity));
+    @GetMapping(params = {"page", "size", "sort"})
+    public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getDetailedRestaurants(pageable));
     }
 
     @GetMapping(path = "/filtered")

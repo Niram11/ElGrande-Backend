@@ -8,8 +8,8 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.BusinessHourService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,13 +30,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BusinessHourControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    BusinessHourService service;
+    private BusinessHourService service;
 
     @MockBean
-    RestaurantRepository restaurantRepository;
+    private RestaurantRepository restaurantRepository;
+
+    private UUID businessHourId;
+    private UUID restaurantId;
+    private BusinessHourDto businessHourDto;
+    private NewBusinessHourDto newBusinessHourDto;
+    private String contentResponse;
+
+    @BeforeEach
+    void setUp() {
+        businessHourId = UUID.fromString("e7b0b987-fcbd-4ea4-8f97-a1244cb81904");
+        restaurantId = UUID.fromString("180d99e9-0dcc-4f64-9ea6-32604f8ffd09");
+
+        businessHourDto = new BusinessHourDto(
+                businessHourId,
+                1,
+                LocalTime.of(12, 30),
+                LocalTime.of(17, 30)
+        );
+
+        newBusinessHourDto = new NewBusinessHourDto(
+                2,
+                LocalTime.of(13, 30),
+                LocalTime.of(18, 30),
+                restaurantId
+        );
+
+        contentResponse = """
+                {
+                    "id": "e7b0b987-fcbd-4ea4-8f97-a1244cb81904",
+                    "dayOfWeek": 1,
+                    "openingHour": "12:30:00",
+                    "closingHour": "17:30:00"
+                }
+                """;
+    }
 
     @Test
     void testGetAllBusinessHours_ShouldReturnStatusOkAndListOfBusinessHourDto_WhenCalled() throws Exception {
@@ -52,21 +87,11 @@ public class BusinessHourControllerTest {
 
     @Test
     void testGetBusinessHourById_ShouldReturnStatusOkAndDto_WhenBusinessHoursExist() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-
-        BusinessHourDto businessHourDto = new BusinessHourDto(
-                id,
-                1,
-                LocalTime.of(12, 30),
-                LocalTime.of(17, 30)
-        );
-
         // when
-        when(service.getBusinessHourById(id)).thenReturn(businessHourDto);
+        when(service.getBusinessHourById(businessHourId)).thenReturn(businessHourDto);
 
         // test
-        mockMvc.perform(get("/api/v1/business-hours/" + id))
+        mockMvc.perform(get("/api/v1/business-hours/" + businessHourId))
                 .andExpectAll(status().isOk(),
                         jsonPath("$.id").value(businessHourDto.id().toString()),
                         jsonPath("$.dayOfWeek").value(businessHourDto.dayOfWeek()),
@@ -77,23 +102,17 @@ public class BusinessHourControllerTest {
 
     @Test
     void testGetBusinessHourById_ShouldReturnErrorMessage_WhenNoBusinessHours() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-
         // when
-        when(service.getBusinessHourById(id)).thenThrow(new ObjectNotFoundException(id, BusinessHour.class));
+        when(service.getBusinessHourById(businessHourId)).thenThrow(new ObjectNotFoundException(businessHourId, BusinessHour.class));
         // test
-        mockMvc.perform(get("/api/v1/business-hours/" + id))
+        mockMvc.perform(get("/api/v1/business-hours/" + businessHourId))
                 .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class BusinessHour and id " + id + " cannot be found")
+                        jsonPath("$.errorMessage").value("Object of class BusinessHour and id " + businessHourId + " cannot be found")
                 );
     }
 
     @Test
     void testGetBusinessHoursByRestaurantId_ShouldReturnStatusOkAndEmptyList_WhenRestaurantExist() throws Exception {
-        // given
-        UUID restaurantId = UUID.randomUUID();
-
         // when
         when(service.getBusinessHoursByRestaurantId(restaurantId)).thenReturn(List.of());
 
@@ -107,7 +126,6 @@ public class BusinessHourControllerTest {
     @Test
     void testGetBusinessHoursByRestaurantId_ShouldReturnStatusOkAndListOfBusinessHoursDto_WhenRestaurantExist() throws Exception {
         // given
-        UUID restaurantId = UUID.randomUUID();
         UUID bhOneId = UUID.fromString("5ca6ea83-966a-4b4d-8a3a-416bbc5ce567");
         UUID bhTwoId = UUID.fromString("abe6d29b-043f-425d-a3b8-dd7cdc623379");
 
@@ -124,7 +142,7 @@ public class BusinessHourControllerTest {
                 LocalTime.of(18, 30)
         );
 
-        String contentRespond = """
+        contentResponse = """
                 [
                     {
                         "id": "5ca6ea83-966a-4b4d-8a3a-416bbc5ce567",
@@ -147,52 +165,26 @@ public class BusinessHourControllerTest {
         //test
         mockMvc.perform(get("/api/v1/business-hours?restaurantId=" + restaurantId))
                 .andExpectAll(status().isOk(),
-                        content().json(contentRespond)
+                        content().json(contentResponse)
                 );
     }
 
     @Test
     void testCreateNewBusinessHourAndUpdateBusinessHour_ShouldReturnStatusCreatedAndBusinessHourDto_WhenCalled() throws Exception {
         // given
-        UUID bhId = UUID.fromString("9162eb15-ea1b-4a70-964b-6c4203d793c3");
-        UUID restaurantId = UUID.fromString("73ef773d-6a33-449a-9ccd-e9e305450939");
-
-        NewBusinessHourDto newBusinessHourDto = new NewBusinessHourDto(
-                2,
-                LocalTime.of(13, 30),
-                LocalTime.of(18, 30),
-                restaurantId
-        );
-
-        BusinessHourDto businessHourDto = new BusinessHourDto(
-                bhId,
-                2,
-                LocalTime.of(13, 30),
-                LocalTime.of(18, 30)
-        );
-
         String contentRequest = """
                 {
                     "dayOfWeek": 2,
                     "openingHour": "13:30",
                     "closingHour": "18:30",
-                    "restaurantId": "73ef773d-6a33-449a-9ccd-e9e305450939"
-                }
-                """;
-
-        String contentResponse = """
-                {
-                    "id": "9162eb15-ea1b-4a70-964b-6c4203d793c3",
-                    "dayOfWeek": 2,
-                    "openingHour": "13:30:00",
-                    "closingHour": "18:30:00"
+                    "restaurantId": "180d99e9-0dcc-4f64-9ea6-32604f8ffd09"
                 }
                 """;
 
         // when
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
         when(service.saveNewBusinessHour(newBusinessHourDto)).thenReturn(businessHourDto);
-        when(service.updateBusinessHour(bhId, newBusinessHourDto)).thenReturn(businessHourDto);
+        when(service.updateBusinessHour(businessHourId, newBusinessHourDto)).thenReturn(businessHourDto);
 
         // test
         mockMvc.perform(post("/api/v1/business-hours")
@@ -202,7 +194,7 @@ public class BusinessHourControllerTest {
                         content().json(contentResponse)
                 );
 
-        mockMvc.perform(put("/api/v1/business-hours/" + bhId)
+        mockMvc.perform(put("/api/v1/business-hours/" + businessHourId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isCreated(),
@@ -312,4 +304,43 @@ public class BusinessHourControllerTest {
         mockMvc.perform(delete("/api/v1/business-hours/" + UUID.randomUUID()))
                 .andExpectAll(status().isNoContent());
     }
+
+    @Test
+    void testCreateMultipleNewBusinessHour_ShouldReturnStatusCreatedAndListOfBusinessHour_WhenCalled() throws Exception {
+        // given
+        String contentRequest = """
+                [
+                    {
+                        "dayOfWeek": 2,
+                        "openingHour": "13:30",
+                        "closingHour": "18:30",
+                        "restaurantId": "180d99e9-0dcc-4f64-9ea6-32604f8ffd09"
+                    }
+                ]
+                """;
+
+        contentResponse = """
+                [
+                    {
+                        "id": "e7b0b987-fcbd-4ea4-8f97-a1244cb81904",
+                        "dayOfWeek": 1,
+                        "openingHour": "12:30:00",
+                        "closingHour": "17:30:00"
+                    }
+                ]
+                """;
+
+        // when
+        when(service.saveMultipleNewBusinessHour(List.of(newBusinessHourDto)))
+                .thenReturn(List.of(businessHourDto));
+
+        // test
+        mockMvc.perform(post("/api/v1/business-hours/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentRequest))
+                .andExpectAll(status().isCreated(),
+                        content().json(contentResponse)
+                );
+    }
+
 }

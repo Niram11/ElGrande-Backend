@@ -1,9 +1,12 @@
 package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -110,4 +113,14 @@ class RestaurantRepositoryTest {
         assertNotEquals(restaurantAfterSave.getContactNumber(), 123);
         assertNotEquals(restaurantAfterSave.getContactEmail(), "Kacper@wp.pl");
     }
+
+    @Test
+    void testFindAllDetailedRestaurants_ShouldReturnListOfDetailedRestaurantProjection_WhenExist() {
+        // then
+        List<DetailedRestaurantProjection> projection = repository.findAllDetailedRestaurants(PageRequest.of(0, 3, Sort.by("name")));
+
+        // test
+        assertEquals(3, projection.size());
+    }
+
 }

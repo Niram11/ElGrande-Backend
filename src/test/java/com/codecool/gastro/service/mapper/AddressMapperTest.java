@@ -4,6 +4,7 @@ import com.codecool.gastro.dto.address.AddressDto;
 import com.codecool.gastro.dto.address.NewAddressDto;
 import com.codecool.gastro.repository.entity.Address;
 import com.codecool.gastro.repository.entity.Restaurant;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
