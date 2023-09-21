@@ -9,6 +9,7 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,14 @@ public class RestaurantService {
         return restaurantRepository.getTopRestaurants(quantity)
                 .stream()
                 .map(restaurantMapper::toDetailedDto)
+                .toList();
+    }
+
+    public List<RestaurantDto> getFilteredRestaurants(String category, String city, String dishName, BigDecimal reviewMin,
+                                                      BigDecimal reviewMax, String reviewSort) {
+        return restaurantRepository.getFilteredRestaurants(category, city, dishName, reviewMin, reviewMax, reviewSort)
+                .stream()
+                .map(restaurantMapper::toDto)
                 .toList();
     }
 

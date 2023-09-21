@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +37,20 @@ public class RestaurantController {
     public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(@RequestParam("top") int quantity) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getTopRestaurants(quantity));
     }
+
+    @GetMapping(path = "/filtered")
+    public ResponseEntity<List<RestaurantDto>> getFilteredRestaurants(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "dishName", required = false) String dishName,
+            @RequestParam(value = "reviewMin", required = false, defaultValue = "0") BigDecimal reviewMin,
+            @RequestParam(value = "reviewMax", required = false, defaultValue = "10") BigDecimal reviewMax,
+            @RequestParam(value = "reviewSort", required = false, defaultValue = "ASC") String reviewSort) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getFilteredRestaurants(category, city,
+                dishName, reviewMin, reviewMax, reviewSort));
+    }
+
+
 
     @PostMapping
     public ResponseEntity<RestaurantDto> createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
