@@ -18,7 +18,7 @@ public interface DishMapper {
     Dish dtoToDish(NewDishDto newDishDto);
 
     @Mapping(source = "newDishDto.restaurantId", target = "restaurant.id")
-    Dish dtoToDish(NewDishDto newDishDto, UUID id);
+    Dish dtoToDish(UUID id, NewDishDto newDishDto);
 
     Dish dtoToDish(UUID id);
 

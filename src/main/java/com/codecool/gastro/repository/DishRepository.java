@@ -25,6 +25,6 @@ public interface DishRepository extends JpaRepository<Dish, UUID> {
     @Query("SELECT dish from Dish dish LEFT join fetch dish.categories " +
             "left join fetch dish.ingredients left join fetch dish.restaurant " +
             "WHERE dish.restaurant.id = :restaurantId")
-    List<Dish> findByRestaurantId(UUID restaurantId);
+    List<Dish> findByRestaurant(UUID restaurantId);
 
 }

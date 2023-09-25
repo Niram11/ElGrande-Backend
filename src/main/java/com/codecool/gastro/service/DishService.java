@@ -15,6 +15,7 @@ import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
 import com.codecool.gastro.service.mapper.IngredientMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -48,13 +49,13 @@ public class DishService {
     }
 
     public List<DishDto> getDishesByRestaurant(UUID id) {
-        return dishRepository.findByRestaurantId(id)
+        return dishRepository.findByRestaurant(id)
                 .stream()
                 .map(dishMapper::toDto)
                 .toList();
     }
 
-    public DishDto getDishBy(UUID id) {
+    public DishDto getDishById(UUID id) {
         return dishRepository.findById(id)
                 .map(dishMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
@@ -66,7 +67,7 @@ public class DishService {
     }
 
     public DishDto updateDish(UUID id, NewDishDto newDishDto) {
-        Dish updatedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto, id));
+        Dish updatedDish = dishRepository.save(dishMapper.dtoToDish(id, newDishDto));
         return dishMapper.toDto(updatedDish);
     }
 
@@ -83,6 +84,7 @@ public class DishService {
         dishRepository.save(dish);
     }
 
+    @Transactional
     public void assignDishCategoryToDish(UUID dishId, Set<NewDishCategoryDto> categories) {
         Dish dish = dishRepository.findById(dishId)
                 .orElseThrow(() -> new ObjectNotFoundException(dishId, Dish.class));
@@ -96,9 +98,9 @@ public class DishService {
         for (NewIngredientDto ingredient : ingredients) {
 
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name());
-            Ingredient mappedIngredient = ingredientMapper.dtoToIngredient(ingredient);
 
             if (ingredientOptional.isEmpty()) {
+                Ingredient mappedIngredient = ingredientMapper.dtoToIngredient(ingredient);
                 mappedIngredient.setName(mappedIngredient.getName().toLowerCase());
                 ingredientRepository.save(mappedIngredient);
                 dish.assignIngredient(mappedIngredient);
@@ -114,9 +116,9 @@ public class DishService {
         for (NewDishCategoryDto category : categories) {
 
             Optional<DishCategory> dishCategory = dishCategoryRepository.findByCategory(category.category());
-            DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
 
             if (dishCategory.isEmpty()) {
+                DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
                 mappedDishCategory.setCategory(mappedDishCategory.getCategory().toLowerCase());
                 dishCategoryRepository.save(mappedDishCategory);
                 dish.assignCategories(mappedDishCategory);

@@ -30,8 +30,8 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DishDto> getDish(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishBy(id));
+    public ResponseEntity<DishDto> getDishById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishById(id));
     }
 
     @GetMapping(params = {"restaurantId"})
