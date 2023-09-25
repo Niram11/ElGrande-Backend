@@ -8,14 +8,13 @@ import org.mapstruct.Mapper;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring")
-public interface DishCategoryMapper
-{
+public interface DishCategoryMapper {
     DishCategoryDto toDto(DishCategory dishCategory);
 
     DishCategory dtoToDishCategory(NewDishCategoryDto dishCategoryDto);
 
     DishCategory dtoToDishCategory(UUID id);
 
-    DishCategory dtoToDishCategory(NewDishCategoryDto dishCategoryDto, UUID id);
+    DishCategory dtoToDishCategory(UUID id, NewDishCategoryDto dishCategoryDto);
 
 }

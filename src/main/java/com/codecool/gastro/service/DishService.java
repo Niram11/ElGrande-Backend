@@ -113,7 +113,7 @@ public class DishService {
     private void addDishCategoryToDish(Set<NewDishCategoryDto> categories, Dish dish) {
         for (NewDishCategoryDto category : categories) {
 
-            Optional<DishCategory> dishCategory = dishCategoryRepository.findBy(category.category());
+            Optional<DishCategory> dishCategory = dishCategoryRepository.findByCategory(category.category());
             DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
 
             if (dishCategory.isEmpty()) {

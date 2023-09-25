@@ -1,3 +1,0 @@
-insert into address(id, restaurant_id, additional_details, country, city, postal_code, street, street_number)
-values ('8a814d44-51b4-4a9b-a3f2-ece1775c98e0', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'Details1', 'Germany', 'Berlin', '41579', 'street1', '16B'),
-       ('c9ce7b69-2609-46c9-a91a-fb199ed87dc3', '860a757c-a704-4ac3-820c-2f3f37657a68', 'Details2', 'Poland', 'Kraków', '66420', 'street2', '15A');

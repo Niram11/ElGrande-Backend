@@ -10,12 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface DishCategoryRepository extends JpaRepository<DishCategory, UUID>
-{
+public interface DishCategoryRepository extends JpaRepository<DishCategory, UUID> {
     @Query("SELECT dishCategory FROM DishCategory dishCategory")
-    List<DishCategory> findALl();
+    List<DishCategory> findAll();
+
     @Query("SELECT dishCategory FROM DishCategory dishCategory WHERE dishCategory.id = :id")
-    Optional<DishCategory> findBy(UUID id);
+    Optional<DishCategory> findById(UUID id);
+
     @Query("SELECT dishCategory FROM DishCategory dishCategory WHERE dishCategory.category = :category")
-    Optional<DishCategory> findBy(String category);
+    Optional<DishCategory> findByCategory(String category);
 }
