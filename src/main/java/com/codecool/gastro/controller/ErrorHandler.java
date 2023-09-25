@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller;
 
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.hibernate.TransientPropertyValueException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,7 +42,7 @@ public class ErrorHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotReadableException(HttpMessageNotReadableException ex) {
-        String errMsg = "One or more fields are not readable";
+        String errMsg = "One or more fields are incorrect type";
         return new ErrorResponse(errMsg);
     }
 
@@ -51,6 +52,14 @@ public class ErrorHandler {
         String errMsg = "Operation cannot be completed due to incorrect data";
         return new ErrorResponse(errMsg);
     }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
+        String errMsg = "One or more fields are does not meet requirements";
+        return new ErrorResponse(errMsg);
+    }
+
 
     public record ErrorResponse(String errorMessage) {
 

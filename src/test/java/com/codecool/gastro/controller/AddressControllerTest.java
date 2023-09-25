@@ -96,8 +96,6 @@ public class AddressControllerTest {
 
     @Test
     void testGetAddressById_ShouldReturnStatusOkAndAddressDto_WhenAddressExist() throws Exception {
-
-
         // when
         when(service.getAddressById(addressId)).thenReturn(addressDto);
 

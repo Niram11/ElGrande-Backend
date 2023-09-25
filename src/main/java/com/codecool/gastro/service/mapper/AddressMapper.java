@@ -2,6 +2,7 @@ package com.codecool.gastro.service.mapper;
 
 import com.codecool.gastro.dto.address.AddressDto;
 import com.codecool.gastro.dto.address.NewAddressDto;
+import com.codecool.gastro.dto.address.NewFormAddressDto;
 import com.codecool.gastro.repository.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,4 +21,6 @@ public interface AddressMapper {
 
     @Mapping(target = "restaurant.id", source = "newAddressDto.restaurantId")
     Address dtoToAddress(UUID id, NewAddressDto newAddressDto);
+
+    Address newFormDtoToAddress(NewFormAddressDto newFormAddressDto);
 }
