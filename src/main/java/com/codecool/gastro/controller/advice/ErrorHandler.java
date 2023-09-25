@@ -1,4 +1,4 @@
-package com.codecool.gastro.controller;
+package com.codecool.gastro.controller.advice;
 
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import jakarta.validation.ConstraintViolationException;
