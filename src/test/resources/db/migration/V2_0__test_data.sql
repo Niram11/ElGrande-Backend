@@ -30,6 +30,16 @@ values ('f454d079-4179-41b5-858e-bdc5ad953256', 12.3, 'Lasagne', '4e99a0c4-d1bb-
        ('23be11d5-18a6-4823-9c29-f4728d01fa37', 10, 'Lasagne', 'c728af54-0d03-4af1-a68e-6364db2370ee'),
        ('c90ad3f6-6662-43d3-a6d4-23942840f6aa', 15, 'Spaghetti', 'c728af54-0d03-4af1-a68e-6364db2370ee');
 
+-- INGREDIENT
+insert into ingredient(id, name)
+values ('7f357c2a-a0ce-4a8f-9c07-ad34e3be7497', 'Tomato'),
+       ('5419e2c5-9335-4ed6-b897-81e271d339ba', 'Pasta');
+
+-- DISH <> INGREDIENT
+insert into dish_ingredients(dish_id, ingredient_id)
+values ('f454d079-4179-41b5-858e-bdc5ad953256', '7f357c2a-a0ce-4a8f-9c07-ad34e3be7497'),
+       ('f454d079-4179-41b5-858e-bdc5ad953256', '5419e2c5-9335-4ed6-b897-81e271d339ba');
+
 -- DISH CATEGORY
 insert into dish_category(id, category)
 values ('0188a205-ed29-405e-9245-4b714a0db157', 'Meat'),

@@ -18,6 +18,11 @@ public class IngredientService {
     private final IngredientRepository ingredientRepository;
     private final IngredientMapper ingredientMapper;
 
+    public IngredientService(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {
+        this.ingredientRepository = ingredientRepository;
+        this.ingredientMapper = ingredientMapper;
+    }
+
     public List<IngredientDto> getAllIngredients() {
         return ingredientRepository.findAll()
                 .stream()
@@ -25,16 +30,12 @@ public class IngredientService {
                 .toList();
     }
 
-    public IngredientDto getIngredientBy(UUID id) {
+    public IngredientDto getIngredientById(UUID id) {
         return ingredientRepository.findById(id)
                 .map(ingredientMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
     }
 
-    public IngredientService(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {
-        this.ingredientRepository = ingredientRepository;
-        this.ingredientMapper = ingredientMapper;
-    }
 
     public IngredientDto saveNewIngredient(NewIngredientDto newIngredientDto) {
         Ingredient savedIngredient = ingredientMapper.dtoToIngredient(newIngredientDto);
@@ -47,8 +48,7 @@ public class IngredientService {
     }
 
     public void deleteIngredient(UUID id) {
-        Ingredient deletedIngredient = ingredientMapper.dtoToIngredient(id);
-        ingredientRepository.delete(deletedIngredient);
+        ingredientRepository.delete(ingredientMapper.dtoToIngredient(id));
     }
 
     private Ingredient parseToLowerCase(Ingredient ingredient) {
