@@ -7,6 +7,9 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
+import com.codecool.gastro.service.specification.FilteredRestaurantsSpecification;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +21,12 @@ import java.util.UUID;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
+    private final EntityManager entityManager;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, EntityManager entityManager) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
+        this.entityManager = entityManager;
     }
 
     public List<RestaurantDto> getRestaurants() {
@@ -50,9 +55,10 @@ public class RestaurantService {
                 .toList();
     }
 
-    public List<RestaurantDto> getFilteredRestaurants(String category, String city, String dishName, BigDecimal reviewMin,
-                                                      BigDecimal reviewMax, String reviewSort) {
-        return restaurantRepository.getFilteredRestaurants(category, city, dishName, reviewMin, reviewMax, reviewSort)
+    public List<RestaurantDto> getFilteredRestaurants(String category, String city, String dishName,
+                                                      Double reviewMin, Double reviewMax, String reviewSort) {
+        FilteredRestaurantsSpecification specification = new FilteredRestaurantsSpecification(entityManager);
+        return specification.getFilteredRestaurants(category, city, dishName, reviewMin, reviewMax, reviewSort)
                 .stream()
                 .map(restaurantMapper::toDto)
                 .toList();

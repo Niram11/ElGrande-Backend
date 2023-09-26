@@ -38,14 +38,14 @@ public class RestaurantController {
     public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getDetailedRestaurants(pageable));
     }
-
+//TODO:parameters to object, category and dishName to List
     @GetMapping(path = "/filtered")
     public ResponseEntity<List<RestaurantDto>> getFilteredRestaurants(
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "dishName", required = false) String dishName,
-            @RequestParam(value = "reviewMin", required = false, defaultValue = "0") BigDecimal reviewMin,
-            @RequestParam(value = "reviewMax", required = false, defaultValue = "10") BigDecimal reviewMax,
+            @RequestParam(value = "reviewMin", required = false, defaultValue = "0") Double reviewMin,
+            @RequestParam(value = "reviewMax", required = false, defaultValue = "10") Double reviewMax,
             @RequestParam(value = "reviewSort", required = false, defaultValue = "ASC") String reviewSort) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getFilteredRestaurants(category, city,
                 dishName, reviewMin, reviewMax, reviewSort));
