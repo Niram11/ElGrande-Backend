@@ -16,7 +16,7 @@ public interface ImageMapper {
     Image dtoToImage(NewImageDto newImageDto);
 
     @Mapping(source = "newImageDto.restaurantId", target = "restaurant.id")
-    Image dtoToImage(NewImageDto newImageDto, UUID id);
+    Image dtoToImage(UUID id, NewImageDto newImageDto);
 
     Image dtoToImage(UUID id);
 }

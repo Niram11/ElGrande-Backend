@@ -27,8 +27,8 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ImageDto> getImage(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageBy(id));
+    public ResponseEntity<ImageDto> getImageById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageById(id));
     }
 
     @GetMapping(params = {"restaurantId"})

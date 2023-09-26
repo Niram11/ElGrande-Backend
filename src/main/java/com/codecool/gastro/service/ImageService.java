@@ -28,14 +28,14 @@ public class ImageService {
                 .toList();
     }
 
-    public ImageDto getImageBy(UUID id) {
-        return imageRepository.findOneBy(id)
+    public ImageDto getImageById(UUID id) {
+        return imageRepository.findById(id)
                 .map(imageMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Image.class));
     }
 
     public List<ImageDto> getImagesByRestaurant(UUID id) {
-        return imageRepository.findImagesByRestaurant(id)
+        return imageRepository.findAllByRestaurant(id)
                 .stream()
                 .map(imageMapper::toDto)
                 .toList();
@@ -47,7 +47,7 @@ public class ImageService {
     }
 
     public ImageDto updateImage(UUID id, NewImageDto newImageDto) {
-        Image updatedImage = imageRepository.save(imageMapper.dtoToImage(newImageDto, id));
+        Image updatedImage = imageRepository.save(imageMapper.dtoToImage(id, newImageDto));
         return imageMapper.toDto(updatedImage);
     }
 
