@@ -102,7 +102,7 @@ public class CustomerRepositoryTest {
         customer.setSurname("Surname");
         customer.setEmail("Email@wp.pl");
         customer.setSubmissionTime(LocalDate.of(2010, 10, 10));
-        customer.setPasswordHash("PW");
+        customer.setPassword("PW");
 
         // then
         Customer savedCustomer = repository.save(customer);
@@ -120,7 +120,7 @@ public class CustomerRepositoryTest {
         customer.setSurname("Surname");
         customer.setEmail("Email@wp.pl");
         customer.setSubmissionTime(LocalDate.of(2010, 10, 10));
-        customer.setPasswordHash("PW");
+        customer.setPassword("PW");
 
         // then
         Customer savedCustomer = repository.save(customer);

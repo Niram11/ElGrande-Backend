@@ -16,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CustomerController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CustomerControllerTest {
 
     @Autowired
@@ -54,17 +56,6 @@ public class CustomerControllerTest {
         customerId = UUID.fromString("2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b");
         restaurantId = UUID.fromString("5d05e324-757b-421a-9a47-1f60a7f57120");
         ownershipId = UUID.fromString("dd3895ce-539a-48f7-984d-8adfc3da6565");
-    }
-
-    @Test
-    void testGetAllCustomers_ShouldReturnStatusOkAndList_WhenCalled() throws Exception {
-        // when
-        when(service.getCustomers()).thenReturn(List.of());
-
-        // test
-        mockMvc.perform(get("/api/v1/customers"))
-                .andExpectAll(status().isOk(),
-                        content().json("[]"));
     }
 
     @Test
@@ -179,14 +170,13 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void testCreateNewCustomerAndUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithoutRestaurants() throws Exception {
+    void testUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithoutRestaurants() throws Exception {
         // given
         NewCustomerDto newCustomerDto = new NewCustomerDto(
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                "PW",
-                Set.of()
+                "PW"
         );
 
         CustomerDto customerDto = new CustomerDto(
@@ -203,8 +193,7 @@ public class CustomerControllerTest {
                     "name": "Name",
                     "surname": "Surname",
                     "email": "Email@wp.pl",
-                    "passwordHash": "PW",
-                    "restaurants": []
+                    "password": "PW"
                 }
                 """;
         String contentRespond = """
@@ -223,12 +212,6 @@ public class CustomerControllerTest {
         when(service.updateCustomer(customerId, newCustomerDto)).thenReturn(customerDto);
 
         // test
-        mockMvc.perform(post("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentRespond));
-
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
@@ -253,8 +236,7 @@ public class CustomerControllerTest {
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                "PW",
-                Set.of(restaurantDto)
+                "PW"
         );
 
         CustomerDto customerDto = new CustomerDto(
@@ -271,12 +253,7 @@ public class CustomerControllerTest {
                     "name": "Name",
                     "surname": "Surname",
                     "email": "Email@wp.pl",
-                    "passwordHash": "PW",
-                    "restaurants": [
-                        {
-                            "id": "5d05e324-757b-421a-9a47-1f60a7f57120"
-                        }
-                    ]
+                    "password": "PW"
                 }
                 """;
         String contentRespond = """
@@ -304,12 +281,6 @@ public class CustomerControllerTest {
         when(service.updateCustomer(customerId, newCustomerDto)).thenReturn(customerDto);
 
         // test
-        mockMvc.perform(post("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentRespond));
-
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
@@ -319,29 +290,19 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void testCreateNewCustomerAndUpdateCustomer_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidData() throws Exception {
+    void testUpdateCustomer_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidData() throws Exception {
         // given
         String contentRequest = """
                 {
                     "name": "",
                     "surname": "",
                     "email": "",
-                    "passwordHash": "",
+                    "password": "",
                     "restaurants": []
                 }
                 """;
 
         // test
-        mockMvc.perform(post("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Email cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Password hash cannot be empty"))
-                );
-
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
@@ -349,7 +310,7 @@ public class CustomerControllerTest {
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Email cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Password hash cannot be empty"))
+                        jsonPath("$.errorMessage", Matchers.containsString("Password cannot be empty"))
                 );
 
         // given
@@ -358,20 +319,12 @@ public class CustomerControllerTest {
                     "name": "Name",
                     "surname": "Surname",
                     "email": "email.pl",
-                    "passwordHash": "PW",
+                    "password": "PW",
                     "restaurants": []
                 }
                 """;
 
-        // test
-
-        mockMvc.perform(post("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
-                );
-
+        // then
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))

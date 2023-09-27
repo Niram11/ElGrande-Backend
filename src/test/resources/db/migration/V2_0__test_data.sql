@@ -19,7 +19,7 @@ values ('c56f5aec-de67-4698-b045-7e96ef64dad0', '4e99a0c4-d1bb-48c6-95f3-d202b84
        ('a3fbbd05-7fcc-4a2c-916c-940a2ca940fd', 'c728af54-0d03-4af1-a68e-6364db2370ee', 4, '14:40:00', '11:10:00');
 
 -- CUSTOMER
-insert into customer(id, name, surname, email, submission_time, password_hash, is_deleted)
+insert into customer(id, name, surname, email, submission_time, password, is_deleted)
 values ('3662bb1f-4804-4f37-b0ac-9417e4ec385b', 'Tomek', 'Marcin', 'Tomek@gmail.com', '2012-12-12', 'pw', false),
        ('89b77b49-562f-4570-ae40-52b4e359cb5f', 'Oskar', 'Konrad', 'Oskar@wp.pl', '2011-11-11', 'pw', false);
 

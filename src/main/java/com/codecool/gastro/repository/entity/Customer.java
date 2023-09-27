@@ -32,9 +32,8 @@ public class Customer {
     private String email;
 
     private LocalDate submissionTime;
-
-    @NotBlank(message = "Password hash cannot be empty")
-    private String passwordHash;
+    @NotBlank(message = "Password cannot be empty")
+    private String password;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
 
@@ -83,12 +82,12 @@ public class Customer {
         this.submissionTime = submissionTime;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<Restaurant> getRestaurants() {

@@ -32,7 +32,7 @@ public class CustomerMapperTest {
         customer.setSurname("Surname");
         customer.setEmail("Email@wp.pl");
         customer.setSubmissionTime(LocalDate.of(2012, 12, 12));
-        customer.setPasswordHash("PW");
+        customer.setPassword("PW");
     }
 
     @Test
@@ -89,8 +89,7 @@ public class CustomerMapperTest {
                 customer.getName(),
                 customer.getSurname(),
                 customer.getEmail(),
-                customer.getPasswordHash(),
-                Set.of()
+                customer.getPassword()
         );
 
         // then
@@ -102,14 +101,14 @@ public class CustomerMapperTest {
         assertEquals(customerOne.getName(), customer.getName());
         assertEquals(customerOne.getSurname(), customer.getSurname());
         assertEquals(customerOne.getEmail(), customer.getEmail());
-        assertEquals(customerOne.getPasswordHash(), customer.getPasswordHash());
+        assertEquals(customerOne.getPassword(), customer.getPassword());
         assertEquals(customerOne.getRestaurants().size(), 0);
 
         assertEquals(customerTwo.getId(), customerId);
         assertEquals(customerTwo.getName(), customer.getName());
         assertEquals(customerTwo.getSurname(), customer.getSurname());
         assertEquals(customerTwo.getEmail(), customer.getEmail());
-        assertEquals(customerTwo.getPasswordHash(), customer.getPasswordHash());
+        assertEquals(customerTwo.getPassword(), customer.getPassword());
         assertEquals(customerTwo.getRestaurants().size(), 0);
     }
 

@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +37,8 @@ public class CustomerServiceTest {
     CustomerRepository repository;
     @Mock
     CustomerMapper mapper;
+    @Mock
+    PasswordEncoder encoder;
 
     private UUID customerId;
     private Customer customer;
@@ -74,22 +77,8 @@ public class CustomerServiceTest {
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                "PW",
-                Set.of()
+                "PW"
         );
-    }
-
-    @Test
-    void testGetCustomers_ShouldReturnEmptyList_WhenCalled() {
-        // when
-        when(repository.findAll()).thenReturn(List.of());
-
-        // then
-        List<CustomerDto> list = service.getCustomers();
-
-        // test
-        assertEquals(list.size(), 0);
-        verify(repository, times(1)).findAll();
     }
 
     @Test
@@ -162,6 +151,7 @@ public class CustomerServiceTest {
         when(mapper.dtoToCustomer(newCustomerDto)).thenReturn(customer);
         when(repository.save(customer)).thenReturn(customer);
         when(mapper.toDto(customer)).thenReturn(customerDto);
+
         // then
         CustomerDto testedCustomerDto = service.saveCustomer(newCustomerDto);
 
@@ -171,7 +161,6 @@ public class CustomerServiceTest {
         assertEquals(testedCustomerDto.name(), newCustomerDto.name());
         assertEquals(testedCustomerDto.surname(), newCustomerDto.surname());
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
-        assertEquals(testedCustomerDto.restaurants().size(), newCustomerDto.restaurants().size());
         verify(mapper, times(1)).dtoToCustomer(newCustomerDto);
         verify(mapper, times(1)).toDto(customer);
     }
@@ -194,7 +183,6 @@ public class CustomerServiceTest {
         assertEquals(testedCustomerDto.surname(), newCustomerDto.surname());
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
         assertNotEquals(testedCustomerDto.submissionTime(), captor.getValue().getSubmissionTime());
-        assertEquals(testedCustomerDto.restaurants().size(), newCustomerDto.restaurants().size());
         verify(repository, times(1)).findById(customerId);
         verify(mapper, times(1)).dtoToCustomer(customerId, newCustomerDto);
         verify(mapper, times(1)).toDto(customer);
