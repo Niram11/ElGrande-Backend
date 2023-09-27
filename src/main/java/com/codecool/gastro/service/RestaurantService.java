@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
@@ -9,11 +10,9 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import com.codecool.gastro.service.specification.FilteredRestaurantsSpecification;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,10 +54,9 @@ public class RestaurantService {
                 .toList();
     }
 
-    public List<RestaurantDto> getFilteredRestaurants(String category, String city, String dishName,
-                                                      Double reviewMin, Double reviewMax, String reviewSort) {
+    public List<RestaurantDto> getFilteredRestaurants(FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         FilteredRestaurantsSpecification specification = new FilteredRestaurantsSpecification(entityManager);
-        return specification.getFilteredRestaurants(category, city, dishName, reviewMin, reviewMax, reviewSort)
+        return specification.getFilteredRestaurants(filteredRestaurantsCriteria)
                 .stream()
                 .map(restaurantMapper::toDto)
                 .toList();

@@ -1,5 +1,6 @@
 package com.codecool.gastro.service.specification;
 
+import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.repository.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
@@ -16,8 +17,7 @@ public class FilteredRestaurantsSpecification {
         this.entityManager = entityManager;
     }
 
-    public List<Restaurant> getFilteredRestaurants(String category, String city, String dishName, Double reviewMin,
-                                                   Double reviewMax, String reviewSort) {
+    public List<Restaurant> getFilteredRestaurants(FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Restaurant> criteriaQuery = criteriaBuilder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
@@ -25,17 +25,18 @@ public class FilteredRestaurantsSpecification {
 
         Subquery<Double> averageRatingSubQuery = averageRatingSubQuery(criteriaQuery, root, criteriaBuilder);
 
-        if (category != null) {
-            predicates.add(categoryPredicate(root, criteriaBuilder, category));
+        if (filteredRestaurantsCriteria.category() != null) {
+            predicates.add(categoryPredicate(root, criteriaQuery,  filteredRestaurantsCriteria.category()));
         }
-        if (city != null) {
-            predicates.add(cityPredicate(root, criteriaQuery, criteriaBuilder, city));
+        if (filteredRestaurantsCriteria.city() != null) {
+            predicates.add(cityPredicate(root, criteriaQuery, criteriaBuilder, filteredRestaurantsCriteria.city()));
         }
-        if (dishName != null) {
-            predicates.add(dishPredicate(root, criteriaQuery, criteriaBuilder, dishName));
+        if (filteredRestaurantsCriteria.dishName() != null) {
+            predicates.add(dishPredicate(root, criteriaQuery, filteredRestaurantsCriteria.dishName()));
         }
-        predicates.add(reviewRangePredicate(criteriaBuilder, averageRatingSubQuery, reviewMin, reviewMax));
-        Order order = determineOrder(criteriaBuilder, averageRatingSubQuery, reviewSort);
+        predicates.add(reviewRangePredicate(criteriaBuilder, averageRatingSubQuery,
+                filteredRestaurantsCriteria.reviewMin(), filteredRestaurantsCriteria.reviewMax()));
+        Order order = determineOrder(criteriaBuilder, averageRatingSubQuery, filteredRestaurantsCriteria.reviewSort());
 
         criteriaQuery.orderBy(order);
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
@@ -43,9 +44,10 @@ public class FilteredRestaurantsSpecification {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    private Predicate categoryPredicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, String category) {
-        Join<Restaurant, RestaurantCategory> joinCategory = root.join("categories", JoinType.LEFT);
-        return criteriaBuilder.equal(joinCategory.get("category"), category);
+    private Predicate categoryPredicate(Root<Restaurant> root, CriteriaQuery<Restaurant> criteriaQuery,
+                                        List<String> category) {
+        Subquery<UUID> categorySubQuery = categorySubQuery(criteriaQuery, category);
+        return root.get("id").in(categorySubQuery);
     }
 
     private Predicate cityPredicate(Root<Restaurant> root, CriteriaQuery<Restaurant> criteriaQuery,
@@ -55,8 +57,8 @@ public class FilteredRestaurantsSpecification {
     }
 
     private Predicate dishPredicate(Root<Restaurant> root, CriteriaQuery<Restaurant> criteriaQuery,
-                                    CriteriaBuilder criteriaBuilder, String dishName) {
-        Subquery<UUID> dishSubQuery = dishSubQuery(criteriaQuery, criteriaBuilder, dishName);
+                                    List<String> dishName) {
+        Subquery<UUID> dishSubQuery = dishSubQuery(criteriaQuery, dishName);
         return root.get("id").in(dishSubQuery);
     }
 
@@ -76,6 +78,14 @@ public class FilteredRestaurantsSpecification {
         }
     }
 
+    private Subquery<UUID> categorySubQuery(CriteriaQuery<?> criteriaQuery, List<String> category) {
+        Subquery<UUID> subquery = criteriaQuery.subquery(UUID.class);
+        Root<RestaurantCategory> categoryRoot = subquery.from(RestaurantCategory.class);
+        subquery.select(categoryRoot.get("restaurants").<UUID>get("id"));
+        subquery.where(categoryRoot.get("category").in(category));
+        return subquery;
+    }
+
     private Subquery<UUID> addressSubQuery(CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder,
                                            String city) {
         Subquery<UUID> subquery = criteriaQuery.subquery(UUID.class);
@@ -85,12 +95,11 @@ public class FilteredRestaurantsSpecification {
         return subquery;
     }
 
-    private Subquery<UUID> dishSubQuery(CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder,
-                                        String dishName) {
+    private Subquery<UUID> dishSubQuery(CriteriaQuery<?> criteriaQuery, List<String> dishName) {
         Subquery<UUID> subquery = criteriaQuery.subquery(UUID.class);
         Root<Dish> dishRoot = subquery.from(Dish.class);
         subquery.select(dishRoot.get("restaurant").<UUID>get("id"));
-        subquery.where(criteriaBuilder.equal(dishRoot.get("dishName"), dishName));
+        subquery.where(dishRoot.get("dishName").in(dishName));
         return subquery;
     }
 
