@@ -47,7 +47,7 @@ public class FormService {
     }
 
     @Transactional
-    public void provideForm(NewFormRestaurantDto newFormDto) {
+    public void provideRestaurantForm(NewFormRestaurantDto newFormDto) {
         Restaurant restaurant = restaurantMapper.dtoToRestaurant(newFormDto.restaurant());
         Location location = handleLocation(newFormDto.location(), restaurant);
         List<BusinessHour> businessHours = handleBusinessHours(newFormDto.businessHour(), restaurant);

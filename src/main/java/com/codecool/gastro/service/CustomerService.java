@@ -7,6 +7,7 @@ import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,19 +18,14 @@ import java.util.UUID;
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final PasswordEncoder encoder;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, PasswordEncoder encoder) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.encoder = encoder;
     }
 
-
-    public List<CustomerDto> getCustomers() {
-        return customerRepository.findAll()
-                .stream()
-                .map(customerMapper::toDto)
-                .toList();
-    }
 
     public CustomerDto getCustomerById(UUID id) {
         return customerRepository.findById(id)
@@ -46,14 +42,16 @@ public class CustomerService {
     public CustomerDto saveCustomer(NewCustomerDto newCustomerDto) {
         Customer customerToSave = customerMapper.dtoToCustomer(newCustomerDto);
         customerToSave.setSubmissionTime(LocalDate.now());
+        customerToSave.setPassword(encoder.encode(customerToSave.getPassword()));
         return customerMapper.toDto(customerRepository.save(customerToSave));
     }
 
     public CustomerDto updateCustomer(UUID id, NewCustomerDto newCustomerDto) {
         customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-        Customer updatedCustomer = customerRepository.save(customerMapper.dtoToCustomer(id, newCustomerDto));
-        return customerMapper.toDto(updatedCustomer);
+        Customer customerToUpdate = customerMapper.dtoToCustomer(id, newCustomerDto);
+        customerToUpdate.setPassword(encoder.encode(customerToUpdate.getPassword()));
+        return customerMapper.toDto(customerRepository.save(customerToUpdate));
     }
 
 

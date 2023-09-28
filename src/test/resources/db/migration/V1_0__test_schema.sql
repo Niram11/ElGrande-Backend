@@ -6,7 +6,7 @@ create table customer
         primary key,
     email           varchar(255),
     name            varchar(255),
-    password_hash   varchar(255),
+    password        varchar(255),
     surname         varchar(255)
 );
 

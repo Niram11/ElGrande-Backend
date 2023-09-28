@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,11 +21,6 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDto>> getAllCustomers() {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomers());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerById(id));
@@ -36,12 +30,6 @@ public class CustomerController {
     public ResponseEntity<DetailedCustomerDto> getDetailedCustomerById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerById(id));
     }
-
-    @PostMapping
-    public ResponseEntity<CustomerDto> createNewCustomer(@Valid @RequestBody NewCustomerDto newCustomerDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.saveCustomer(newCustomerDto));
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @Valid @RequestBody NewCustomerDto updateDto) {
