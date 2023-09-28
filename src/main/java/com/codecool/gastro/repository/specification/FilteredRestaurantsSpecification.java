@@ -1,4 +1,4 @@
-package com.codecool.gastro.service.specification;
+package com.codecool.gastro.repository.specification;
 
 import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.repository.entity.*;

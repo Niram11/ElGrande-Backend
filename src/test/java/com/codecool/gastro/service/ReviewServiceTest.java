@@ -41,7 +41,7 @@ class ReviewServiceTest {
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
-    public static final Pageable PAGEABLE = (Pageable) PageRequest.of(0, 100000);
+    public static final Pageable PAGEABLE = PageRequest.of(0, 100000);
 
 
     @Test
@@ -127,7 +127,7 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //When
-        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID,PAGEABLE)).thenReturn((Page<Review>) List.of(review));
+        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID,PAGEABLE)).thenReturn(List.of(review));
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
         List<ReviewDto> reviews = service.getReviewsByRestaurant(RESTAURANT_ID, PAGEABLE);
 

@@ -8,7 +8,7 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
-import com.codecool.gastro.service.specification.FilteredRestaurantsSpecification;
+import com.codecool.gastro.repository.specification.FilteredRestaurantsSpecification;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

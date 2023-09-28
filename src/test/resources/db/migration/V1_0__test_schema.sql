@@ -201,9 +201,9 @@ create table restaurant_restaurant_category
 
 create table review
 (
-    grade           numeric(38, 2)
+    grade           double precision
         constraint review_grade_check
-            check ((grade >= (1)::numeric) AND (grade <= (10)::numeric)),
+            check ((grade >= (1)::double precision) AND (grade <= (10)::double precision)),
     submission_time date,
     customer_id     uuid not null
         constraint fkgce54o0p6uugoc2tev4awewly

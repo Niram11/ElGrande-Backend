@@ -25,6 +25,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
             "left join fetch rev.restaurant " +
             "left join fetch rev.customer " +
             "where rev.restaurant.id = :id")
-    Page<Review> getReviewsByRestaurant(UUID id, Pageable pageable);
+    List<Review> getReviewsByRestaurant(UUID id, Pageable pageable);
 
 }
