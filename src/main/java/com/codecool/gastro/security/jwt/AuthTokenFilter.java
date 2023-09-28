@@ -59,4 +59,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+//    private String parseOAuth2(HttpServletRequest request) {
+//        String principal = request.getAuthType();
+//
+//    }
 }

@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.auth.LoginRequest;
 import com.codecool.gastro.dto.auth.RefreshedTokenResponse;
 import com.codecool.gastro.dto.auth.TokenRefreshRequest;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
-import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.security.jwt.JwtUtils;
 import com.codecool.gastro.security.service.UserDetailsImpl;
 import com.codecool.gastro.service.CustomerService;
@@ -15,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auths")
@@ -69,5 +70,10 @@ public class AuthController {
                 jwt,
                 "Bearer"
         ));
+    }
+
+    @PostMapping("/oauth2/signup")
+    public ResponseEntity<?> registerOAuth2User(@AuthenticationPrincipal OAuth2User user) {
+        return ResponseEntity.ok("");
     }
 }
