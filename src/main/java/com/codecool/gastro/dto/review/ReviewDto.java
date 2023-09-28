@@ -8,7 +8,7 @@ import java.util.UUID;
 public record ReviewDto(
         UUID id,
         String comment,
-        BigDecimal grade,
+        Double grade,
         LocalDate submissionTime
 ) {
 }

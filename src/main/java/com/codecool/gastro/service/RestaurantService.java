@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
@@ -7,6 +8,8 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
+import com.codecool.gastro.service.specification.FilteredRestaurantsSpecification;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,12 @@ import java.util.UUID;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
+    private final EntityManager entityManager;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, EntityManager entityManager) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
+        this.entityManager = entityManager;
     }
 
     public List<RestaurantDto> getRestaurants() {
@@ -46,6 +51,14 @@ public class RestaurantService {
         return restaurantRepository.findAllDetailedRestaurants(pageable)
                 .stream()
                 .map(restaurantMapper::toDetailedDto)
+                .toList();
+    }
+
+    public List<RestaurantDto> getFilteredRestaurants(FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+        FilteredRestaurantsSpecification specification = new FilteredRestaurantsSpecification(entityManager);
+        return specification.getFilteredRestaurants(filteredRestaurantsCriteria)
+                .stream()
+                .map(restaurantMapper::toDto)
                 .toList();
     }
 

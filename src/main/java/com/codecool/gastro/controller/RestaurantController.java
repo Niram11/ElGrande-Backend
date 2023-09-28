@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
@@ -36,6 +37,13 @@ public class RestaurantController {
     @GetMapping(params = {"page", "size", "sort"})
     public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getDetailedRestaurants(pageable));
+    }
+
+    @GetMapping(path = "/filtered")
+    public ResponseEntity<List<RestaurantDto>> getFilteredRestaurants(
+            @ModelAttribute FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(restaurantService.getFilteredRestaurants(filteredRestaurantsCriteria));
     }
 
     @PostMapping
