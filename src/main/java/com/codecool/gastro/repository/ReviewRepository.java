@@ -1,10 +1,12 @@
 package com.codecool.gastro.repository;
 
-
 import com.codecool.gastro.repository.entity.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +25,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
             "left join fetch rev.restaurant " +
             "left join fetch rev.customer " +
             "where rev.restaurant.id = :id")
-    List<Review> getReviewsByRestaurant(UUID id);
+    Page<Review> getReviewsByRestaurant(UUID id, Pageable pageable);
+
 }

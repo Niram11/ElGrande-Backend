@@ -1,6 +1,5 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
@@ -9,15 +8,16 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
-import java.math.BigDecimal;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -36,15 +36,16 @@ class ReviewServiceTest {
     private ReviewRepository repository;
 
     private final static String COMMENT = "comment";
-    private final static BigDecimal GRADE = BigDecimal.valueOf(6);
+    private final static Double GRADE = Double.valueOf(6);
     private final static UUID REVIEW_ID = UUID.randomUUID();
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
+    public static final Pageable PAGEABLE = (Pageable) PageRequest.of(0, 100000);
 
 
     @Test
-    void getReviews() {
+    void testGetReviews() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -126,9 +127,9 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //When
-        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID)).thenReturn(List.of(review));
+        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID,PAGEABLE)).thenReturn((Page<Review>) List.of(review));
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
-        List<ReviewDto> reviews = service.getReviewsByRestaurant(RESTAURANT_ID);
+        List<ReviewDto> reviews = service.getReviewsByRestaurant(RESTAURANT_ID, PAGEABLE);
 
         //Test
         assertEquals(List.of(reviewDto), reviews);

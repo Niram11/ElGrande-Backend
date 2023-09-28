@@ -9,6 +9,7 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -36,8 +37,8 @@ public class ReviewService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
     }
 
-    public List<ReviewDto> getReviewsByRestaurant(UUID id) {
-        return reviewRepository.getReviewsByRestaurant(id)
+    public List<ReviewDto> getReviewsByRestaurant(UUID id, Pageable pageable) {
+        return reviewRepository.getReviewsByRestaurant(id, pageable)
                 .stream()
                 .map(reviewMapper::toDto)
                 .toList();

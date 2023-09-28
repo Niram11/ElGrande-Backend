@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,10 +32,11 @@ public class ReviewController {
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewBy(id));
     }
-
+//TODO: specification ASC DESC, pagable
     @GetMapping(params = "restaurantId")
-    public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByRestaurant(restaurantId));
+    public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId,
+                                                                   Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByRestaurant(restaurantId, pageable));
     }
 
     @PostMapping

@@ -20,7 +20,7 @@ public class Review {
     private String comment;
     @Min(value = 1, message = "Grade must be greater then or equal 1")
     @Max(value = 10, message = "Grade must be less then or equal 10")
-    private BigDecimal grade;
+    private Double grade;
 
     private LocalDate submissionTime;
     @ManyToOne
@@ -49,11 +49,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public BigDecimal getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
-    public void setGrade(BigDecimal grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 
