@@ -29,9 +29,7 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(Customer customer) {
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER"));
-
+    public static UserDetailsImpl build(Customer customer, Collection<GrantedAuthority> authorities) {
         return new UserDetailsImpl(
                 customer.getId(),
                 customer.getName(),

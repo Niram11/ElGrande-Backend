@@ -9,9 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Customer {
@@ -20,7 +18,7 @@ public class Customer {
     private UUID id;
 
     @NotBlank(message = "Name cannot be empty")
-    @Size(min=3)
+    @Size(min = 3)
     private String name;
 
     @NotBlank(message = "Surname cannot be empty")
@@ -36,6 +34,12 @@ public class Customer {
     private String password;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "customer_role",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
     private Boolean isDeleted = false;
 
@@ -92,6 +96,14 @@ public class Customer {
 
     public Set<Restaurant> getRestaurants() {
         return restaurants;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     public Boolean getDeleted() {

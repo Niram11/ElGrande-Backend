@@ -64,14 +64,14 @@ public class WebSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/**").permitAll()
+                        auth.requestMatchers("/api/**", "/error").permitAll()
                                 .anyRequest().authenticated()
-                );
-//                .oauth2Login(withDefaults())
-//                .logout(l -> l.logoutSuccessUrl("/").permitAll());
+                )
+                .oauth2Login(withDefaults())
+                .logout(l -> l.logoutSuccessUrl("/").permitAll());
 
 
         http.authenticationProvider(authenticationProvider());
