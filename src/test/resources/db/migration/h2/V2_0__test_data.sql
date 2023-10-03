@@ -54,7 +54,7 @@ values ('0188a205-ed29-405e-9245-4b714a0db157', '84ebf2b8-f8c7-4b63-966a-0057d4b
 
 -- IMAGE
 insert into image(id, restaurant_id, path_to_image)
-values ('d9ea6cf3-b18d-4a6c-a023-0747345bd275', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'path/to'),
-       ('52792893-e2cf-47b7-98fd-ef7f047b79c3', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'path/to'),
-       ('5989c2d8-8ac0-47b6-8b7c-1d335a6f2da2', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to'),
-       ('4cf8b369-77af-489d-8967-806d4fdffab5', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to');
+values ('d9ea6cf3-b18d-4a6c-a023-0747345bd275', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'path/to/1'),
+       ('52792893-e2cf-47b7-98fd-ef7f047b79c3', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'path/to/2'),
+       ('5989c2d8-8ac0-47b6-8b7c-1d335a6f2da2', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to/3'),
+       ('4cf8b369-77af-489d-8967-806d4fdffab5', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to/4');
