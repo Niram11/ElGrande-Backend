@@ -34,12 +34,12 @@ public class Customer {
     private String password;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
-    @ManyToMany
-    @JoinTable(
-            name = "customer_role",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "customer_role",
+//            joinColumns = @JoinColumn(name = "customer_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    private Collection<Role> roles;
 
     private Boolean isDeleted = false;
 
@@ -98,13 +98,13 @@ public class Customer {
         return restaurants;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
+//    public Collection<Role> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(Collection<Role> roles) {
+//        this.roles = roles;
+//    }
 
     public Boolean getDeleted() {
         return isDeleted;
