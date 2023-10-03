@@ -32,6 +32,12 @@ public class ReviewController {
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewBy(id));
     }
+
+    @GetMapping(params = "{customerId}")
+    public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByCustomerId(customerId));
+    }
+
 //TODO: specification ASC DESC, pagable
     @GetMapping(params = "restaurantId")
     public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId,

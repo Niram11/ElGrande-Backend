@@ -44,6 +44,13 @@ public class ReviewService {
                 .toList();
     }
 
+    public List<ReviewDto> getReviewByCustomerId(UUID id) {
+        return reviewRepository.getReviewsByCustomerId(id)
+                .stream()
+                .map(reviewMapper::toDto)
+                .toList();
+    }
+
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());
