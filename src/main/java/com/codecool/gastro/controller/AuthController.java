@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/auths")
 public class AuthController {
     AuthenticationManager authenticationManager;
@@ -47,7 +48,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(
+        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(
                 jwt,
                 "Bearer",
                 userDetails.getId(),
@@ -72,8 +73,8 @@ public class AuthController {
         ));
     }
 
-    @PostMapping("/oauth2/signup")
-    public ResponseEntity<?> registerOAuth2User(@AuthenticationPrincipal OAuth2User user) {
-        return ResponseEntity.ok("");
-    }
+//    @PostMapping("/oauth2/signup")
+//    public ResponseEntity<?> registerOAuth2User(@AuthenticationPrincipal OAuth2User user) {
+//        return ResponseEntity.ok("");
+//    }
 }

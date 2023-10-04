@@ -1,7 +1,8 @@
 package com.codecool.gastro.repository;
 
+import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.repository.entity.Review;
-import org.springframework.data.domain.Page;
+import com.codecool.gastro.repository.projection.DetailedReviewProjection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,13 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
             "where rev.restaurant.id = :id")
     List<Review> getReviewsByRestaurant(UUID id, Pageable pageable);
 
+
+    @Query("select rev from Review rev where rev.customer.id = :id")
+    List<Review> getReviewsByCustomerId(UUID id);
+
+    @Query(nativeQuery = true, value = """
+            select r.comment, r.grade, r.submission_time, c.name from review r left join customer c on r.customer_id = c.id
+            where restaurant_id = :restaurantId
+            """)
+    List<DetailedReviewProjection> findDetailedReviewsByRestaurantId(UUID restaurantId);
 }

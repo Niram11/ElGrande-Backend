@@ -4,7 +4,8 @@ create table customer
     submission_time date,
     id              uuid not null
         primary key,
-    email           varchar(255),
+    email           varchar(255)
+        unique,
     name            varchar(255),
     password        varchar(255),
     surname         varchar(255)
@@ -28,9 +29,9 @@ create table ingredient
 
 create table location
 (
-    latitude  numeric(38, 2),
-    longitude numeric(38, 2),
-    id        uuid not null
+    latitude  numeric(38, 2) not null,
+    longitude numeric(38, 2) not null,
+    id        uuid           not null
         primary key
 );
 
@@ -74,14 +75,14 @@ create table address
 
 create table business_hour
 (
-    closing_hour  time(6),
-    day_of_week   integer
+    closing_hour  time(6) not null,
+    day_of_week   integer not null
         constraint business_hour_day_of_week_check
             check ((day_of_week >= 1) AND (day_of_week <= 7)),
-    opening_hour  time(6),
-    id            uuid not null
+    opening_hour  time(6) not null,
+    id            uuid    not null
         primary key,
-    restaurant_id uuid not null
+    restaurant_id uuid    not null
         constraint fkin1qvmlk3n7dta0ussafe9i4m
             references restaurant
 );
@@ -139,8 +140,8 @@ create table image
         constraint fk1sx05gapcfuchki4jyoup6wrv
             references restaurant,
     path_to_image varchar(255)
+        unique
 );
-
 
 create table location_restaurants
 (
@@ -166,7 +167,6 @@ create table ownership_restaurants
     primary key (ownership_id, restaurants_id)
 );
 
-
 create table promoted_local
 (
     end_date      time(6),
@@ -178,7 +178,6 @@ create table promoted_local
         constraint fk3qt6e9f8vb7o4ognw5chphatv
             references restaurant
 );
-
 
 create table restaurant_category
 (
@@ -215,3 +214,4 @@ create table review
             references restaurant,
     comment         varchar(255)
 );
+

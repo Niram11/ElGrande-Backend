@@ -1,10 +1,12 @@
 package com.codecool.gastro.service;
 
 
+import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Review;
+import com.codecool.gastro.repository.projection.DetailedReviewProjection;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,13 @@ public class ReviewService {
                 .toList();
     }
 
+    public List<ReviewDto> getReviewByCustomerId(UUID id) {
+        return reviewRepository.getReviewsByCustomerId(id)
+                .stream()
+                .map(reviewMapper::toDto)
+                .toList();
+    }
+
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());
@@ -59,5 +68,12 @@ public class ReviewService {
 
     public void deleteReview(UUID id) {
         reviewRepository.delete(reviewMapper.dtoToReview(id));
+    }
+
+    public List<DetailedReview> getDetailedReviewsByRestaurantId(UUID restaurantId) {
+        return reviewRepository.findDetailedReviewsByRestaurantId(restaurantId)
+                .stream()
+                .map(reviewMapper::toDetailedDto)
+                .toList();
     }
 }

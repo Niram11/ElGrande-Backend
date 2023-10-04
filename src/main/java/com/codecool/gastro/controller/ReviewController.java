@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller;
 
 
+import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.service.ReviewService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +34,17 @@ public class ReviewController {
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewBy(id));
     }
-//TODO: specification ASC DESC, pagable
+
+    @GetMapping(params = "{customerId}")
+    public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByCustomerId(customerId));
+    }
+
+    @GetMapping(value = "/details", params = "restaurantId")
+    public ResponseEntity<List<DetailedReview>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getDetailedReviewsByRestaurantId(restaurantId));
+    }
+
     @GetMapping(params = "restaurantId")
     public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId,
                                                                    Pageable pageable) {
@@ -43,6 +55,7 @@ public class ReviewController {
     public ResponseEntity<ReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.saveReview(newReviewDTO));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody NewReviewDto newReviewDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.updateReview(id, newReviewDTO));

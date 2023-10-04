@@ -39,6 +39,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
                     res.name,
                     res.description,
                     res.website,
+                    res.is_deleted,
                     res.contact_number AS contactNumber,
                     res.contact_email AS contactEmail,
                     ARRAY_AGG(DISTINCT ima.path_to_image) FILTER (
@@ -61,6 +62,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
                     GROUP BY
                         res.id
               ) AS rev_data ON res_data.id = rev_data.id
+            WHERE res_data.is_deleted = false
             ORDER BY
             CASE WHEN averageGrade IS NULL THEN 1 ELSE 0 END,
             averageGrade DESC

@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +31,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(Customer customer) {
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("USER"));
-
+        Collection<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("USER"));
         return new UserDetailsImpl(
                 customer.getId(),
                 customer.getName(),
