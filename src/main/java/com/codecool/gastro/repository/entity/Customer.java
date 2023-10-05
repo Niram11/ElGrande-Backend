@@ -16,31 +16,20 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     @NotBlank(message = "Name cannot be empty")
     @Size(min = 3)
     private String name;
-
-    @NotBlank(message = "Surname cannot be empty")
     private String surname;
-
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email")
     @Column(unique = true)
     private String email;
-
     private LocalDate submissionTime;
-    @NotBlank(message = "Password cannot be empty")
     private String password;
+    @Enumerated(EnumType.STRING)
+    private CustomerRole role;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
-//    @ManyToMany
-//    @JoinTable(
-//            name = "customer_role",
-//            joinColumns = @JoinColumn(name = "customer_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Collection<Role> roles;
-
     private Boolean isDeleted = false;
 
     public Customer() {
@@ -94,17 +83,17 @@ public class Customer {
         this.password = password;
     }
 
+    public CustomerRole getRole() {
+        return role;
+    }
+
+    public void setRole(CustomerRole role) {
+        this.role = role;
+    }
+
     public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
-
-//    public Collection<Role> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Collection<Role> roles) {
-//        this.roles = roles;
-//    }
 
     public Boolean getDeleted() {
         return isDeleted;

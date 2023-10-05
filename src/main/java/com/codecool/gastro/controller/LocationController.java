@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/locations")
 public class LocationController {
     private final LocationService locationsService;

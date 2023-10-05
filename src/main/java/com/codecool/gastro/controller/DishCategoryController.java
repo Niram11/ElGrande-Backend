@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/dish-categories")
 public class DishCategoryController {
     private final DishCategoryService dishCategoryService;
