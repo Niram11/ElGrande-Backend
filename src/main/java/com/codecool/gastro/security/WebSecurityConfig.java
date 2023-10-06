@@ -20,6 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -68,26 +69,31 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfiguration()))
-//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/v1/auths/**", "/error").permitAll()
+                        auth.requestMatchers(
+                                        "/api/v1/auths/**",
+                                        "/login",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/error"
+                                ).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oath2 -> {
                     oath2.successHandler(oAuth2LoginSuccessHandler);
+                    oath2.loginPage("/login").permitAll();
                 })
-                .logout(l -> l.logoutSuccessUrl("/").permitAll());
-
-
-        http.authenticationProvider(authenticationProvider());
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                .logout(l -> l.logoutSuccessUrl("/").permitAll())
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

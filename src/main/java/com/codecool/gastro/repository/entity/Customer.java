@@ -27,7 +27,7 @@ public class Customer {
     private LocalDate submissionTime;
     private String password;
     @Enumerated(EnumType.STRING)
-    private CustomerRole role;
+    private CustomerRole role = CustomerRole.ROLE_USER;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
     private Boolean isDeleted = false;

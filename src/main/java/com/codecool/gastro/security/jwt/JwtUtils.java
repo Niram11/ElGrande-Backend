@@ -6,6 +6,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Component
@@ -77,5 +82,17 @@ public class JwtUtils {
         }
 
         return false;
+    }
+
+    public String parseJwt(HttpServletRequest request) {
+        if (Objects.isNull(request.getCookies())) {
+            return null;
+        }
+
+        Optional<Cookie> jwtToken = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("JWTTOKEN"))
+                .findFirst();
+
+        return jwtToken.map(Cookie::getValue).orElse(null);
     }
 }

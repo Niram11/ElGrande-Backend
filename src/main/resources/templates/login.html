@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodSpot</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+    <script defer type="module" th:src="@{/js/LoginHandler.js}"></script>
+    <!--    <link rel="stylesheet" type="text/css" href="../static/css/login.css" />-->
+</head>
+<body>
+<div class="login-form">
+    <h3>Login</h3>
+    <form>
+        <label>Email
+            <br>
+            <input name="email" type="email">
+        </label>
+        <label>
+            Password
+            <br>
+            <input name="password" type="password">
+        </label>
+        <button type="submit">Log in</button>
+    </form>
+    <button><a href="/oauth2/authorization/google">Sign up using Google</a></button>
+</div>
+</body>
+</html>

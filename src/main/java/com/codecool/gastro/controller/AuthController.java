@@ -9,6 +9,8 @@ import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.security.jwt.JwtUtils;
 import com.codecool.gastro.security.service.UserDetailsImpl;
 import com.codecool.gastro.service.CustomerService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/jwt/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
@@ -51,10 +53,8 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(
                 jwt,
-                "Bearer",
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail()

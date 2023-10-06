@@ -1,0 +1,26 @@
+body {
+    background-color: lightgray;
+}
+
+.login-form {
+    border: rgb(128, 128, 128) 1px solid;
+    margin: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+button {
+    margin-bottom: 10px;
+}
