@@ -82,6 +82,7 @@ public class WebSecurityConfig {
                                         "/api/v1/**",
                                         "/login",
                                         "/css/**",
+                                        "/img/**",
                                         "/js/**",
                                         "/error"
                                 ).permitAll()

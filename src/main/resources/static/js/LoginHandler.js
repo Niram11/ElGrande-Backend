@@ -18,7 +18,7 @@ form.addEventListener('submit', (e) => {
     })
 
     loginUser(formDataObject).then(responseData => {
-        document.cookie = `JWTTOKEN=${responseData.token}`
+        document.cookie = `JWT_TOKEN=${responseData.token}`
         window.location.href = "http://localhost:3000/main-page"
     })
 
