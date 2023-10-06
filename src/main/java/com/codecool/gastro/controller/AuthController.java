@@ -9,6 +9,7 @@ import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.security.jwt.JwtUtils;
 import com.codecool.gastro.security.service.UserDetailsImpl;
 import com.codecool.gastro.service.CustomerService;
+import com.nimbusds.oauth2.sdk.TokenRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -42,8 +43,14 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
+    @GetMapping("/jwt")
+    public ResponseEntity<CustomerDto> getJwtUser(@Valid @RequestBody TokenRefreshRequest token) {
+        String email = jwtUtils.getEmailFromJwtToken(token.token());
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerByEmail(email));
+    }
+
     @PostMapping("/jwt/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
@@ -78,7 +85,7 @@ public class AuthController {
     }
 
     @GetMapping("/oauth2")
-    public ResponseEntity<CustomerDto> registerOAuth2User(@AuthenticationPrincipal OAuth2User user) {
+    public ResponseEntity<CustomerDto> getOAuth2User(@AuthenticationPrincipal OAuth2User user) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerByEmail(user.getAttribute("email")));
     }
 

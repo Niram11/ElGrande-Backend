@@ -1,26 +1,104 @@
 body {
-    background-color: lightgray;
-}
-
-.login-form {
-    border: rgb(128, 128, 128) 1px solid;
-    margin: 15%;
+    background: linear-gradient(36deg, rgba(255,159,0,1) 0%, rgba(255,245,0,1) 35%, rgba(52,211,24,1) 66%, rgba(3,175,50,1) 100%);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.login-form {
+    border: lightgray 1px solid;
+    border-radius: 3px;
+    background-color: whitesmoke;
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    width: max-content;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-label {
-    text-align: center;
-    padding-bottom: 10px;
-}
-
-button {
+input {
+    font-size: 18px;
+    width: 15vw;
+    height: 5vh;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border: 1px rgb(128, 128, 128) solid;
     margin-bottom: 10px;
+    text-overflow: ellipsis;
+}
+
+form button {
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    width: 15vw;
+    height: 5vh;
+    background: rgb(17,13,87);
+    background: linear-gradient(90deg, rgba(17,13,87,1) 0%, rgba(8,38,140,1) 100%);
+    margin-bottom: 10px;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.options {
+    font-size: 18px;
+    margin-bottom: 10px;
+    width: 15vw;
+    text-align: center;
+}
+
+.options #forget-pw {
+    float: left;
+}
+.options #signup {
+    float: right;
+}
+
+span {
+    font-size: 16px;
+    color: rgb(128, 128, 128);
+    margin-bottom: 10px;
+}
+
+#login a {
+    color: black;
+}
+
+#google{
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background: rgb(113,18,18);
+    background: linear-gradient(90deg, rgba(113,18,18,1) 0%, rgba(221,111,111,1) 100%);
+    border-radius: 3px;
+    width: 15vw;
+    height: 5vh;
+    margin-bottom: 10px;
+}
+
+#google a {
+    color: white;
+}
+
+img {
+    width: 10vw;
+    height: 15vh;
 }

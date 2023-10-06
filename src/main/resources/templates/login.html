@@ -4,25 +4,29 @@
     <meta charset="UTF-8">
     <title>FoodSpot</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
-    <script defer type="module" th:src="@{/js/LoginHandler.js}"></script>
-    <!--    <link rel="stylesheet" type="text/css" href="../static/css/login.css" />-->
+    <script type="module" th:src="@{/js/LoginHandler.js}" defer></script>
+<!--    <script type="module" src="../static/js/LoginHandler.js" defer></script>-->
+<!--    <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>-->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&family=Quicksand:wght@500&display=swap');
+    </style>
 </head>
 <body>
 <div class="login-form">
-    <h3>Login</h3>
+    <img th:src="@{/img/FoodSpotTransparent.png}" alt="Image">
+<!--    <img src="../static/img/FoodSpotTransparent.png" alt="Image">-->
     <form>
-        <label>Email
-            <br>
-            <input name="email" type="email">
-        </label>
-        <label>
-            Password
-            <br>
-            <input name="password" type="password">
-        </label>
+        <input placeholder="E-mail" name="email" type="email">
+        <input placeholder="Password" name="password" type="password">
         <button type="submit">Log in</button>
     </form>
-    <button><a href="/oauth2/authorization/google">Sign up using Google</a></button>
+    <div class="options">
+        <a id="forget-pw">Forgot Password?</a>
+        <a id="signup">Sing Up</a>
+        <span id="login" hidden>Have an account? <a>Log In</a></span>
+    </div>
+    <span>or you can log in with</span>
+    <button id="google"><a href="/oauth2/authorization/google">Google</a></button>
 </div>
 </body>
 </html>

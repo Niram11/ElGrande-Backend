@@ -1,6 +1,10 @@
 package com.codecool.gastro.controller.advice;
 
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.TransientPropertyValueException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -57,6 +61,31 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
         String errMsg = "One or more fields are does not meet requirements";
+        return new ErrorResponse(errMsg);
+    }
+
+    @ExceptionHandler(value = MalformedJwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMalformedJwtException(MalformedJwtException ex) {
+        String errMsg = "Invalid JWT token: " + ex.getMessage();
+        return new ErrorResponse(errMsg);
+    }
+    @ExceptionHandler(value = UnsupportedJwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUnsupportedJwtException(UnsupportedJwtException ex) {
+        String errMsg = "JWT token is unsupported: " + ex.getMessage();
+        return new ErrorResponse(errMsg);
+    }
+    @ExceptionHandler(value = SignatureException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleSignatureException(SignatureException ex) {
+        String errMsg = "Invalid JWT signature: " + ex.getMessage();
+        return new ErrorResponse(errMsg);
+    }
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleExpiredJwtException(ExpiredJwtException ex) {
+        String errMsg = "JWT token is expired: " + ex.getMessage();
         return new ErrorResponse(errMsg);
     }
 
