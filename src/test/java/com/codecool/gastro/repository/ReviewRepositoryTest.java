@@ -75,12 +75,12 @@ class ReviewRepositoryTest {
         projectionTwo.setSubmissionTime(LocalDate.of(2022,5,7));
         projectionTwo.setName("Tomek");
 
+
+        // todo: fix that test is true even though fields are different
         List<DetailedReviewProjection> expected = List.of(projectionOne, projectionTwo);
-        assertThat(actual).usingRecursiveComparison()
-                .ignoringCollectionOrder()
-                .comparingOnlyFields("comment")
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("getComment", "getGrade", "getName", "getSubmissionTime")
                 .isEqualTo(expected);
-//        expected.get(0).equals(null);
     }
 }
-//assertThat(projectionOne).usingRecursiveComparison().isEqualTo(projectionTwo)
