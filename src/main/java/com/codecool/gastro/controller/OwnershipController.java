@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/ownerships")
 public class OwnershipController {
     private final OwnershipService ownershipService;

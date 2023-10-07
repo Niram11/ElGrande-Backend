@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
     private final CustomerService customerService;

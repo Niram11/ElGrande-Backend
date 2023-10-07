@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public record JwtResponse(
         String token,
-        String type,
         UUID id,
         String name,
         String email

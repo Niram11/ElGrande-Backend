@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
 @RequestMapping("api/v1/dishes")
 public class DishController {
     private final DishService dishService;

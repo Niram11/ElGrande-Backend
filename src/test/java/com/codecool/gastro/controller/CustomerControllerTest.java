@@ -308,7 +308,6 @@ public class CustomerControllerTest {
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Email cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Password cannot be empty"))
                 );

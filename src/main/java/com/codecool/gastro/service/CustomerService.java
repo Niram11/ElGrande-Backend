@@ -5,6 +5,7 @@ import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -78,4 +80,9 @@ public class CustomerService {
         customer.setDeleted(true);
     }
 
+    public CustomerDto getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .map(customerMapper::toDto)
+                .orElseThrow(() -> new EmailNotFoundException(email));
+    }
 }
