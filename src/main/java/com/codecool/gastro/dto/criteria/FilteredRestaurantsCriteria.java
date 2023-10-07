@@ -1,4 +1,4 @@
-package com.codecool.gastro.criteria;
+package com.codecool.gastro.dto.criteria;
 
 import java.util.List;
 
