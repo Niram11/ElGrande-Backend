@@ -8,11 +8,10 @@ import com.codecool.gastro.repository.entity.Review;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReviewMapperTest {
     private final ReviewMapper mapper = Mappers.getMapper(ReviewMapper.class);
@@ -20,7 +19,7 @@ class ReviewMapperTest {
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
     private final static String COMMENT = "comment";
-    private final static Double GRADE = Double.valueOf(7);
+    private final static int GRADE = 7;
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
 
     @Test

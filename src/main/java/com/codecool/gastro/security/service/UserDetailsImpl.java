@@ -6,20 +6,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
+    @Serial
     private static final long serialVersionUID = 1L;
-    private UUID id;
-    private String username;
-    private String email;
+    private final UUID id;
+    private final String username;
+    private final String email;
+    private final Collection<? extends GrantedAuthority> authorities;
     @JsonIgnore
     private String password;
-
-    private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UUID id, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
@@ -31,7 +32,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(Customer customer) {
-        Collection<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("USER"));
+        Collection<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(customer.getRole().name()));
         return new UserDetailsImpl(
                 customer.getId(),
                 customer.getName(),
