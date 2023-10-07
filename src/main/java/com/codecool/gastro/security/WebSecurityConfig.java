@@ -78,7 +78,6 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(
-                                        "/api/v1/auths/**",
                                         "/api/v1/**",
                                         "/login",
                                         "/css/**",
