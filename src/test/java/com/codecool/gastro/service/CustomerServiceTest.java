@@ -2,6 +2,7 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
@@ -47,6 +48,7 @@ public class CustomerServiceTest {
     DetailedCustomerProjection projection = factory.createProjection(DetailedCustomerProjection.class);
     private DetailedCustomerDto detailedCustomerDto;
     private NewCustomerDto newCustomerDto;
+    private EditCustomerDto editCustomerDto;
 
     @BeforeEach
     void setUp() {
@@ -78,6 +80,11 @@ public class CustomerServiceTest {
                 "Surname",
                 "Email@wp.pl",
                 "PW"
+        );
+
+        editCustomerDto = new EditCustomerDto(
+                "Name",
+                "Surname"
         );
     }
 
@@ -170,11 +177,10 @@ public class CustomerServiceTest {
         // when
         when(repository.findById(customerId)).thenReturn(Optional.of(customer));
         when(repository.save(customer)).thenReturn(customer);
-        when(mapper.dtoToCustomer(customerId, newCustomerDto)).thenReturn(customer);
         when(mapper.toDto(customer)).thenReturn(customerDto);
 
         // then
-        CustomerDto testedCustomerDto = service.updateCustomer(customerId, newCustomerDto);
+        CustomerDto testedCustomerDto = service.updateCustomer(customerId, editCustomerDto);
 
         // test
         verify(repository, times(1)).save(captor.capture());
@@ -184,7 +190,6 @@ public class CustomerServiceTest {
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
         assertNotEquals(testedCustomerDto.submissionTime(), captor.getValue().getSubmissionTime());
         verify(repository, times(1)).findById(customerId);
-        verify(mapper, times(1)).dtoToCustomer(customerId, newCustomerDto);
         verify(mapper, times(1)).toDto(customer);
     }
 
@@ -194,7 +199,7 @@ public class CustomerServiceTest {
         when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
 
         // test
-        assertThrows(ObjectNotFoundException.class, () -> service.updateCustomer(customerId, newCustomerDto));
+        assertThrows(ObjectNotFoundException.class, () -> service.updateCustomer(customerId, editCustomerDto));
         verify(repository, times(1)).findById(customerId);
     }
 

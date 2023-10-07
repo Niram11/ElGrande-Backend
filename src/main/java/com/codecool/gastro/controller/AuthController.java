@@ -38,10 +38,11 @@ public class AuthController {
     JwtUtils jwtUtils;
     OAuth2AuthorizedClientService authorizedClientService;
 
-    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService, JwtUtils jwtUtils, OAuth2AuthorizedClientService authorizedClientService) {
         this.authenticationManager = authenticationManager;
         this.customerService = customerService;
         this.jwtUtils = jwtUtils;
+        this.authorizedClientService = authorizedClientService;
     }
 
     @GetMapping(params = {"jwt"})
@@ -95,5 +96,5 @@ public class AuthController {
         authorizedClientService.removeAuthorizedClient(user.getClientRegistration().getRegistrationId(), user.getPrincipalName());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    
+
 }
