@@ -44,12 +44,6 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getDetailedReviewsByRestaurantId(restaurantId));
     }
 
-//    @GetMapping(params = "restaurantId")
-//    public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId,
-//                                                                   Pageable pageable) {
-//        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByRestaurant(restaurantId, pageable));
-//    }
-
     @PostMapping
     public ResponseEntity<ReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.saveReview(newReviewDTO));
