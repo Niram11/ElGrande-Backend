@@ -20,7 +20,7 @@ class ReviewMapperTest {
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
     private final static String COMMENT = "comment";
-    private final static Double GRADE = Double.valueOf(7);
+    private final static int GRADE = 7;
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
 
     @Test

@@ -36,7 +36,7 @@ class ReviewServiceTest {
     private ReviewRepository repository;
 
     private final static String COMMENT = "comment";
-    private final static Double GRADE = Double.valueOf(6);
+    private final static int GRADE = 6;
     private final static UUID REVIEW_ID = UUID.randomUUID();
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
