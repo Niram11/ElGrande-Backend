@@ -58,3 +58,8 @@ values ('d9ea6cf3-b18d-4a6c-a023-0747345bd275', '4e99a0c4-d1bb-48c6-95f3-d202b84
        ('52792893-e2cf-47b7-98fd-ef7f047b79c3', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', 'path/to/2'),
        ('5989c2d8-8ac0-47b6-8b7c-1d335a6f2da2', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to/3'),
        ('4cf8b369-77af-489d-8967-806d4fdffab5', 'c728af54-0d03-4af1-a68e-6364db2370ee', 'path/to/4');
+
+-- REVIEW
+insert into review (id, grade, comment, customer_id, restaurant_id, submission_time)
+values ('b4157a16-61c7-41fd-8c6a-f3c9e8e592cd', 6, 'new comment', '3662bb1f-4804-4f37-b0ac-9417e4ec385b', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', '2023-10-07'),
+       ('1397cee8-9a75-4e96-a969-7170d6624b99', 10, 'this is old comment', '3662bb1f-4804-4f37-b0ac-9417e4ec385b', '4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5', '2022-05-07')
