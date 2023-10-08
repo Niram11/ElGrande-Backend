@@ -6,7 +6,6 @@ import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Review;
-import com.codecool.gastro.repository.projection.DetailedReviewProjection;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class ReviewService {
                 .toList();
     }
 
-    public ReviewDto getReviewBy(UUID id) {
+    public ReviewDto getReviewById(UUID id) {
         return reviewRepository.findById(id)
                 .map(reviewMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));

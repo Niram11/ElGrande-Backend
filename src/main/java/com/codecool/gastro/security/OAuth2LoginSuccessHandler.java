@@ -7,6 +7,7 @@ import com.codecool.gastro.service.CustomerService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +24,8 @@ import java.util.Map;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-    private final CustomerRepository customerRepository;
+
+    private CustomerRepository customerRepository;
 
     @Value("${gastro.app.frontendUrl}")
     private String frontendUrl;

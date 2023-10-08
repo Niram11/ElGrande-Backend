@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2Aut
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,15 +38,16 @@ public class AuthController {
     JwtUtils jwtUtils;
     OAuth2AuthorizedClientService authorizedClientService;
 
-    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService, JwtUtils jwtUtils, OAuth2AuthorizedClientService authorizedClientService) {
         this.authenticationManager = authenticationManager;
         this.customerService = customerService;
         this.jwtUtils = jwtUtils;
+        this.authorizedClientService = authorizedClientService;
     }
 
-    @GetMapping("/jwt")
-    public ResponseEntity<CustomerDto> getJwtUser(@Valid @RequestBody TokenRefreshRequest token) {
-        String email = jwtUtils.getEmailFromJwtToken(token.token());
+    @GetMapping(params = {"jwt"})
+    public ResponseEntity<CustomerDto> getJwtUser(@RequestParam("jwt") String token) {
+        String email = jwtUtils.getEmailFromJwtToken(token);
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerByEmail(email));
     }
 
@@ -74,7 +76,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/jwt/refresh-token")
+    @PostMapping("/jwt/refresh")
     public ResponseEntity<RefreshedTokenResponse> refreshToken(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
         String email = jwtUtils.getEmailFromJwtToken(tokenRefreshRequest.token());
         String jwt = jwtUtils.generateTokenFromEmail(email);
@@ -94,4 +96,5 @@ public class AuthController {
         authorizedClientService.removeAuthorizedClient(user.getClientRegistration().getRegistrationId(), user.getPrincipalName());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

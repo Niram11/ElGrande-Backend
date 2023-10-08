@@ -1,6 +1,6 @@
 package com.codecool.gastro.repository.specification;
 
-import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
+import com.codecool.gastro.dto.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.repository.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;

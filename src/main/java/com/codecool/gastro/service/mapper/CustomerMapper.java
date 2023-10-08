@@ -2,6 +2,7 @@ package com.codecool.gastro.service.mapper;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.entity.Customer;
@@ -18,4 +19,5 @@ public interface CustomerMapper {
     Customer dtoToCustomer(NewCustomerDto customerDto);
 
     Customer dtoToCustomer(UUID id, NewCustomerDto customerDto);
+
 }

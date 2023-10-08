@@ -96,7 +96,7 @@ class ReviewServiceTest {
         //When
         Mockito.when(repository.findById(REVIEW_ID)).thenReturn(Optional.of(review));
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
-        ReviewDto testedReview = service.getReviewBy(REVIEW_ID);
+        ReviewDto testedReview = service.getReviewById(REVIEW_ID);
 
         //Then
         assertEquals(testedReview, reviewDto);
@@ -104,7 +104,7 @@ class ReviewServiceTest {
 
     @Test
     void testGetReviewsByShouldThrowObjectNotFoundExceptionWhenReviewNotExists() {
-        assertThrows(ObjectNotFoundException.class, () -> service.getReviewBy(REVIEW_ID));
+        assertThrows(ObjectNotFoundException.class, () -> service.getReviewById(REVIEW_ID));
     }
 
     @Test

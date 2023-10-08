@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller.advice;
 
+import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -89,6 +90,12 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
+    @ExceptionHandler(value = EmailNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleEmailNotFoundException(EmailNotFoundException ex) {
+        String errMsg = ex.getMessage();
+        return new ErrorResponse(errMsg);
+    }
 
     public record ErrorResponse(String errorMessage) {
 

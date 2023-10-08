@@ -15,11 +15,10 @@ import java.util.UUID;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    @Query("select rev from Review rev")
+    @Query("select rev from Review rev left join fetch rev.customer left join fetch rev.restaurant ")
     List<Review> findAll();
 
-    @Query("select rev from Review rev " +
-            "where rev.id = :id")
+    @Query("select rev from Review rev left join fetch rev.customer left join fetch rev.restaurant where rev.id = :id")
     Optional<Review> findById(UUID id);
 
     @Query("select rev from Review rev " +
@@ -29,7 +28,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> getReviewsByRestaurant(UUID id, Pageable pageable);
 
 
-    @Query("select rev from Review rev where rev.customer.id = :id")
+    @Query("select rev from Review rev left join fetch rev.restaurant left join fetch rev.customer where rev.customer.id = :id")
     List<Review> getReviewsByCustomerId(UUID id);
 
     @Query(nativeQuery = true, value = """

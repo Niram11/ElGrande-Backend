@@ -34,15 +34,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
-    @Autowired
     private UserDetailsServiceImpl userDetailsService;
-    @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
-    @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Value("${gastro.app.frontendUrl}")
     private String frontendUrl;
+
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -75,10 +78,10 @@ public class WebSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfiguration()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(
-                                        "/api/v1/auths/**",
                                         "/api/v1/**",
                                         "/login",
                                         "/css/**",
@@ -103,7 +106,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(frontendUrl));
         configuration.addAllowedMethod("*");
-        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);

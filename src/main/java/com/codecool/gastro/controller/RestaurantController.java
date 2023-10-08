@@ -1,6 +1,6 @@
 package com.codecool.gastro.controller;
 
-import com.codecool.gastro.criteria.FilteredRestaurantsCriteria;
+import com.codecool.gastro.dto.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;

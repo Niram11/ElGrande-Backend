@@ -30,8 +30,8 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewDto> getReview(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewBy(id));
+    public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewById(id));
     }
 
     @GetMapping(params = "{customerId}")
@@ -42,12 +42,6 @@ public class ReviewController {
     @GetMapping(value = "/details", params = "restaurantId")
     public ResponseEntity<List<DetailedReview>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getDetailedReviewsByRestaurantId(restaurantId));
-    }
-
-    @GetMapping(params = "restaurantId")
-    public ResponseEntity<List<ReviewDto>> getReviewsForRestaurant(@RequestParam("restaurantId") UUID restaurantId,
-                                                                   Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByRestaurant(restaurantId, pageable));
     }
 
     @PostMapping
