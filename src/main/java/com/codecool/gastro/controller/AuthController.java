@@ -76,7 +76,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/jwt/refresh-token")
+    @PostMapping("/jwt/refresh")
     public ResponseEntity<RefreshedTokenResponse> refreshToken(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
         String email = jwtUtils.getEmailFromJwtToken(tokenRefreshRequest.token());
         String jwt = jwtUtils.generateTokenFromEmail(email);
