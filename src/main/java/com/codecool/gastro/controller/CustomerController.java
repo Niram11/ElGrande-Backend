@@ -2,6 +2,7 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @Valid @RequestBody NewCustomerDto updateDto) {
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @Valid @RequestBody EditCustomerDto updateDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(id, updateDto));
     }
 

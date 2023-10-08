@@ -2,6 +2,7 @@ package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.CustomerRepository;
@@ -172,11 +173,9 @@ public class CustomerControllerTest {
     @Test
     void testUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithoutRestaurants() throws Exception {
         // given
-        NewCustomerDto newCustomerDto = new NewCustomerDto(
+        EditCustomerDto editCustomerDto = new EditCustomerDto(
                 "Name",
-                "Surname",
-                "Email@wp.pl",
-                "PW"
+                "Surname"
         );
 
         CustomerDto customerDto = new CustomerDto(
@@ -191,9 +190,7 @@ public class CustomerControllerTest {
         String contentRequest = """
                 {
                     "name": "Name",
-                    "surname": "Surname",
-                    "email": "Email@wp.pl",
-                    "password": "PW"
+                    "surname": "Surname"
                 }
                 """;
         String contentRespond = """
@@ -207,9 +204,7 @@ public class CustomerControllerTest {
                 }
                 """;
         // when
-        when(repository.findByEmail(newCustomerDto.email())).thenReturn(Optional.empty());
-        when(service.saveCustomer(newCustomerDto)).thenReturn(customerDto);
-        when(service.updateCustomer(customerId, newCustomerDto)).thenReturn(customerDto);
+        when(service.updateCustomer(customerId, editCustomerDto)).thenReturn(customerDto);
 
         // test
         mockMvc.perform(put("/api/v1/customers/" + customerId)
@@ -221,7 +216,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void testCreateNewCustomerAndUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithRestaurants() throws Exception {
+    void testUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithRestaurants() throws Exception {
         // given
         RestaurantDto restaurantDto = new RestaurantDto(
                 restaurantId,
@@ -232,11 +227,9 @@ public class CustomerControllerTest {
                 null
         );
 
-        NewCustomerDto newCustomerDto = new NewCustomerDto(
+        EditCustomerDto editCustomerDto = new EditCustomerDto(
                 "Name",
-                "Surname",
-                "Email@wp.pl",
-                "PW"
+                "Surname"
         );
 
         CustomerDto customerDto = new CustomerDto(
@@ -251,9 +244,7 @@ public class CustomerControllerTest {
         String contentRequest = """
                 {
                     "name": "Name",
-                    "surname": "Surname",
-                    "email": "Email@wp.pl",
-                    "password": "PW"
+                    "surname": "Surname"
                 }
                 """;
         String contentRespond = """
@@ -276,9 +267,7 @@ public class CustomerControllerTest {
                 }
                 """;
         // when
-        when(repository.findByEmail(newCustomerDto.email())).thenReturn(Optional.empty());
-        when(service.saveCustomer(newCustomerDto)).thenReturn(customerDto);
-        when(service.updateCustomer(customerId, newCustomerDto)).thenReturn(customerDto);
+        when(service.updateCustomer(customerId, editCustomerDto)).thenReturn(customerDto);
 
         // test
         mockMvc.perform(put("/api/v1/customers/" + customerId)
@@ -295,10 +284,7 @@ public class CustomerControllerTest {
         String contentRequest = """
                 {
                     "name": "",
-                    "surname": "",
-                    "email": "",
-                    "password": "",
-                    "restaurants": []
+                    "surname": ""
                 }
                 """;
 
@@ -308,27 +294,7 @@ public class CustomerControllerTest {
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Email cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Password cannot be empty"))
-                );
-
-        // given
-        contentRequest = """
-                {
-                    "name": "Name",
-                    "surname": "Surname",
-                    "email": "email.pl",
-                    "password": "PW",
-                    "restaurants": []
-                }
-                """;
-
-        // then
-        mockMvc.perform(put("/api/v1/customers/" + customerId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
+                        jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty"))
                 );
     }
 

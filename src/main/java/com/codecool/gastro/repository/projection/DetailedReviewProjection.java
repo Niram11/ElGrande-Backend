@@ -1,19 +1,21 @@
 package com.codecool.gastro.repository.projection;
 
+import java.time.LocalDate;
+
 public interface DetailedReviewProjection {
     String getComment();
 
-    String getGrade();
+    int getGrade();
 
-    String getSubmissionTime();
+    LocalDate getSubmissionTime();
 
     String getName();
 
     void setComment(String comment);
 
-    void setGrade(String grade);
+    void setGrade(int grade);
 
-    void setSubmissionTime(String submissionTime);
+    void setSubmissionTime(LocalDate submissionTime);
 
     void setName(String name);
 }

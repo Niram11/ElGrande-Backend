@@ -2,6 +2,7 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
@@ -48,12 +49,12 @@ public class CustomerService {
         return customerMapper.toDto(customerRepository.save(customerToSave));
     }
 
-    public CustomerDto updateCustomer(UUID id, NewCustomerDto newCustomerDto) {
-        customerRepository.findById(id)
+    public CustomerDto updateCustomer(UUID id, EditCustomerDto updatedCustomer) {
+        Customer customerFromDB = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-        Customer customerToUpdate = customerMapper.dtoToCustomer(id, newCustomerDto);
-        customerToUpdate.setPassword(encoder.encode(customerToUpdate.getPassword()));
-        return customerMapper.toDto(customerRepository.save(customerToUpdate));
+        customerFromDB.setName(updatedCustomer.name());
+        customerFromDB.setSurname(updatedCustomer.surname());
+        return customerMapper.toDto(customerRepository.save(customerFromDB));
     }
 
 

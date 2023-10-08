@@ -8,7 +8,8 @@ create table customer
         unique,
     name            varchar(255),
     password        varchar(255),
-    surname         varchar(255)
+    surname         varchar(255),
+    role varchar(255)
 );
 
 create table dish_category
@@ -200,7 +201,7 @@ create table restaurant_restaurant_category
 
 create table review
 (
-    grade           double precision
+    grade           int
         constraint review_grade_check
             check ((grade >= (1)::double precision) AND (grade <= (10)::double precision)),
     submission_time date,

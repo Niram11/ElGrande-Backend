@@ -14,16 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
@@ -36,7 +36,7 @@ class ReviewServiceTest {
     private ReviewRepository repository;
 
     private final static String COMMENT = "comment";
-    private final static Double GRADE = Double.valueOf(6);
+    private final static int GRADE = 6;
     private final static UUID REVIEW_ID = UUID.randomUUID();
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
@@ -96,7 +96,7 @@ class ReviewServiceTest {
         //When
         Mockito.when(repository.findById(REVIEW_ID)).thenReturn(Optional.of(review));
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
-        ReviewDto testedReview = service.getReviewBy(REVIEW_ID);
+        ReviewDto testedReview = service.getReviewById(REVIEW_ID);
 
         //Then
         assertEquals(testedReview, reviewDto);
@@ -104,7 +104,7 @@ class ReviewServiceTest {
 
     @Test
     void testGetReviewsByShouldThrowObjectNotFoundExceptionWhenReviewNotExists() {
-        assertThrows(ObjectNotFoundException.class, () -> service.getReviewBy(REVIEW_ID));
+        assertThrows(ObjectNotFoundException.class, () -> service.getReviewById(REVIEW_ID));
     }
 
     @Test
