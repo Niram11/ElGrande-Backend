@@ -1,6 +1,5 @@
 package com.codecool.gastro.repository;
 
-import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.repository.projection.DetailedReviewProjection;
 import org.springframework.data.domain.Pageable;

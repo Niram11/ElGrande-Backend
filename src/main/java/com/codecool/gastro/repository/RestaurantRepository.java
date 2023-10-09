@@ -70,7 +70,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     List<DetailedRestaurantProjection> findAllDetailedRestaurants(Pageable pageable);
 
 
-
 //    @Query(value =
 //            "SELECT * FROM (" +
 //                    "    SELECT DISTINCT restaurant.id, restaurant.name, restaurant.description, restaurant.website," +

@@ -43,36 +43,6 @@ class ReviewServiceTest {
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
     public static final Pageable PAGEABLE = PageRequest.of(0, 100000);
 
-
-    @Test
-    void testGetReviews() {
-        //Given
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(RESTAURANT_ID);
-
-        Customer customer = new Customer();
-        customer.setId(CUSTOMER_ID);
-
-        Review review = new Review();
-        review.setId(REVIEW_ID);
-        review.setCustomer(customer);
-        review.setRestaurant(restaurant);
-        review.setSubmissionTime(LOCAL_DATE);
-        review.setComment(COMMENT);
-        review.setGrade(GRADE);
-
-        ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
-
-        //When
-        Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
-        Mockito.when(repository.findAll()).thenReturn(List.of(review));
-        List<ReviewDto> reviews = service.getReviews();
-
-        //Then
-        assertEquals(List.of(reviewDto), reviews);
-
-    }
-
     @Test
     void getReviewBy() {
         //Given
@@ -167,44 +137,6 @@ class ReviewServiceTest {
         assertEquals(reviewDto, testedReview);
     }
 
-    @Test
-    void updateReview() {
-        //Given
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(RESTAURANT_ID);
-
-        Customer customer = new Customer();
-        customer.setId(CUSTOMER_ID);
-
-        Review review = new Review();
-        review.setId(REVIEW_ID);
-        review.setCustomer(customer);
-        review.setRestaurant(restaurant);
-        review.setSubmissionTime(LOCAL_DATE);
-        review.setComment(COMMENT);
-        review.setGrade(GRADE);
-
-        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
-        ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
-
-        //When
-        Mockito.when(repository.findById(REVIEW_ID)).thenReturn(Optional.of(review));
-        Mockito.when(repository.save(review)).thenReturn(review);
-        Mockito.when(mapper.dtoToReview(REVIEW_ID, newReviewDto)).thenReturn(review);
-        Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
-        ReviewDto updatedReview = service.updateReview(REVIEW_ID, newReviewDto);
-
-        //Test
-        assertEquals(reviewDto, updatedReview);
-    }
-
-    @Test
-    void testUpdateReviewShouldThrowObjectNotFoundExceptionWhenReviewNotExists() {
-        //Given
-        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
-        //Test
-        assertThrows(ObjectNotFoundException.class, () -> service.updateReview(REVIEW_ID, newReviewDto));
-    }
 
     @Test
     void deleteReview() {

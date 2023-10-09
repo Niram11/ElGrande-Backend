@@ -58,12 +58,6 @@ public class ReviewService {
         return reviewMapper.toDto(reviewRepository.save(savedReview));
     }
 
-    public ReviewDto updateReview(UUID id, NewReviewDto newReviewDTO) {
-        reviewRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
-        Review updatedReview = reviewRepository.save(reviewMapper.dtoToReview(id, newReviewDTO));
-        return reviewMapper.toDto(updatedReview);
-    }
 
     public void deleteReview(UUID id) {
         reviewRepository.delete(reviewMapper.dtoToReview(id));

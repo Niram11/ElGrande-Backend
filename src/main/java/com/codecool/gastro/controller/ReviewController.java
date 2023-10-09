@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,10 +23,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAllReviews() {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews());
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
@@ -49,10 +44,6 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.saveReview(newReviewDTO));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody NewReviewDto newReviewDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.updateReview(id, newReviewDTO));
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ReviewDto> deleteReview(@PathVariable UUID id) {

@@ -98,5 +98,4 @@ public class RestaurantService {
         String emailSuffix = restaurant.getContactEmail().split("@")[1];
         restaurant.setContactEmail(UUID.randomUUID() + "@" + emailSuffix);
     }
-
 }
