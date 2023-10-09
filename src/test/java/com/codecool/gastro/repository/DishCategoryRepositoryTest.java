@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DishCategoryRepositoryTest {
 
     @Autowired
-    private DishCategoryRepository repository;
+    DishCategoryRepository repository;
 
     private UUID dishCategoryId;
 

@@ -20,15 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CustomerMapperTest {
+    CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
 
-    private CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
     private UUID customerId;
-    private final Customer customer = new Customer();
+    private Customer customer;
 
     @BeforeEach
     void setUp() {
         customerId = UUID.fromString("71a4b2a2-52e3-4411-8daf-c00b3c9ca3ea");
 
+        customer = new Customer();
+        customer.setId(customerId);
         customer.setName("Name");
         customer.setSurname("Surname");
         customer.setEmail("Email@wp.pl");
@@ -38,9 +40,6 @@ public class CustomerMapperTest {
 
     @Test
     void testToDto_ShouldMapCustomerToDto_WhenCalled() {
-        // given
-        customer.setId(customerId);
-
         // then
         CustomerDto customerDto = mapper.toDto(customer);
 
@@ -83,7 +82,7 @@ public class CustomerMapperTest {
     }
 
     @Test
-    void testDtoToCustomer_ShouldMapCustomerDto_WhenCalled() {
+    void testDtoToCustomer_ShouldMapCustomerDto_WhenProvidingDto() {
         // given
         NewCustomerDto newCustomerDto = new NewCustomerDto(
                 customer.getName(),
@@ -94,24 +93,14 @@ public class CustomerMapperTest {
 
         // then
         Customer customerOne = mapper.dtoToCustomer(newCustomerDto);
-        Customer customerTwo = mapper.dtoToCustomer(customerId, newCustomerDto);
 
         // test
-        assertNotEquals(customerOne.getId(), customerId);
         assertEquals(customerOne.getName(), customer.getName());
         assertEquals(customerOne.getSurname(), customer.getSurname());
         assertEquals(customerOne.getEmail(), customer.getEmail());
         assertEquals(customerOne.getPassword(), customer.getPassword());
         assertEquals(customerOne.getRestaurants().size(), 0);
-
-        assertEquals(customerTwo.getId(), customerId);
-        assertEquals(customerTwo.getName(), customer.getName());
-        assertEquals(customerTwo.getSurname(), customer.getSurname());
-        assertEquals(customerTwo.getEmail(), customer.getEmail());
-        assertEquals(customerTwo.getPassword(), customer.getPassword());
-        assertEquals(customerTwo.getRestaurants().size(), 0);
     }
-
 
     @Test
     void testUpdateCustomerFromDto_ShouldUpdateFieldsAndLeavesRestWithSameValues_WhenCalled() {

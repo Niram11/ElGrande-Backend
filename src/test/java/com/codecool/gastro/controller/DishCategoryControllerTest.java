@@ -23,18 +23,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = DishCategoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class DishCategoryControllerTest {
-
     @Autowired
-    private MockMvc mockMvc;
-
+    MockMvc mockMvc;
     @MockBean
-    private DishCategoryService service;
+    DishCategoryService service;
 
     private UUID dishCategoryId;
-
     private DishCategoryDto dishCategoryDto;
     private NewDishCategoryDto newDishCategoryDto;
-
     private String contentResponse;
 
     @BeforeEach

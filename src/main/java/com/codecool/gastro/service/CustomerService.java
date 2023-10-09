@@ -31,13 +31,6 @@ public class CustomerService {
         this.encoder = encoder;
     }
 
-
-    public CustomerDto getCustomerById(UUID id) {
-        return customerRepository.findById(id)
-                .map(customerMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-    }
-
     public DetailedCustomerDto getDetailedCustomerById(UUID id) {
         return customerRepository.findDetailedById(id)
                 .map(customerMapper::toDetailedDto)
@@ -46,19 +39,18 @@ public class CustomerService {
 
     public CustomerDto saveCustomer(NewCustomerDto newCustomerDto) {
         Customer customerToSave = customerMapper.dtoToCustomer(newCustomerDto);
-        customerToSave.setSubmissionTime(LocalDate.now());
-        customerToSave.setPassword(encoder.encode(customerToSave.getPassword()));
+        setCreationTime(customerToSave);
+        encodePassword(customerToSave);
         return customerMapper.toDto(customerRepository.save(customerToSave));
     }
 
-    public CustomerDto updateCustomer(UUID id, EditCustomerDto updatedCustomer) {
-        Customer customerFromDB = customerRepository.findById(id)
+    public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
+        Customer updatedCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-        customerFromDB.setName(updatedCustomer.name());
-        customerFromDB.setSurname(updatedCustomer.surname());
-        return customerMapper.toDto(customerRepository.save(customerFromDB));
-    }
 
+        customerMapper.updateCustomerFromDto(editCustomerDto, updatedCustomer);
+        return customerMapper.toDto(customerRepository.save(updatedCustomer));
+    }
 
     public void softDelete(UUID id) {
         Customer customer = customerRepository.findById(id)
@@ -66,21 +58,6 @@ public class CustomerService {
 
         obfuscateData(customer);
         customerRepository.save(customer);
-    }
-
-
-    private void obfuscateData(Customer customer) {
-
-        // Mask surname by filling with *
-        int surnameLength = customer.getSurname().length();
-        customer.setSurname("*".repeat(surnameLength));
-
-        // Mask email by filling first part of the email (before @) with *
-        int atIndex = customer.getEmail().indexOf('@');
-        String maskedEmail = UUID.randomUUID() + customer.getEmail().substring(atIndex);
-        customer.setEmail(maskedEmail);
-
-        customer.setDeleted(true);
     }
 
     public CustomerDto getCustomerByEmail(String email) {
@@ -98,5 +75,27 @@ public class CustomerService {
 
         customer.assignRestaurant(restaurant);
         customerRepository.save(customer);
+    }
+
+    private void obfuscateData(Customer customer) {
+
+        // Mask surname by filling with *
+        int surnameLength = customer.getSurname().length();
+        customer.setSurname("*" .repeat(surnameLength));
+
+        // Mask email by filling first part of the email (before @) with *
+        int atIndex = customer.getEmail().indexOf('@');
+        String maskedEmail = UUID.randomUUID() + customer.getEmail().substring(atIndex);
+        customer.setEmail(maskedEmail);
+
+        customer.setDeleted(true);
+    }
+
+    private void encodePassword(Customer customerToSave) {
+        customerToSave.setPassword(encoder.encode(customerToSave.getPassword()));
+    }
+
+    private void setCreationTime(Customer customerToSave) {
+        customerToSave.setSubmissionTime(LocalDate.now());
     }
 }

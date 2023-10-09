@@ -25,19 +25,16 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DishCategoryServiceTest {
-
     @InjectMocks
-    private DishCategoryService service;
+    DishCategoryService service;
     @Mock
-    private DishCategoryMapper mapper;
+    DishCategoryMapper mapper;
     @Mock
-    private DishCategoryRepository repository;
+    DishCategoryRepository repository;
 
     private UUID dishCategoryId;
-
     private DishCategory dishCategory;
     private DishCategoryDto dishCategoryDto;
-
     private NewDishCategoryDto newDishCategoryDto;
 
     @BeforeEach
@@ -100,7 +97,7 @@ class DishCategoryServiceTest {
         when(mapper.toDto(dishCategory)).thenReturn(dishCategoryDto);
         DishCategoryDto exceptedDishCategoryDto = service.saveDishCategory(newDishCategoryDto);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
         assertNotEquals(captor.getValue().getCategory(), exceptedDishCategoryDto.category());
     }
@@ -108,13 +105,22 @@ class DishCategoryServiceTest {
     @Test
     void testUpdateDishCategory_ShouldSaveWithLowerCaseLettersAndReturnDistCategoryDto_WhenCalled() {
         // when
-        when(mapper.dtoToDishCategory(dishCategoryId, newDishCategoryDto)).thenReturn(dishCategory);
+        when(repository.findById(dishCategoryId)).thenReturn(Optional.of(dishCategory));
         when(repository.save(dishCategory)).thenReturn(dishCategory);
         when(mapper.toDto(dishCategory)).thenReturn(dishCategoryDto);
         DishCategoryDto exceptedDishCategoryDto = service.updateDishCategory(dishCategoryId, newDishCategoryDto);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
         assertNotEquals(captor.getValue().getCategory(), exceptedDishCategoryDto.category());
+    }
+
+    @Test
+    void testUpdateDishCategory_ShouldThrowObjectNotFoundException_WhenNoDishCategory() {
+        // when
+        when(repository.findById(dishCategoryId)).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(ObjectNotFoundException.class, () -> service.updateDishCategory(dishCategoryId, newDishCategoryDto));
     }
 }
