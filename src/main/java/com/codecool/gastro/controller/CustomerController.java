@@ -21,11 +21,6 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerById(id));
-    }
-
     @GetMapping("/{id}/details")
     public ResponseEntity<DetailedCustomerDto> getDetailedCustomerById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getDetailedCustomerById(id));
@@ -36,8 +31,14 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(id, updateDto));
     }
 
+    @PutMapping("/{id}/restaurants/{restaurantId}")
+    public ResponseEntity<Void> assignRestaurantToCustomer(@PathVariable UUID id, @PathVariable UUID restaurantId) {
+        customerService.assignRestaurantToCustomer(id, restaurantId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomerDto> deleteCustomer(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         customerService.softDelete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

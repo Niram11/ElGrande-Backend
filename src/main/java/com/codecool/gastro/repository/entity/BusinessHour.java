@@ -19,14 +19,13 @@ public class BusinessHour {
     @NotNull(message = "Day of week cannot be null")
     @Column(nullable = false)
     private Integer dayOfWeek;
-
     @NotNull(message = "Opening hour cannot be empty")
     @Column(nullable = false)
     private LocalTime openingHour;
-
     @NotNull(message = "Closing hour cannot be empty")
     @Column(nullable = false)
     private LocalTime closingHour;
+    private boolean isUnknown = true;
     @ManyToOne
     @JoinColumn(nullable = false)
     private Restaurant restaurant;
@@ -64,6 +63,14 @@ public class BusinessHour {
 
     public void setClosingHour(LocalTime closingHour) {
         this.closingHour = closingHour;
+    }
+
+    public boolean getIsUnknown() {
+        return isUnknown;
+    }
+
+    public void setIsUnknown(boolean unknown) {
+        isUnknown = unknown;
     }
 
     public Restaurant getRestaurant() {

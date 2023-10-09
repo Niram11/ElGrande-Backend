@@ -2,6 +2,7 @@ package com.codecool.gastro.service.mapper;
 
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
+import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
@@ -49,7 +50,6 @@ public class CustomerMapperTest {
         assertEquals(customerDto.surname(), customer.getSurname());
         assertEquals(customerDto.email(), customer.getEmail());
         assertEquals(customerDto.submissionTime(), customer.getSubmissionTime());
-        assertEquals(customerDto.restaurants().size(), 0);
     }
 
     @Test
@@ -112,4 +112,25 @@ public class CustomerMapperTest {
         assertEquals(customerTwo.getRestaurants().size(), 0);
     }
 
+
+    @Test
+    void testUpdateCustomerFromDto_ShouldUpdateFieldsAndLeavesRestWithSameValues_WhenCalled() {
+        Customer customer = new Customer();
+        customer.setName("Name");
+        customer.setSurname("Surname");
+        customer.setEmail("Email@wp.pl");
+
+        EditCustomerDto editCustomerDto = new EditCustomerDto(
+                "editedName",
+                "editedSurname"
+        );
+
+        // when
+        mapper.updateCustomerFromDto(editCustomerDto, customer);
+
+        // then
+        assertNotEquals(customer.getName(), "Name");
+        assertNotEquals(customer.getSurname(), "Surname");
+        assertEquals(customer.getEmail(), "Email@wp.pl");
+    }
 }

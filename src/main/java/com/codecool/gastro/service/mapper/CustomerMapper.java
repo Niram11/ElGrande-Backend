@@ -7,6 +7,7 @@ import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.entity.Customer;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
 
@@ -16,8 +17,9 @@ public interface CustomerMapper {
 
     DetailedCustomerDto toDetailedDto(DetailedCustomerProjection customer);
 
+    void updateCustomerFromDto(EditCustomerDto editCustomerDto, @MappingTarget Customer customer);
+
     Customer dtoToCustomer(NewCustomerDto customerDto);
 
     Customer dtoToCustomer(UUID id, NewCustomerDto customerDto);
-
 }

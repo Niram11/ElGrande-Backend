@@ -38,17 +38,12 @@ public class AuthController {
     JwtUtils jwtUtils;
     OAuth2AuthorizedClientService authorizedClientService;
 
-    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService, JwtUtils jwtUtils, OAuth2AuthorizedClientService authorizedClientService) {
+    public AuthController(AuthenticationManager authenticationManager, CustomerService customerService,
+                          JwtUtils jwtUtils, OAuth2AuthorizedClientService authorizedClientService) {
         this.authenticationManager = authenticationManager;
         this.customerService = customerService;
         this.jwtUtils = jwtUtils;
         this.authorizedClientService = authorizedClientService;
-    }
-
-    @GetMapping(params = {"jwt"})
-    public ResponseEntity<CustomerDto> getJwtUser(@RequestParam("jwt") String token) {
-        String email = jwtUtils.getEmailFromJwtToken(token);
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerByEmail(email));
     }
 
     @PostMapping("/jwt/login")

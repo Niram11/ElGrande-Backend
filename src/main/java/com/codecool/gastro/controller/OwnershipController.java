@@ -20,11 +20,6 @@ public class OwnershipController {
         this.ownershipService = ownershipService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<OwnershipDto>> getAllOwnerships() {
-        return ResponseEntity.status(HttpStatus.OK).body(ownershipService.getAllOwnerships());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<OwnershipDto> getOwnership(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(ownershipService.getOwnership(id));

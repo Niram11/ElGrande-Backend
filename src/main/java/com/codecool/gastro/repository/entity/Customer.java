@@ -102,6 +102,10 @@ public class Customer {
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
+
+    public void assignRestaurant(Restaurant restaurant) {
+        restaurants.add(restaurant);
+    }
 }
 
 

@@ -20,10 +20,7 @@ public record NewBusinessHourDto(
         @NotNull(message = "Closing hour cannot be null")
         @TimeFormat
         @Schema(type = "String", pattern = "HH:mm")
-        LocalTime closingHour,
-        @RestaurantExist
-        UUID restaurantId
-
+        LocalTime closingHour
 ) {
 
 }

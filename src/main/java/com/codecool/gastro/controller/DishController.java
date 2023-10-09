@@ -23,11 +23,6 @@ public class DishController {
         this.dishService = dishService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<DishDto>> getDishes() {
-        return ResponseEntity.status(HttpStatus.OK).body(dishService.getAllDishes());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<DishDto> getDishById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishById(id));

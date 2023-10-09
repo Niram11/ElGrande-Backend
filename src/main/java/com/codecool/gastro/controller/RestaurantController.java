@@ -29,7 +29,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
 

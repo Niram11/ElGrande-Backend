@@ -72,15 +72,6 @@ public class DishControllerTest {
     }
 
     @Test
-    void testGetDishes_ShouldReturnStatusOkAndListOfDishes_WhenCalled() throws Exception {
-        // then
-        mockMvc.perform(get("/api/v1/dishes"))
-                .andExpectAll(status().isOk(),
-                        content().json("[]")
-                );
-    }
-
-    @Test
     void testGetDishById_ShouldReturnStatusOkAndDishDto_WhenExist() throws Exception {
         // when
         when(service.getDishById(dishId)).thenReturn(dishDto);

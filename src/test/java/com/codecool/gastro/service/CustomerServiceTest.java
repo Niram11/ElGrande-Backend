@@ -61,8 +61,7 @@ public class CustomerServiceTest {
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                LocalDate.of(2012, 12, 12),
-                Set.of()
+                LocalDate.of(2012, 12, 12)
         );
 
         detailedCustomerDto = new DetailedCustomerDto(
@@ -103,7 +102,6 @@ public class CustomerServiceTest {
         assertEquals(testedCustomerDto.surname(), customerDto.surname());
         assertEquals(testedCustomerDto.email(), customerDto.email());
         assertEquals(testedCustomerDto.submissionTime(), customerDto.submissionTime());
-        assertEquals(testedCustomerDto.restaurants(), customerDto.restaurants());
         verify(repository, times(1)).findById(customerId);
         verify(mapper, times(1)).toDto(customer);
     }

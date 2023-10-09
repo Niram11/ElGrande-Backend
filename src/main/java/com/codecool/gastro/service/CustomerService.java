@@ -5,7 +5,9 @@ import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
@@ -13,19 +15,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder encoder;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, PasswordEncoder encoder) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, RestaurantRepository restaurantRepository, PasswordEncoder encoder) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.restaurantRepository = restaurantRepository;
         this.encoder = encoder;
     }
 
@@ -85,5 +87,16 @@ public class CustomerService {
         return customerRepository.findByEmail(email)
                 .map(customerMapper::toDto)
                 .orElseThrow(() -> new EmailNotFoundException(email));
+    }
+
+    public void assignRestaurantToCustomer(UUID id, UUID restaurantId) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Restaurant.class));
+
+        customer.assignRestaurant(restaurant);
+        customerRepository.save(customer);
     }
 }

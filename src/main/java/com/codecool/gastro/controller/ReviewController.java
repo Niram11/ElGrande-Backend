@@ -24,17 +24,12 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAllReviews() {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewById(id));
     }
 
-    @GetMapping(params = "{customerId}")
+    @GetMapping(params = "customerId")
     public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByCustomerId(customerId));
     }

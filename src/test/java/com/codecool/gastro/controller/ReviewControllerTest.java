@@ -82,14 +82,6 @@ public class ReviewControllerTest {
                 """;
     }
 
-    @Test
-    void testGetAllReviews_ShouldReturnStatusOkAndList_WhenCalled() throws Exception {
-        // then
-        mockMvc.perform(get("/api/v1/reviews"))
-                .andExpectAll(status().isOk(),
-                        content().json("[]")
-                );
-    }
 
     @Test
     void testGetReviewById_ShouldReturnStatusOkAndReviewDto_WhenExist() throws Exception {
@@ -122,7 +114,7 @@ public class ReviewControllerTest {
 
         // then
         mockMvc.perform(get("/api/v1/reviews")
-                        .param("customerId", "3466582c-580b-4d87-aa1d-615350e9598c"))
+                        .param("customerId", String.valueOf(customerId)))
                 .andExpectAll(status().isOk(),
                         content().json("[]")
                 );

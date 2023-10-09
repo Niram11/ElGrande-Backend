@@ -20,16 +20,6 @@ public class BusinessHourController {
         this.businessHourService = businessHourService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<BusinessHourDto>> getAllBusinessHours() {
-        return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHours());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BusinessHourDto> getBusinessHour(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHourById(id));
-    }
-
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<BusinessHourDto>> getBusinessHoursByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHoursByRestaurantId(restaurantId));
@@ -39,12 +29,6 @@ public class BusinessHourController {
     public ResponseEntity<BusinessHourDto> createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveNewBusinessHour(newBusinessHourDto));
     }
-
-    @PostMapping("/list")
-    public ResponseEntity<List<BusinessHourDto>> createMultipleNewBusinessHour(@Valid @RequestBody List<NewBusinessHourDto> newBusinessHourDtoList) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveMultipleNewBusinessHour(newBusinessHourDtoList));
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<BusinessHourDto> updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {

@@ -20,10 +20,6 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ImageDto>> getAllImages() {
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImages());
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ImageDto> getImageById(@PathVariable UUID id) {

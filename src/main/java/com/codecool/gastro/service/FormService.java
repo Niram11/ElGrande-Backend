@@ -1,7 +1,7 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.address.NewFormAddressDto;
-import com.codecool.gastro.dto.businesshour.NewFormBusinessHourDto;
+import com.codecool.gastro.dto.address.NewAddressDto;
+import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.dto.form.NewFormRestaurantDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.AddressRepository;
@@ -50,8 +50,8 @@ public class FormService {
     public void provideRestaurantForm(NewFormRestaurantDto newFormDto) {
         Restaurant restaurant = restaurantMapper.dtoToRestaurant(newFormDto.restaurant());
         Location location = handleLocation(newFormDto.location(), restaurant);
-        List<BusinessHour> businessHours = handleBusinessHours(newFormDto.businessHour(), restaurant);
-        Address address = handleAddress(newFormDto.address(), restaurant);
+        List<BusinessHour> businessHours = handleBusinessHours(newFormDto.newBusinessHourDtoList(), restaurant);
+        Address address = handleAddress(newFormDto.newAddressDto(), restaurant);
         saveForm(restaurant, location, businessHours, address);
     }
 
@@ -60,16 +60,16 @@ public class FormService {
         location.assignRestaurant(restaurant);
         return location;
     }
-    private Address handleAddress(NewFormAddressDto newFormAddressDto, Restaurant restaurant) {
-        Address address = addressMapper.newFormDtoToAddress(newFormAddressDto);
+    private Address handleAddress(NewAddressDto newAddressDto, Restaurant restaurant) {
+        Address address = addressMapper.dtoToAddress(newAddressDto);
         address.setRestaurant(restaurant);
         return address;
     }
 
-    private List<BusinessHour> handleBusinessHours(List<NewFormBusinessHourDto> newFormBusinessHourDtoList, Restaurant restaurant) {
+    private List<BusinessHour> handleBusinessHours(List<NewBusinessHourDto> newFormBusinessHourDtoList, Restaurant restaurant) {
         List<BusinessHour> mappedBusinessHours = newFormBusinessHourDtoList
             .stream()
-            .map(businessHourMapper::newFormDtoToBusinessHour)
+            .map(businessHourMapper::dtoToBusinessHour)
             .toList();
         mappedBusinessHours.forEach(bh -> bh.setRestaurant(restaurant));
         return mappedBusinessHours;

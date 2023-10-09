@@ -38,93 +38,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = CustomerController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class CustomerControllerTest {
-
     @Autowired
-    private MockMvc mockMvc;
-
+    MockMvc mockMvc;
     @MockBean
-    private CustomerService service;
-
+    CustomerService service;
     @MockBean
-    private CustomerRepository repository;
+    CustomerRepository repository;
 
     private UUID customerId;
     private UUID restaurantId;
     private UUID ownershipId;
+    private String contentResponseDetailedDto;
+    private String contentResponseDto;
+    private DetailedCustomerDto detailedCustomerDto;
+    private CustomerDto customerDto;
 
     @BeforeEach
     void setUp() {
         customerId = UUID.fromString("2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b");
         restaurantId = UUID.fromString("5d05e324-757b-421a-9a47-1f60a7f57120");
         ownershipId = UUID.fromString("dd3895ce-539a-48f7-984d-8adfc3da6565");
-    }
 
-    @Test
-    void testGetCustomerById_ShouldReturnStatusOkAndCustomerDto_WhenCustomerExist() throws Exception {
-        // when
-        RestaurantDto restaurantDto = new RestaurantDto(
-                restaurantId,
-                "Name",
-                "Desc",
-                "Website.pl",
-                123123123,
-                "Email@gmail.com"
-        );
-
-        CustomerDto customerDto = new CustomerDto(
-                customerId,
-                "Name",
-                "Surname",
-                "Email@wp.pl",
-                LocalDate.of(2001, 12, 12),
-                Set.of(restaurantDto)
-        );
-
-        String contentRespond = """
-                {
-                    "id": "2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b",
-                    "name": "Name",
-                    "surname": "Surname",
-                    "email": "Email@wp.pl",
-                    "submissionTime": "2001-12-12",
-                    "restaurants" : [
-                        {
-                            "id": "5d05e324-757b-421a-9a47-1f60a7f57120",
-                            "name": "Name",
-                            "description": "Desc",
-                            "website": "Website.pl",
-                            "contactNumber": 123123123,
-                            "contactEmail": "Email@gmail.com"
-                        }
-                    ]
-                }
-                """;
-
-        // when
-        when(service.getCustomerById(customerId)).thenReturn(customerDto);
-
-        // test
-        mockMvc.perform(get("/api/v1/customers/" + customerId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentRespond));
-    }
-
-    @Test
-    void testGetCustomerById_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoCustomer() throws Exception {
-        // when
-        doThrow(new ObjectNotFoundException(customerId, Customer.class)).when(service).getCustomerById(customerId);
-
-        // test
-        mockMvc.perform(get("/api/v1/customers/" + customerId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Customer and id " + customerId + " cannot be found")
-                );
-    }
-
-    @Test
-    void testGetDetailedCustomerById_ShouldReturnStatusOkAndDetailedCustomerDto_WhenCustomerExist() throws Exception {
-        // given
-        DetailedCustomerDto detailedCustomerDto = new DetailedCustomerDto(
+        detailedCustomerDto = new DetailedCustomerDto(
                 customerId,
                 "Name",
                 "Surname",
@@ -134,7 +69,15 @@ public class CustomerControllerTest {
                 ownershipId
         );
 
-        String contentResponse = """
+        customerDto = new CustomerDto(
+                customerId,
+                "Name",
+                "Surname",
+                "Email@wp.pl",
+                LocalDate.of(2012, 12, 12)
+        );
+
+        contentResponseDetailedDto = """
                 {
                     "id": "2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b",
                     "name": "Name",
@@ -148,13 +91,26 @@ public class CustomerControllerTest {
                 }
                 """;
 
+        contentResponseDto = """
+                {
+                    "id": "2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b",
+                    "name": "Name",
+                    "surname": "Surname",
+                    "email": "Email@wp.pl",
+                    "submissionTime": "2012-12-12"
+                }
+                """;
+    }
+
+    @Test
+    void testGetDetailedCustomerById_ShouldReturnStatusOkAndDetailedCustomerDto_WhenCustomerExist() throws Exception {
         // when
         when(service.getDetailedCustomerById(customerId)).thenReturn(detailedCustomerDto);
 
-        // test
+        // then
         mockMvc.perform(get("/api/v1/customers/" + customerId + "/details"))
                 .andExpectAll(status().isOk(),
-                        content().json(contentResponse)
+                        content().json(contentResponseDetailedDto)
                 );
     }
 
@@ -163,118 +119,54 @@ public class CustomerControllerTest {
         // when
         doThrow(new ObjectNotFoundException(customerId, Customer.class)).when(service).getDetailedCustomerById(customerId);
 
-        // test
+        // then
         mockMvc.perform(get("/api/v1/customers/" + customerId + "/details"))
                 .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Customer and id " + customerId + " cannot be found")
+                        jsonPath("$.errorMessage").value("Object of class "
+                                + Customer.class.getSimpleName() + " and id " + customerId + " cannot be found")
                 );
     }
 
     @Test
     void testUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithoutRestaurants() throws Exception {
         // given
-        EditCustomerDto editCustomerDto = new EditCustomerDto(
-                "Name",
-                "Surname"
-        );
-
-        CustomerDto customerDto = new CustomerDto(
-                customerId,
-                "Name",
-                "Surname",
-                "Email@wp.pl",
-                LocalDate.of(2012, 12, 12),
-                Set.of()
-        );
-
         String contentRequest = """
                 {
                     "name": "Name",
                     "surname": "Surname"
                 }
                 """;
-        String contentRespond = """
-                {
-                    "id": "2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b",
-                    "name": "Name",
-                    "surname": "Surname",
-                    "email": "Email@wp.pl",
-                    "submissionTime": "2012-12-12",
-                    "restaurants": []
-                }
-                """;
         // when
-        when(service.updateCustomer(customerId, editCustomerDto)).thenReturn(customerDto);
+        when(service.updateCustomer(any(UUID.class), any(EditCustomerDto.class))).thenReturn(customerDto);
 
-        // test
+        // then
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isCreated(),
-                        content().json(contentRespond)
+                        content().json(contentResponseDto)
                 );
     }
 
     @Test
     void testUpdateCustomer_ShouldReturnStatusCreatedAndCustomerDto_WhenProvidingValidDataWithRestaurants() throws Exception {
         // given
-        RestaurantDto restaurantDto = new RestaurantDto(
-                restaurantId,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        EditCustomerDto editCustomerDto = new EditCustomerDto(
-                "Name",
-                "Surname"
-        );
-
-        CustomerDto customerDto = new CustomerDto(
-                customerId,
-                "Name",
-                "Surname",
-                "Email@wp.pl",
-                LocalDate.of(2012, 12, 12),
-                Set.of(restaurantDto)
-        );
-
         String contentRequest = """
                 {
                     "name": "Name",
                     "surname": "Surname"
                 }
                 """;
-        String contentRespond = """
-                {
-                    "id": "2b92aa17-b11a-4ef7-afce-bd37fa1d8b7b",
-                    "name": "Name",
-                    "surname": "Surname",
-                    "email": "Email@wp.pl",
-                    "submissionTime": "2012-12-12",
-                    "restaurants": [
-                        {
-                            "id": "5d05e324-757b-421a-9a47-1f60a7f57120",
-                            "name": null,
-                            "description": null,
-                            "website": null,
-                            "contactNumber": null,
-                            "contactEmail": null
-                        }
-                    ]
-                }
-                """;
-        // when
-        when(service.updateCustomer(customerId, editCustomerDto)).thenReturn(customerDto);
 
-        // test
+        // when
+        when(service.updateCustomer(any(UUID.class), any(EditCustomerDto.class))).thenReturn(customerDto);
+
+        // then
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isCreated(),
-                        content().json(contentRespond)
+                        content().json(contentResponseDto)
                 );
     }
 
@@ -288,7 +180,7 @@ public class CustomerControllerTest {
                 }
                 """;
 
-        // test
+        // then
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
@@ -300,7 +192,7 @@ public class CustomerControllerTest {
 
     @Test
     void testSoftDeleteCustomer_ShouldReturnStatusNoContent_WhenCustomerExist() throws Exception {
-        // test
+        // then
         mockMvc.perform(delete("/api/v1/customers/" + customerId))
                 .andExpectAll(status().isNoContent());
     }
@@ -310,8 +202,11 @@ public class CustomerControllerTest {
         // when
         doThrow(new ObjectNotFoundException(customerId, Customer.class)).when(service).softDelete(customerId);
 
-        // test
+        // then
         mockMvc.perform(delete("/api/v1/customers/" + customerId))
-                .andExpectAll(status().isNotFound());
+                .andExpectAll(status().isNotFound(),
+                        jsonPath("$.errorMessage").value("Object of class "
+                                + Customer.class.getSimpleName() + " and id " + customerId + " cannot be found")
+                );
     }
 }

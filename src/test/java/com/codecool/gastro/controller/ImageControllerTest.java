@@ -66,15 +66,6 @@ public class ImageControllerTest {
     }
 
     @Test
-    void testGetAllImages_ShouldReturnStatusOkAndList_WhenCalled() throws Exception {
-        // then
-        mockMvc.perform(get("/api/v1/images"))
-                .andExpectAll(status().isOk(),
-                        content().json("[]")
-                );
-    }
-
-    @Test
     void testGetImageById_ShouldReturnStatusOdAndImageDto_WhenExist() throws Exception {
         // when
         when(service.getImageById(imageId)).thenReturn(imageDto);

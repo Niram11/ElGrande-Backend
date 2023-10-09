@@ -26,21 +26,19 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressServiceTest {
-
     @InjectMocks
-    private AddressService service;
-
+    AddressService service;
     @Mock
-    private AddressRepository repository;
-
+    AddressRepository repository;
     @Mock
-    private AddressMapper mapper;
-
+    AddressMapper mapper;
 
     private UUID addressId;
     private UUID restaurantId;
     private AddressDto addressDto;
     private Address address;
+    private NewAddressDto newAddressDto;
+
     @BeforeEach
     void setUp() {
         addressId = UUID.fromString("5d0c91c3-9d20-4e24-84a2-04d420b86bc0");
@@ -56,91 +54,30 @@ public class AddressServiceTest {
                 ""
         );
 
-        address = new Address();
-    }
-
-    @Test
-    void testGetAddresses_ShouldReturnEmptyList_WhenNoAddresses() {
-        // when
-        when(repository.findAll()).thenReturn(List.of());
-
-        // then
-        List<AddressDto> list = service.getAddresses();
-
-        // test
-        assertEquals(0, list.size());
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    void testGetAddresses_ShouldReturnListOfAddressesDto_WhenAddressesExist() {
-        // given
-        AddressDto addressDtoOne = addressDto;
-
-        AddressDto addressDtoTwo = new AddressDto(
-                UUID.randomUUID(),
-                "Germany",
-                "Hamburg",
-                "34450",
-                "street",
-                "55/2",
+        newAddressDto = new NewAddressDto(
+                "Poland",
+                "Gdańsk",
+                "12-345",
+                "Warszawska",
+                "13B/3",
                 ""
         );
 
-        Address addressOne = address;
-        Address addressTwo = new Address();
-
-        // when
-        when(repository.findAll()).thenReturn(List.of(addressOne, addressTwo));
-        when(mapper.toDto(addressOne)).thenReturn(addressDtoOne);
-        when(mapper.toDto(addressTwo)).thenReturn(addressDtoTwo);
-
-        // then
-        List<AddressDto> list = service.getAddresses();
-
-        // test
-        assertEquals(List.of(addressDtoOne, addressDtoTwo), list);
-        verify(repository, times(1)).findAll();
-        verify(mapper, times(2)).toDto(any(Address.class));
-    }
-
-    @Test
-    void testGetAddressById_ShouldReturnAddressDto_WhenAddressExist() {
-        // given
+        address = new Address();
         address.setId(addressId);
 
-        // when
-        when(repository.findById(address.getId())).thenReturn(Optional.of(address));
-        when(mapper.toDto(any(Address.class))).thenReturn(addressDto);
-
-        // then
-        AddressDto pickedAddress = service.getAddressById(address.getId());
-
-        // test
-        assertEquals(address.getId(), pickedAddress.id());
-        verify(repository, times(1)).findById(any(UUID.class));
-        verify(mapper, times(1)).toDto(any(Address.class));
     }
 
     @Test
-    void testGetAddressById_ShouldThrowObjectNotFoundException_WhenNoAddress() {
-        // test
-        assertThrows(ObjectNotFoundException.class, () -> service.getAddressById(UUID.randomUUID()));
-    }
-
-    @Test
-    void testGetAddressByRestaurantId_ShouldReturnAddressDto_WhenAddressExist() {
-        // given
-        address.setId(addressId);
-
+    void testGetAddressByRestaurantId_ShouldReturnAddressDto_WhenExist() {
         // when
         when(repository.findByRestaurantId(restaurantId)).thenReturn(Optional.of(address));
         when(mapper.toDto(any(Address.class))).thenReturn(addressDto);
 
-        // then
+        // when
         AddressDto pickedAddress = service.getAddressByRestaurantId(restaurantId);
 
-        // test
+        // then
         assertEquals(address.getId(), pickedAddress.id());
         verify(repository, times(1)).findByRestaurantId(any(UUID.class));
         verify(mapper, times(1)).toDto(any(Address.class));
@@ -148,53 +85,30 @@ public class AddressServiceTest {
 
     @Test
     void testGetAddressByRestaurantId_ShouldThrowObjectNotFoundException_WhenNoAddress() {
-        // test
+        // then
         assertThrows(ObjectNotFoundException.class, () -> service.getAddressByRestaurantId(UUID.randomUUID()));
     }
 
-
     @Test
-    void testSaveNewAddressAndUpdateAddress_ShouldReturnAddressDto_WhenSavingAnInstance() {
-        // given
-        NewAddressDto newAddressDto = new NewAddressDto(
-                "Poland",
-                "Gdańsk",
-                "12-345",
-                "Warszawska",
-                "13B/3",
-                "",
-                restaurantId
-        );
-
+    void testUpdateAddress_ShouldReturnAddressDto_WhenExist() {
         // when
-        when(mapper.dtoToAddress(newAddressDto)).thenReturn(address);
+        when(repository.findById(addressId)).thenReturn(Optional.of(address));
         when(repository.save(address)).thenReturn(address);
         when(mapper.toDto(any(Address.class))).thenReturn(addressDto);
+        AddressDto savedAddressDto = service.updateAddress(addressId, newAddressDto);
 
         // then
-        AddressDto savedAddressDto = service.saveNewAddress(newAddressDto);
-
-        // test
         assertEquals(savedAddressDto, addressDto);
-        verify(mapper, times(1)).dtoToAddress(any(NewAddressDto.class));
         verify(repository, times(1)).save(any(Address.class));
         verify(mapper, times(1)).toDto(any(Address.class));
     }
 
     @Test
-    void testDeleteAddress_ShouldDeleteAddress_WhenCalled() {
-        // given
-        address.setId(addressId);
-
+    void testUpdateAddress_ShouldThrowObjectNotFoundException_WhenNoAddress() {
         // when
-        when(mapper.dtoToAddress(addressId)).thenReturn(address);
+        when(repository.findById(addressId)).thenReturn(Optional.empty());
 
         // then
-        service.deleteAddress(addressId);
-
-        // test
-        verify(mapper, times(1)).dtoToAddress(addressId);
-        verify(repository, times(1)).delete(address);
+        assertThrows(ObjectNotFoundException.class, () -> service.updateAddress(addressId, newAddressDto));
     }
-
 }

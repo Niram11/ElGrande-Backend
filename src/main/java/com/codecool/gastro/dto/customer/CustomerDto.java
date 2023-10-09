@@ -11,7 +11,6 @@ public record CustomerDto(
         String name,
         String surname,
         String email,
-        LocalDate submissionTime,
-        Set<RestaurantDto> restaurants
+        LocalDate submissionTime
 ) {
 }
