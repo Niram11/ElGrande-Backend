@@ -45,11 +45,6 @@ public class RestaurantController {
                 .body(restaurantService.getFilteredRestaurants(filteredRestaurantsCriteria));
     }
 
-    @PostMapping
-    public ResponseEntity<RestaurantDto> createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.saveNewRestaurant(newRestaurantDto));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.updateRestaurant(id, newRestaurantDto));
