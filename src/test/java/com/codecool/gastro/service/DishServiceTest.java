@@ -1,6 +1,7 @@
 package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.dish.DishDto;
+import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
@@ -9,9 +10,11 @@ import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.DishRepository;
 import com.codecool.gastro.repository.IngredientRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ingredient;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
@@ -51,12 +54,15 @@ class DishServiceTest {
     DishCategoryRepository dishCategoryRepository;
     @Mock
     DishCategoryService dishCategoryService;
+    @Mock
+    RestaurantRepository restaurantRepository;
 
     private UUID restaurantId;
     private UUID dishId;
     private Dish dish;
     private DishDto dishDto;
     private NewDishDto newDishDto;
+    private EditDishDto editDishDto;
 
     @BeforeEach
     void setUp() {
@@ -74,6 +80,12 @@ class DishServiceTest {
         );
 
         newDishDto = new NewDishDto(
+                "Name",
+                BigDecimal.valueOf(12),
+                restaurantId
+        );
+
+        editDishDto = new EditDishDto(
                 "Name",
                 BigDecimal.valueOf(12)
         );
@@ -120,6 +132,7 @@ class DishServiceTest {
         when(mapper.dtoToDish(newDishDto)).thenReturn(dish);
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
+        when(restaurantRepository.findById(newDishDto.restaurantId())).thenReturn(Optional.of(new Restaurant()));
         DishDto expectedDishDto = service.saveNewDish(newDishDto);
 
         // then
@@ -135,7 +148,7 @@ class DishServiceTest {
         when(repository.findById(dishId)).thenReturn(Optional.of(dish));
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
-        DishDto expectedDishDto = service.updateDish(dishId, newDishDto);
+        DishDto expectedDishDto = service.updateDish(dishId, editDishDto);
 
         // then
         assertEquals(expectedDishDto.id(), dishDto.id());

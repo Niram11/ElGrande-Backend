@@ -20,25 +20,14 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ImageDto> getImageById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageById(id));
-    }
-
     @GetMapping(params = {"restaurantId"})
-    public ResponseEntity<List<ImageDto>> getImagesByRestaurant(@RequestParam("restaurantId") UUID restaurantId){
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImagesByRestaurant(restaurantId));
+    public ResponseEntity<List<ImageDto>> getImagesByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getImagesByRestaurantId(restaurantId));
     }
 
     @PostMapping
     public ResponseEntity<ImageDto> createNewImage(@Valid @RequestBody NewImageDto newImageDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveNewImage(newImageDto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ImageDto> updateImage(@PathVariable UUID id, @Valid @RequestBody NewImageDto newImageDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.updateImage(id , newImageDto));
     }
 
     @DeleteMapping("/{id}")

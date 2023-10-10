@@ -1,5 +1,6 @@
 package com.codecool.gastro.service.mapper;
 
+import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.repository.entity.Dish;
@@ -21,7 +22,7 @@ public interface DishMapper {
 
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "id", ignore = true)
-    void updatedDishFromDto(NewDishDto newDishDto, @MappingTarget Dish dish);
+    void updatedDishFromDto(EditDishDto editDishDto, @MappingTarget Dish dish);
 
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "price", ignore = true)

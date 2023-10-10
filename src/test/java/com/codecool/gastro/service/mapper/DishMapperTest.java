@@ -1,6 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
 import com.codecool.gastro.dto.dish.DishDto;
+import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.repository.entity.Dish;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ public class DishMapperTest {
     private UUID dishId;
     private Dish dish;
     private NewDishDto newDishDto;
+    private EditDishDto editDishDto;
     
     @BeforeEach
     void setUp() {
@@ -30,7 +32,13 @@ public class DishMapperTest {
 
         newDishDto = new NewDishDto(
                 "Pizza",
-                BigDecimal.valueOf(15.3)
+                BigDecimal.valueOf(15.3),
+                UUID.randomUUID()
+        );
+
+        editDishDto = new EditDishDto(
+                "Tomato-Soup",
+                BigDecimal.valueOf(8.3)
         );
     }
 
@@ -69,11 +77,11 @@ public class DishMapperTest {
     @Test
     void testUpdateDishFromDto_ShouldUpdateOnlyFiledThatAreInDtoRestShouldBeSame_WhenCalled() {
         // when
-        mapper.updatedDishFromDto(newDishDto, dish);
+        mapper.updatedDishFromDto(editDishDto, dish);
 
         // then
-        assertEquals(dish.getPrice(), newDishDto.price());
-        assertEquals(dish.getDishName(), newDishDto.dishName());
+        assertEquals(dish.getPrice(), editDishDto.price());
+        assertEquals(dish.getDishName(), editDishDto.dishName());
         assertNotNull(dish.getCategories());
         assertNotNull(dish.getIngredients());
     }

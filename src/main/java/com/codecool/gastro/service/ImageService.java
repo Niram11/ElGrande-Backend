@@ -21,20 +21,7 @@ public class ImageService {
         this.imageMapper = imageMapper;
     }
 
-    public List<ImageDto> getImages() {
-        return imageRepository.findALl()
-                .stream()
-                .map(imageMapper::toDto)
-                .toList();
-    }
-
-    public ImageDto getImageById(UUID id) {
-        return imageRepository.findById(id)
-                .map(imageMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Image.class));
-    }
-
-    public List<ImageDto> getImagesByRestaurant(UUID id) {
+    public List<ImageDto> getImagesByRestaurantId(UUID id) {
         return imageRepository.findAllByRestaurant(id)
                 .stream()
                 .map(imageMapper::toDto)
@@ -44,11 +31,6 @@ public class ImageService {
     public ImageDto saveNewImage(NewImageDto newImageDto) {
         Image savedImage = imageRepository.save(imageMapper.dtoToImage(newImageDto));
         return imageMapper.toDto(savedImage);
-    }
-
-    public ImageDto updateImage(UUID id, NewImageDto newImageDto) {
-        Image updatedImage = imageRepository.save(imageMapper.dtoToImage(id, newImageDto));
-        return imageMapper.toDto(updatedImage);
     }
 
     public void deleteImage(UUID id) {

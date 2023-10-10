@@ -33,18 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ImageController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class ImageControllerTest {
-
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
     @MockBean
-    private ImageService service;
+    ImageService service;
     @MockBean
-    private RestaurantRepository restaurantRepository;
+    RestaurantRepository restaurantRepository;
 
     private UUID imageId;
     private UUID restaurantId;
     private ImageDto imageDto;
-
     private String contentResponse;
 
     @BeforeEach
@@ -66,34 +64,10 @@ public class ImageControllerTest {
     }
 
     @Test
-    void testGetImageById_ShouldReturnStatusOdAndImageDto_WhenExist() throws Exception {
-        // when
-        when(service.getImageById(imageId)).thenReturn(imageDto);
-
-        // then
-        mockMvc.perform(get("/api/v1/images/" + imageId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentResponse)
-                );
-
-    }
-
-    @Test
-    void testGetImageById_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoImage() throws Exception {
-        // when
-        when(service.getImageById(imageId)).thenThrow(new ObjectNotFoundException(imageId, Image.class));
-
-        // then
-        mockMvc.perform(get("/api/v1/images/" + imageId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Image and id " + imageId + " cannot be found")
-                );
-    }
-
-    @Test
     void testGetImagesByRestaurant_ShouldReturnStatusOkAndList_WhenCalled() throws Exception {
         // then
-        mockMvc.perform(get("/api/v1/images?restaurantId=" + restaurantId))
+        mockMvc.perform(get("/api/v1/images")
+                        .param("restaurantId", String.valueOf(restaurantId)))
                 .andExpectAll(status().isOk(),
                         content().json("[]")
                 );
@@ -128,7 +102,7 @@ public class ImageControllerTest {
         String contentRequest = """
                 {
                     "pathToImage": "",
-                    "restaurantId": "3d34a701-212c-4183-990b-eb8541a7551a"
+                    "restaurantId": ""
                 }
                 """;
 
@@ -146,49 +120,9 @@ public class ImageControllerTest {
     }
 
     @Test
-    void testUpdateImage_ShouldReturnStatusCreatedAndImageDto_WhenValidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "pathToImage": "/path/to/image",
-                    "restaurantId": "3d34a701-212c-4183-990b-eb8541a7551a"
-                }
-                """;
-
-        // when
-        when(service.updateImage(any(UUID.class), any(NewImageDto.class))).thenReturn(imageDto);
-        when(restaurantRepository.findById(any(UUID.class))).thenReturn(Optional.of(new Restaurant()));
-
+    void testDeleteImage_ShouldReturnStatusNoContent_WhenCalled() throws Exception {
         // then
-        mockMvc.perform(put("/api/v1/images/" + imageId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentResponse)
-                );
+        mockMvc.perform(delete("/api/v1/images/" + imageId))
+                .andExpectAll(status().isNoContent());
     }
-
-    @Test
-    void testUpdateImage_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "pathToImage": "",
-                    "restaurantId": "3d34a701-212c-4183-990b-eb8541a7551a"
-                }
-                """;
-
-        // when
-        when(restaurantRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
-
-        // then
-        mockMvc.perform(put("/api/v1/images/" + imageId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Path to image cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
-                );
-    }
-
 }
