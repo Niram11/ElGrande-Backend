@@ -64,21 +64,6 @@ class ReviewMapperTest {
         assertEquals(review.getCustomer().getId(), newReviewDto.customerId());
     }
 
-    @Test
-    void testDtoToReview() {
-        //Given
-        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
-
-        //When
-        Review review = mapper.dtoToReview(REVIEW_ID, newReviewDto);
-
-        //Then
-        assertEquals(review.getId(), REVIEW_ID);
-        assertEquals(review.getComment(), newReviewDto.comment());
-        assertEquals(review.getGrade(), newReviewDto.grade());
-        assertEquals(review.getRestaurant().getId(), newReviewDto.restaurantId());
-        assertEquals(review.getCustomer().getId(), newReviewDto.customerId());
-    }
 
     @Test
     void testDtoToReview1() {

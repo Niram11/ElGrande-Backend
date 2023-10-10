@@ -6,7 +6,7 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.RestaurantService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import org.hamcrest.Matchers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,17 +17,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = RestaurantController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -38,16 +39,6 @@ public class RestaurantControllerTest {
 
     @MockBean
     private RestaurantService service;
-
-    @Test
-    void testGetAllRestaurants_ShouldReturnStatusOk_WhenCalled() throws Exception {
-        // when
-        when(service.getRestaurants()).thenReturn(new ArrayList<>());
-
-        // test
-        mockMvc.perform(get("/api/v1/restaurants"))
-                .andExpect(status().isOk());
-    }
 
     @Test
     void testGetRestaurantById_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
@@ -160,5 +151,41 @@ public class RestaurantControllerTest {
                 .andExpectAll(status().isOk(),
                         content().json(contentRespond)
                 );
+    }
+
+    @Test
+    void testUpdateRestaurant_ShouldReturnStatusCreatedAndUpdatedRestaurantDto_WhenUpdateIsSuccessful() throws Exception {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+        RestaurantDto updatedRestaurantDto = new RestaurantDto(restaurantId, "Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+
+        // when
+        when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenReturn(updatedRestaurantDto);
+
+        // test
+        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(restaurantId.toString()))
+                .andExpect(jsonPath("$.name").value("Updated Name"));
+    }
+
+    @Test
+    void testUpdateRestaurant_ShouldReturnStatusNotFound_WhenRestaurantToUpdateDoesNotExist() throws Exception {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+
+        // when
+        when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));
+
+        // test
+        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("Object of class Restaurant and id " + restaurantId + " cannot be found"));
     }
 }

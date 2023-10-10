@@ -62,51 +62,6 @@ public class RestaurantServiceTest {
     }
 
     @Test
-    void testGetRestaurants_ShouldReturnEmptyList_WhenNoRestaurant() {
-        // when
-        when(repository.findAll()).thenReturn(List.of());
-
-        // then
-        List<RestaurantDto> list = service.getRestaurants();
-
-        // test
-        assertEquals(0, list.size());
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    void testGetRestaurants_ShouldReturnListOfRestaurantDto_WhenRestaurantsExist() {
-        // given
-        RestaurantDto restaurantDtoOne = restaurantDto;
-
-        RestaurantDto restaurantDtoTwo = new RestaurantDto(
-                UUID.randomUUID(),
-                "Kacper",
-                "test",
-                "test.www",
-                123,
-                "test@gmial.com"
-        );
-
-        Restaurant restaurantOne = restaurant;
-        Restaurant restaurantTwo = new Restaurant();
-
-        // when
-        when(repository.findAll()).thenReturn(List.of(restaurantOne, restaurantTwo));
-        when(mapper.toDto(restaurantOne)).thenReturn(restaurantDtoOne);
-        when(mapper.toDto(restaurantTwo)).thenReturn(restaurantDtoTwo);
-
-        // then
-        List<RestaurantDto> restaurantList = service.getRestaurants();
-
-        // test
-        assertEquals(List.of(restaurantDtoOne, restaurantDtoTwo), restaurantList);
-
-        verify(repository, times(1)).findAll();
-        verify(mapper, times(2)).toDto(any(Restaurant.class));
-    }
-
-    @Test
     void testGetRestaurantById_ShouldReturnRestaurantDto_WhenRestaurantExist() {
         // given
         restaurant.setId(restaurantId);
@@ -232,4 +187,55 @@ public class RestaurantServiceTest {
         // test
         assertEquals(2, list.size());
     }
+
+    @Test
+    void testUpdateRestaurantShouldReturnUpdatedRestaurantDtoWhenRestaurantExists() {
+        // given
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
+                "KacperUpdated",
+                "KacperToUpdated",
+                "wwwUpdated.pl",
+                789789789,
+                "kacperUpdated@wp.pl"
+        );
+
+        Restaurant updatedRestaurant = new Restaurant();
+        updatedRestaurant.setId(restaurantId);
+
+        // when
+        when(repository.findById(restaurantId)).thenReturn(Optional.of(updatedRestaurant));
+        doNothing().when(mapper).updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
+        when(repository.save(updatedRestaurant)).thenReturn(updatedRestaurant);
+        when(mapper.toDto(updatedRestaurant)).thenReturn(restaurantDto);
+
+        // then
+        RestaurantDto updatedRestaurantDto = service.updateRestaurant(restaurantId, newRestaurantDto);
+
+        // test
+        assertEquals(updatedRestaurantDto, restaurantDto);
+        verify(repository, times(1)).findById(restaurantId);
+        verify(mapper, times(1)).updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
+        verify(repository, times(1)).save(updatedRestaurant);
+        verify(mapper, times(1)).toDto(updatedRestaurant);
+    }
+
+    @Test
+    void testUpdateRestaurantShouldThrowObjectNotFoundExceptionWhenRestaurantDoesNotExist() {
+        // given
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
+                "KacperUpdated",
+                "ToUpdated",
+                "wwwUpdated.pl",
+                789789789,
+                "kacperUpdated@wp.pl"
+        );
+
+        // when
+        when(repository.findById(restaurantId)).thenReturn(Optional.empty());
+
+        // test
+        assertThrows(ObjectNotFoundException.class, () -> service.updateRestaurant(restaurantId, newRestaurantDto));
+        verify(repository, times(1)).findById(restaurantId);
+    }
+
 }

@@ -13,6 +13,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -111,7 +113,7 @@ public class ReviewControllerTest {
 
         // then
         mockMvc.perform(get("/api/v1/reviews")
-                        .param("customerId", "3466582c-580b-4d87-aa1d-615350e9598c"))
+                        .param("customerId", String.valueOf(customerId)))
                 .andExpectAll(status().isOk(),
                         content().json("[]")
                 );
@@ -182,5 +184,13 @@ public class ReviewControllerTest {
                         jsonPath("$.errorMessage", Matchers.containsString("Customer with this id does not exist")),
                         jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
                 );
+    }
+
+    private static Stream<Arguments> provideIntForIsBlank() {
+        return Stream.of(
+                Arguments.of("comment", -1, "Grade must be greater then or equal 1"),
+                Arguments.of("comment", 11, "Grade must be less then or equal 10"),
+                Arguments.of("", 5, "Comment cannot be empty")
+        );
     }
 }

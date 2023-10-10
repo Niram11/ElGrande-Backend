@@ -23,11 +23,6 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurants());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));

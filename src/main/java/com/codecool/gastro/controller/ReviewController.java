@@ -29,7 +29,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewById(id));
     }
 
-    @GetMapping(params = "{customerId}")
+    @GetMapping(params = "customerId")
     public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByCustomerId(customerId));
     }
