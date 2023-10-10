@@ -15,9 +15,6 @@ public interface IngredientRepository extends JpaRepository<Ingredient, UUID> {
     @Query("select ingredient from Ingredient ingredient ")
     List<Ingredient> findAll();
 
-    @Query("select ingredient from Ingredient ingredient where ingredient.id = :id")
-    Optional<Ingredient> findById(UUID id);
-
     @Query("select ingredient from Ingredient ingredient where ingredient.name = :name ")
     Optional<Ingredient> findByName(String name);
 }

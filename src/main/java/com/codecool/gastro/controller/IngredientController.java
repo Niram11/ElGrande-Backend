@@ -26,19 +26,9 @@ public class IngredientController {
         return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getAllIngredients());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<IngredientDto> getIngredientById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getIngredientById(id));
-    }
-
     @PostMapping
     public ResponseEntity<IngredientDto> createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.saveNewIngredient(newIngredientDto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<IngredientDto> updateIngredient(@PathVariable UUID id, @Valid @RequestBody NewIngredientDto newIngredientDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.updateIngredient(id, newIngredientDto));
     }
 
     @DeleteMapping("/{id}")

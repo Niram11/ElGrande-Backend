@@ -20,7 +20,4 @@ public interface DishCategoryMapper {
     @Mapping(target = "id", source = "id")
     DishCategory dtoToDishCategory(UUID id);
 
-    @Mapping(target = "id", ignore = true)
-    void updateDishCategoryFromDto(NewDishCategoryDto newDishCategoryDto, @MappingTarget DishCategory dishCategory);
-
 }

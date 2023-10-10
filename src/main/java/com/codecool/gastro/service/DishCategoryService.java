@@ -30,27 +30,12 @@ public class DishCategoryService {
                 .stream().map(dishCategoryMapper::toDto).toList();
     }
 
-    public DishCategoryDto getDishCategoryById(UUID id) {
-        return dishCategoryRepository.findById(id)
-                .map(dishCategoryMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, DishCategory.class));
-    }
-
     public DishCategoryDto saveDishCategory(NewDishCategoryDto newDishCategoryDto) {
         DishCategory dishCategory = dishCategoryMapper.dtoToDishCategory(newDishCategoryDto);
         parseToLowerCase(dishCategory);
         return dishCategoryMapper.toDto(dishCategoryRepository.save(
                 dishCategory
         ));
-    }
-
-    public DishCategoryDto updateDishCategory(UUID id, NewDishCategoryDto newDishCategoryDto) {
-        DishCategory updatedDishCategory = dishCategoryRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, DishCategory.class));
-
-        dishCategoryMapper.updateDishCategoryFromDto(newDishCategoryDto, updatedDishCategory);
-        parseToLowerCase(updatedDishCategory);
-        return dishCategoryMapper.toDto(dishCategoryRepository.save(updatedDishCategory));
     }
 
     public void deleteDishCategory(UUID id) {

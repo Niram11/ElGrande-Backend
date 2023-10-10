@@ -30,19 +30,9 @@ public class DishCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(dishCategoryService.getAllDishCategories());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DishCategoryDto> getDishCategoryById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(dishCategoryService.getDishCategoryById(id));
-    }
-
     @PostMapping
     public ResponseEntity<DishCategoryDto> createDishCategory(@Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(dishCategoryService.saveDishCategory(newDishCategoryDto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<DishCategoryDto> updateDishCategory(@PathVariable UUID id, @Valid @RequestBody NewDishCategoryDto newDishCategoryDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dishCategoryService.updateDishCategory(id, newDishCategoryDto));
     }
 
     @DeleteMapping("/{id}")

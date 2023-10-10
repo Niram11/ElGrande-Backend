@@ -61,13 +61,4 @@ public class DishCategoryMapperTest {
         // then
         assertEquals(testedDishCategory.getCategory(), newDishCategoryDto.category());
     }
-
-    @Test
-    void testUpdateDishCategory_ShouldMapOnlyDataThatWereChangedRestShouldRemainSame_WhenCalled() {
-        // when
-        mapper.updateDishCategoryFromDto(newDishCategoryDto, dishCategory);
-
-        // then
-        assertEquals(dishCategory.getCategory(), newDishCategoryDto.category());
-    }
 }

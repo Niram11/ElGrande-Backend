@@ -59,29 +59,6 @@ public class DishCategoryControllerTest {
     }
 
     @Test
-    void testGetDishCategoryById_ShouldReturnStatusOkAndDishCategoryDto_WhenExist() throws Exception {
-        // when
-        when(service.getDishCategoryById(dishCategoryId)).thenReturn(dishCategoryDto);
-
-        // then
-        mockMvc.perform(get("/api/v1/dish-categories/" + dishCategoryId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentResponse)
-                );
-    }
-
-    @Test
-    void testGetDishCategoryById_ShouldReturnStatusNotFound_WhenNoDishCategory() throws Exception {
-        // when
-        when(service.getDishCategoryById(dishCategoryId)).thenThrow(new ObjectNotFoundException(dishCategoryId, DishCategory.class));
-
-        // then
-        mockMvc.perform(get("/api/v1/dish-categories/" + dishCategoryId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class DishCategory and id " + dishCategoryId + " cannot be found"));
-    }
-
-    @Test
     void testCreateDishCategory_ShouldReturnStatusCreatedAndDishCategoryDto_WhenProvidingValidValues() throws Exception {
         // given
         String contentRequest = """
@@ -121,51 +98,9 @@ public class DishCategoryControllerTest {
     }
 
     @Test
-    void testUpdateDishCategory_ShouldReturnStatusCreatedAndDishCategoryDto_WhenProvidingValidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "category": "Category"
-                }
-                """;
-
-        // when
-        when(service.updateDishCategory(dishCategoryId, newDishCategoryDto)).thenReturn(dishCategoryDto);
-
-        // then
-        mockMvc.perform(put("/api/v1/dish-categories/" + dishCategoryId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentResponse)
-                );
-    }
-
-    @Test
-    void testUpdateDishCategory_ShouldReturnStatusBadRequestAndErrorMessages_WhenProvidingInvalidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "category": ""
-                }
-                """;
-
-        // then
-        mockMvc.perform(put("/api/v1/dish-categories/" + dishCategoryId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage").value("Dish category cannot be empty")
-                );
-    }
-
-
-    @Test
     void testDeleteDishCategory_ShouldReturnStatusNoContent_WhenCalled() throws Exception {
         // test
         mockMvc.perform(delete("/api/v1/dish-categories/" + dishCategoryId))
                 .andExpectAll(status().isNoContent());
     }
-
-
 }
