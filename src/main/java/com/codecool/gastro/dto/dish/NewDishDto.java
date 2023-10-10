@@ -14,9 +14,7 @@ public record NewDishDto(
         String dishName,
         @NotNull(message = "Price cannot be null")
         @Positive(message = "Price must be a positive number")
-        BigDecimal price,
-        @RestaurantExist
-        UUID restaurantId
+        BigDecimal price
 
 ) {
 }

@@ -14,10 +14,6 @@ import java.util.UUID;
 public interface DishRepository extends JpaRepository<Dish, UUID> {
 
     @Query("SELECT dish from Dish dish left join fetch dish.categories " +
-            "left join fetch dish.ingredients left join fetch dish.restaurant")
-    List<Dish> findAll();
-
-    @Query("SELECT dish from Dish dish left join fetch dish.categories " +
             "left join fetch dish.ingredients left join fetch dish.restaurant " +
             "WHERE dish.id = :id")
     Optional<Dish> findById(UUID id);
@@ -25,6 +21,6 @@ public interface DishRepository extends JpaRepository<Dish, UUID> {
     @Query("SELECT dish from Dish dish LEFT join fetch dish.categories " +
             "left join fetch dish.ingredients left join fetch dish.restaurant " +
             "WHERE dish.restaurant.id = :restaurantId")
-    List<Dish> findByRestaurant(UUID restaurantId);
+    List<Dish> findByRestaurantId(UUID restaurantId);
 
 }

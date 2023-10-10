@@ -2,7 +2,9 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
+import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
+import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.DishCategoryRepository;
@@ -24,32 +26,25 @@ public class DishService {
 
     private final DishRepository dishRepository;
     private final DishMapper dishMapper;
+    private final IngredientService ingredientService;
     private final IngredientRepository ingredientRepository;
-    private final IngredientMapper ingredientMapper;
+    private final DishCategoryService dishCategoryService;
     private final DishCategoryRepository dishCategoryRepository;
-    private final DishCategoryMapper dishCategoryMapper;
 
     public DishService(DishRepository dishRepository,
-                       DishMapper dishMapper, IngredientMapper ingredientMapper,
-                       IngredientRepository ingredientRepository, DishCategoryRepository dishCategoryRepository,
-                       DishCategoryMapper dishCategoryMapper) {
+                       DishMapper dishMapper, IngredientService ingredientService,
+                       IngredientRepository ingredientRepository, DishCategoryService dishCategoryService,
+                       DishCategoryRepository dishCategoryRepository) {
         this.dishRepository = dishRepository;
         this.dishMapper = dishMapper;
+        this.ingredientService = ingredientService;
         this.ingredientRepository = ingredientRepository;
-        this.ingredientMapper = ingredientMapper;
+        this.dishCategoryService = dishCategoryService;
         this.dishCategoryRepository = dishCategoryRepository;
-        this.dishCategoryMapper = dishCategoryMapper;
     }
 
-    public List<DishDto> getAllDishes() {
-        return dishRepository.findAll()
-                .stream()
-                .map(dishMapper::toDto)
-                .toList();
-    }
-
-    public List<DishDto> getDishesByRestaurant(UUID id) {
-        return dishRepository.findByRestaurant(id)
+    public List<DishDto> getDishesByRestaurantId(UUID id) {
+        return dishRepository.findByRestaurantId(id)
                 .stream()
                 .map(dishMapper::toDto)
                 .toList();
@@ -67,8 +62,11 @@ public class DishService {
     }
 
     public DishDto updateDish(UUID id, NewDishDto newDishDto) {
-        Dish updatedDish = dishRepository.save(dishMapper.dtoToDish(id, newDishDto));
-        return dishMapper.toDto(updatedDish);
+        Dish updatedDish = dishRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
+
+        dishMapper.updatedDishFromDto(newDishDto, updatedDish);
+        return dishMapper.toDto(dishRepository.save(updatedDish));
     }
 
     public void deleteDish(UUID id) {
@@ -95,39 +93,33 @@ public class DishService {
     }
 
     private void addIngredientsToDish(Set<NewIngredientDto> ingredients, Dish dish) {
-        for (NewIngredientDto ingredient : ingredients) {
+        ingredients.forEach(ingredient -> {
+            Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name().toLowerCase());
 
-            Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name());
-
-            if (ingredientOptional.isEmpty()) {
-                Ingredient mappedIngredient = ingredientMapper.dtoToIngredient(ingredient);
-                mappedIngredient.setName(mappedIngredient.getName().toLowerCase());
-                ingredientRepository.save(mappedIngredient);
-                dish.assignIngredient(mappedIngredient);
-
-            } else if (!dish.getIngredients().contains(ingredientOptional.get())) {
-
-                dish.assignIngredient(ingredientOptional.get());
-            }
-        }
+            ingredientOptional.ifPresentOrElse(dish::assignIngredient,
+                    () -> {
+                        IngredientDto savedIngredient = ingredientService.saveNewIngredient(ingredient);
+                        Ingredient newIngredient = new Ingredient();
+                        newIngredient.setName(savedIngredient.name());
+                        newIngredient.setId(savedIngredient.id());
+                        dish.assignIngredient(newIngredient);
+                    });
+        });
     }
 
     private void addDishCategoryToDish(Set<NewDishCategoryDto> categories, Dish dish) {
-        for (NewDishCategoryDto category : categories) {
+        categories.forEach(category -> {
+            Optional<DishCategory> dishCategoryOptional = dishCategoryRepository.findByCategory(category.category());
 
-            Optional<DishCategory> dishCategory = dishCategoryRepository.findByCategory(category.category());
-
-            if (dishCategory.isEmpty()) {
-                DishCategory mappedDishCategory = dishCategoryMapper.dtoToDishCategory(category);
-                mappedDishCategory.setCategory(mappedDishCategory.getCategory().toLowerCase());
-                dishCategoryRepository.save(mappedDishCategory);
-                dish.assignCategories(mappedDishCategory);
-
-            } else if (!dish.getCategories().contains(dishCategory.get())) {
-
-                dish.assignCategories(dishCategory.get());
-            }
-        }
+            dishCategoryOptional.ifPresentOrElse(dish::assignCategories,
+                    () -> {
+                        DishCategoryDto savedDishCategory = dishCategoryService.saveDishCategory(category);
+                        DishCategory newDishCategory = new DishCategory();
+                        newDishCategory.setCategory(savedDishCategory.category());
+                        newDishCategory.setId(savedDishCategory.id());
+                        dish.assignCategories(newDishCategory);
+                    });
+        });
     }
 
 }

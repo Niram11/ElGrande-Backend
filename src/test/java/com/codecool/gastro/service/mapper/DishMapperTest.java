@@ -13,19 +13,15 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DishMapperTest {
-
-    private DishMapper mapper = Mappers.getMapper(DishMapper.class);
+    DishMapper mapper = Mappers.getMapper(DishMapper.class);
 
     private UUID dishId;
-    private UUID restaurantId;
     private Dish dish;
     private NewDishDto newDishDto;
-
-
+    
     @BeforeEach
     void setUp() {
         dishId = UUID.fromString("05e5bd97-d8ac-4b9b-95e8-a397ad91d02a");
-        restaurantId = UUID.fromString("6dbec6bb-3248-468d-bf1a-6cb9fb0f2bc6");
 
         dish = new Dish();
         dish.setId(dishId);
@@ -34,8 +30,7 @@ public class DishMapperTest {
 
         newDishDto = new NewDishDto(
                 "Pizza",
-                BigDecimal.valueOf(15.3),
-                restaurantId
+                BigDecimal.valueOf(15.3)
         );
     }
 
@@ -53,20 +48,33 @@ public class DishMapperTest {
     }
 
     @Test
-    void testDtoToDish_ShouldReturnDish_WhenCalled() {
+    void testDtoToDish_ShouldReturnDish_WhenProvidedDto() {
         // when
-        Dish dishOne = mapper.dtoToDish(dishId);
-        Dish dishTwo = mapper.dtoToDish(dishId, newDishDto);
-        Dish dishThree = mapper.dtoToDish(newDishDto);
+        Dish testedDish = mapper.dtoToDish(newDishDto);
 
         // then
-        assertEquals(dishOne.getId(), dishId);
-        assertEquals(dishTwo.getId(), dishId);
-        assertEquals(dishTwo.getDishName(), newDishDto.dishName());
-        assertEquals(dishTwo.getPrice(), newDishDto.price());
-        assertEquals(dishTwo.getRestaurant().getId(), newDishDto.restaurantId());
-        assertEquals(dishThree.getDishName(), newDishDto.dishName());
-        assertEquals(dishThree.getPrice(), newDishDto.price());
-        assertEquals(dishThree.getRestaurant().getId(), newDishDto.restaurantId());
+        assertEquals(testedDish.getDishName(), newDishDto.dishName());
+        assertEquals(testedDish.getPrice(), newDishDto.price());
+    }
+    
+    @Test
+    void testDtoToDish_ShouldReturnDish_WhenProvidedId() {
+        // when
+        Dish testedDish = mapper.dtoToDish(dishId);
+
+        // then
+        assertEquals(testedDish.getId(), dishId);
+    }
+
+    @Test
+    void testUpdateDishFromDto_ShouldUpdateOnlyFiledThatAreInDtoRestShouldBeSame_WhenCalled() {
+        // when
+        mapper.updatedDishFromDto(newDishDto, dish);
+
+        // then
+        assertEquals(dish.getPrice(), newDishDto.price());
+        assertEquals(dish.getDishName(), newDishDto.dishName());
+        assertNotNull(dish.getCategories());
+        assertNotNull(dish.getIngredients());
     }
 }

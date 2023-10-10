@@ -152,7 +152,7 @@ public class BusinessHourControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideDataForIsBlank")
+    @MethodSource("getArgsForBusinessHourValidation")
     void testCreateNewBusinessHour_ShouldReturnStatusBadRequestWithErrorMessages_WhenProvidingInvalidData(
             String dayOfWeek, String openingHour, String closingHour, String dayErrMsg, String openingHourErrMsg,
             String closingHourErrMsg) throws Exception {
@@ -178,7 +178,7 @@ public class BusinessHourControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideDataForIsBlank")
+    @MethodSource("getArgsForBusinessHourValidation")
     void testUpdateBusinessHour_ShouldReturnStatusBadRequestWithErrorMessages_WhenProvidingInvalidData(
             String dayOfWeek, String openingHour, String closingHour, String dayErrMsg, String openingHourErrMsg,
             String closingHourErrMsg) throws Exception {
@@ -210,7 +210,7 @@ public class BusinessHourControllerTest {
                 .andExpectAll(status().isNoContent());
     }
 
-    private static Stream<Arguments> provideDataForIsBlank() {
+    private static Stream<Arguments> getArgsForBusinessHourValidation() {
         return Stream.of(
                 Arguments.of("", "", "", "Day of week cannot be null", "Opening hour cannot be null",
                         "Closing hour cannot be null"),

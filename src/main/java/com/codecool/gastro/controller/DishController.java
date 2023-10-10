@@ -30,7 +30,7 @@ public class DishController {
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<DishDto>> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishesByRestaurant(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishesByRestaurantId(restaurantId));
     }
 
     @PostMapping
