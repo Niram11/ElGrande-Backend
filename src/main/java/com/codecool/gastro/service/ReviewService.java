@@ -25,13 +25,6 @@ public class ReviewService {
         this.reviewMapper = reviewMapper;
     }
 
-    public List<ReviewDto> getReviews() {
-        return reviewRepository.findAll()
-                .stream()
-                .map(reviewMapper::toDto)
-                .toList();
-    }
-
     public ReviewDto getReviewById(UUID id) {
         return reviewRepository.findById(id)
                 .map(reviewMapper::toDto)

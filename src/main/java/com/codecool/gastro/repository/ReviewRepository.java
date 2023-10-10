@@ -14,8 +14,6 @@ import java.util.UUID;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    @Query("select rev from Review rev left join fetch rev.customer left join fetch rev.restaurant ")
-    List<Review> findAll();
 
     @Query("select rev from Review rev left join fetch rev.customer left join fetch rev.restaurant where rev.id = :id")
     Optional<Review> findById(UUID id);
