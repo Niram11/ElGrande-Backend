@@ -41,7 +41,7 @@ public class RestaurantControllerTest {
     private RestaurantService service;
 
     @Test
-    void testGetRestaurantById_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
+    void testGetRestaurantByIdShouldReturnStatusNotFoundWhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
@@ -55,7 +55,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testGetRestaurantById_ShouldReturnStatusOkAndRestaurantDto_WhenRestaurantExist() throws Exception {
+    void testGetRestaurantByIdShouldReturnStatusOkAndRestaurantDtoWhenRestaurantExist() throws Exception {
         // given
         RestaurantDto restaurantDto = new RestaurantDto(
                 UUID.randomUUID(),
@@ -82,7 +82,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testSoftDeleteRestaurant_ShouldReturnStatusNoContent_WhenRestaurantExist() throws Exception {
+    void testSoftDeleteRestaurantShouldReturnStatusNoContentWhenRestaurantExist() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
@@ -92,7 +92,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testSoftDeleteRestaurant_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
+    void testSoftDeleteRestaurantShouldReturnStatusNotFoundWhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
@@ -105,7 +105,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testGetTopRestaurantsDetailed_ShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
+    void testGetTopRestaurantsDetailedShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
 
@@ -154,11 +154,11 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testUpdateRestaurant_ShouldReturnStatusCreatedAndUpdatedRestaurantDto_WhenUpdateIsSuccessful() throws Exception {
+    void testUpdateRestaurantShouldReturnStatusCreatedAndUpdatedRestaurantDtoWhenUpdateIsSuccessful() throws Exception {
         // given
         UUID restaurantId = UUID.randomUUID();
-        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
-        RestaurantDto updatedRestaurantDto = new RestaurantDto(restaurantId, "Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+        RestaurantDto updatedRestaurantDto = new RestaurantDto(restaurantId, "UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
 
         // when
         when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenReturn(updatedRestaurantDto);
@@ -173,10 +173,10 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testUpdateRestaurant_ShouldReturnStatusNotFound_WhenRestaurantToUpdateDoesNotExist() throws Exception {
+    void testUpdateRestaurantShouldReturnStatusNotFoundWhenUpdatedRestaurantDoesNotExist() throws Exception {
         // given
         UUID restaurantId = UUID.randomUUID();
-        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("Updated Name", "Updated Desc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
 
         // when
         when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));

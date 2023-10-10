@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class RestaurantMapperTest {
@@ -21,7 +22,7 @@ public class RestaurantMapperTest {
     private final RestaurantMapper mapper = Mappers.getMapper(RestaurantMapper.class);
 
     @Test
-    void testToDto_ShouldMapRestaurantToDto_WhenProvidingValidData() {
+    void testToDtoShouldMapRestaurantToDtoWhenProvidingValidData() {
         // given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(UUID.randomUUID());
@@ -44,7 +45,7 @@ public class RestaurantMapperTest {
     }
 
     @Test
-    void testDtoToRestaurant_ShouldMapToRestaurant_WhenProvidingValidData() {
+    void testDtoToRestaurantShouldMapToRestaurantWhenProvidingValidData() {
         // given
         UUID id = UUID.randomUUID();
 
@@ -70,7 +71,7 @@ public class RestaurantMapperTest {
     }
 
     @Test
-    void testToDetailedDto_ShouldReturnDetailedRestaurantDto_WhenCalled() {
+    void testToDetailedDtoShouldReturnDetailedRestaurantDtoWhenCalled() {
         // given
         ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 
@@ -96,4 +97,41 @@ public class RestaurantMapperTest {
         assertEquals(restaurantDto.imagesPaths().length, restaurant.getImagesPaths().length);
         assertEquals(restaurantDto.averageGrade(), restaurant.getAverageGrade());
     }
+
+    @Test
+    void testUpdateRestaurantFromDtoShouldUpdateProvidedRestaurantFieldsFromDtoExceptIdAndDeleted() {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        boolean deletedFlag = true;
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setId(restaurantId);
+        restaurant.setName("OldName");
+        restaurant.setDescription("OldDesc");
+        restaurant.setWebsite("oldWebsite.pl");
+        restaurant.setContactNumber(987654321);
+        restaurant.setContactEmail("oldEmail@wp.pl");
+        restaurant.setDeleted(deletedFlag);
+
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
+                "NewName",
+                "NewDesc",
+                "newWebsite.pl",
+                123123123,
+                "newEmail@wp.pl"
+        );
+
+        // when
+        mapper.updateRestaurantFromDto(newRestaurantDto, restaurant);
+
+        // test
+        assertEquals(newRestaurantDto.name(), restaurant.getName());
+        assertEquals(newRestaurantDto.description(), restaurant.getDescription());
+        assertEquals(newRestaurantDto.website(), restaurant.getWebsite());
+        assertEquals(newRestaurantDto.contactNumber(), restaurant.getContactNumber());
+        assertEquals(newRestaurantDto.contactEmail(), restaurant.getContactEmail());
+        assertEquals(restaurantId, restaurant.getId());
+        assertTrue(restaurant.getDeleted());
+    }
+
 }
