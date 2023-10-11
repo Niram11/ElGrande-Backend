@@ -30,12 +30,6 @@ public class BusinessHourService {
                 .toList();
     }
 
-    public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository
-                .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
-        return businessHourMapper.toDto(savedBusinessHour);
-    }
-
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
         BusinessHour updatedBusinessHour = businessHourRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));

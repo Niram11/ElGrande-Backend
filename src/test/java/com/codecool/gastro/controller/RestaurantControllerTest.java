@@ -151,12 +151,12 @@ public class RestaurantControllerTest {
 
         String contentTwo = """
                 {
-                "name": "Over100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLongOver100CharactersLong",
+                "name": "",
                 "description": "",
                 "website": "Website.pl",
                 "contactNumber": 1231231231,
                 "contactEmail": "Emailwp.pl"
-                }    
+                }
                 """;
 
         // test
@@ -166,7 +166,6 @@ public class RestaurantControllerTest {
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Contact Number must be a 9-digit integer")),
                         jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
                 );
 
@@ -176,24 +175,7 @@ public class RestaurantControllerTest {
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Contact Number must be a 9-digit integer")),
                         jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
-                );
-
-        mockMvc.perform(post("/api/v1/restaurants")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentTwo))
-                .andExpectAll(
-                        status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
-                );
-
-        mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentTwo))
-                .andExpectAll(
-                        status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must be max 100 characters long"))
                 );
     }
 

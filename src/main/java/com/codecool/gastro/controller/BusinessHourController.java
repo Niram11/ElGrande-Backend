@@ -25,11 +25,6 @@ public class BusinessHourController {
         return ResponseEntity.status(HttpStatus.OK).body(businessHourService.getBusinessHoursByRestaurantId(restaurantId));
     }
 
-    @PostMapping
-    public ResponseEntity<BusinessHourDto> createNewBusinessHour(@Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.saveNewBusinessHour(newBusinessHourDto));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<BusinessHourDto> updateBusinessHour(@PathVariable UUID id, @Valid @RequestBody NewBusinessHourDto newBusinessHourDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(businessHourService.updateBusinessHour(id, newBusinessHourDto));

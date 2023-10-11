@@ -106,28 +106,6 @@ public class BusinessHoursServiceTest {
     }
 
     @Test
-    void testSaveNewBusinessHour_ShouldReturnBusinessHoursDto_WhenCalledWithValidData() {
-        // given
-        businessHour.setId(businessHourId);
-        businessHour.setDayOfWeek(newBusinessHourDto.dayOfWeek());
-        businessHour.setOpeningHour(newBusinessHourDto.openingHour());
-        businessHour.setClosingHour(newBusinessHourDto.closingHour());
-        businessHour.setRestaurant(restaurant);
-
-        // when
-        when(repository.save(businessHour)).thenReturn(businessHour);
-        when(mapper.dtoToBusinessHour(newBusinessHourDto)).thenReturn(businessHour);
-        when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
-        BusinessHourDto savedBusinessHourDto = service.saveNewBusinessHour(newBusinessHourDto);
-
-        // then
-        assertEquals(savedBusinessHourDto, businessHourDto);
-        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto);
-        verify(repository, times(1)).save(businessHour);
-        verify(mapper, times(1)).toDto(businessHour);
-    }
-
-    @Test
     void testUpdateBusinessHour_ShouldReturnBusinessHoursDto_WhenCalledWithValidData() {
         // given
         businessHour.setId(businessHourId);

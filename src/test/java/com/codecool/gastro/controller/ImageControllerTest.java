@@ -106,16 +106,36 @@ public class ImageControllerTest {
                 }
                 """;
 
-        // when
-        when(restaurantRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
-
         // then
         mockMvc.perform(post("/api/v1/images")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Path to image cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
+                        jsonPath("$.errorMessage", Matchers
+                                .containsString("Path to image cannot be empty"))
+                );
+    }
+
+    @Test
+    void testCreateNewImage_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoRestaurant() throws Exception {
+        // given
+        String contentRequest = """
+                {
+                    "pathToImage": "/path/to/image",
+                    "restaurantId": ""
+                }
+                """;
+        // when
+        when(service.saveNewImage(any(NewImageDto.class)))
+                .thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));
+
+        // then
+        mockMvc.perform(post("/api/v1/images")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentRequest))
+                .andExpectAll(status().isNotFound(),
+                        jsonPath("$.errorMessage").value("Object of class " +
+                                Restaurant.class.getSimpleName() + " and id " + restaurantId + " cannot be found")
                 );
     }
 

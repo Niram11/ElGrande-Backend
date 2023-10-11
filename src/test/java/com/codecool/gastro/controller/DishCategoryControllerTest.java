@@ -5,8 +5,12 @@ import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.service.DishCategoryService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,21 +84,23 @@ public class DishCategoryControllerTest {
                 );
     }
 
-    @Test
-    void testCreateDishCategory_ShouldReturnStatusBadRequestAndErrorMessages_WhenProvidingInvalidValues() throws Exception {
+    @ParameterizedTest
+    @MethodSource("getArgsForDishCategoryValidation")
+    void testCreateDishCategory_ShouldReturnStatusBadRequestAndErrorMessages_WhenProvidingInvalidValues(
+            String category, String categoryErrMsg) throws Exception {
         // given
         String contentRequest = """
                 {
-                    "category": ""
+                    "category": "%s"
                 }
-                """;
+                """.formatted(category);
 
         // then
         mockMvc.perform(post("/api/v1/dish-categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage").value("Dish category cannot be empty")
+                        jsonPath("$.errorMessage", Matchers.containsString(categoryErrMsg))
                 );
     }
 
@@ -102,5 +109,12 @@ public class DishCategoryControllerTest {
         // test
         mockMvc.perform(delete("/api/v1/dish-categories/" + dishCategoryId))
                 .andExpectAll(status().isNoContent());
+    }
+
+    private static Stream<Arguments> getArgsForDishCategoryValidation() {
+        return Stream.of(
+                Arguments.of("", "Category cannot be empty"),
+                Arguments.of("-123asd", "Category must contain only letters and not start with number or whitespace")
+        );
     }
 }

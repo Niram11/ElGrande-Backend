@@ -1,12 +1,13 @@
 package com.codecool.gastro.dto.businesshour;
 
-import com.codecool.gastro.controller.validation.RestaurantExist;
 import com.codecool.gastro.controller.validation.TimeFormat;
+import com.codecool.gastro.dto.NewEntityDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
-import java.util.UUID;
 
 public record NewBusinessHourDto(
         @Min(value = 1, message = "Day of week must be greater then or equal 1")
@@ -21,6 +22,6 @@ public record NewBusinessHourDto(
         @TimeFormat
         @Schema(type = "String", pattern = "HH:mm")
         LocalTime closingHour
-) {
+) implements NewEntityDto {
 
 }

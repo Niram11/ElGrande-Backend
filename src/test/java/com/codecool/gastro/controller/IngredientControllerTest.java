@@ -8,6 +8,9 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -81,23 +85,29 @@ public class IngredientControllerTest {
                         content().json(contentResponse)
                 );
     }
-
-    @Test
-    void testCreateIngredient_ShouldReturnStatusBadRequestAndErrorMessages_WhenValidValues() throws Exception {
+    private static Stream<Arguments> getArgsForIngredientsValidation() {
+        return Stream.of(
+                Arguments.of("", "Name cannot be empty"),
+                Arguments.of("123asd", "Name must contain only letters and not start with number or whitespace")
+        );
+    }
+    @ParameterizedTest
+    @MethodSource("getArgsForIngredientsValidation")
+    void testCreateIngredient_ShouldReturnStatusBadRequestAndErrorMessages_WhenValidValues(
+            String name, String nameErrMsg) throws Exception {
         // given
         String contentRequest = """
                 {
-                    "name": ""
+                    "name": "%s"
                 }
-                """;
+                """.formatted(name);
 
         // then
         mockMvc.perform(post("/api/v1/ingredients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must contain only letters and not start with number or whitespace"))
+                        jsonPath("$.errorMessage", Matchers.containsString(nameErrMsg))
                 );
     }
 

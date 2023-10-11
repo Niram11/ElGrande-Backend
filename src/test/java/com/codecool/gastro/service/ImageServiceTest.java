@@ -3,7 +3,9 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.repository.ImageRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Image;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ImageMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,8 @@ class ImageServiceTest {
     ImageRepository repository;
     @Mock
     ImageMapper mapper;
+    @Mock
+    RestaurantRepository restaurantRepository;
 
     private UUID imageId;
     private UUID restaurantId;
@@ -70,6 +74,7 @@ class ImageServiceTest {
         when(mapper.dtoToImage(newImageDto)).thenReturn(image);
         when(repository.save(image)).thenReturn(image);
         when(mapper.toDto(image)).thenReturn(imageDto);
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
         ImageDto testedImageDto = service.saveNewImage(newImageDto);
 
         // then

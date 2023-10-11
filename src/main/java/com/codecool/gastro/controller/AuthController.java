@@ -59,8 +59,8 @@ public class AuthController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(
                 jwt,
+                "Bearer",
                 userDetails.getId(),
-                userDetails.getUsername(),
                 userDetails.getEmail()
         ));
     }

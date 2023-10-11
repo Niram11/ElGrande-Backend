@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-public class PromotedLocal {
+public class PromotedLocal implements EntityObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
