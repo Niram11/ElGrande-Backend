@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Dish {
+public class Dish implements EntityObject {
     public static final String REGEX_FOR_DISH = "^[a-zA-Z][a-zA-Z' ]*$";
 
     @Id

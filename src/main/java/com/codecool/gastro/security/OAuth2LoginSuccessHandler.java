@@ -60,7 +60,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private Customer createCustomer(String email, String name) {
         Customer customer = new Customer();
-        customer.setRole(CustomerRole.ROLE_USER);
+        customer.setRole(CustomerRole.USER);
         customer.setEmail(email);
         customer.setName(name);
         customer.setSubmissionTime(LocalDate.now());

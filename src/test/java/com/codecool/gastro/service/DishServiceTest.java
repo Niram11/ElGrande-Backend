@@ -1,19 +1,25 @@
 package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.dish.DishDto;
+import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
+import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
+import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
 import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.DishRepository;
 import com.codecool.gastro.repository.IngredientRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ingredient;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
 import com.codecool.gastro.service.mapper.IngredientMapper;
+import org.checkerframework.checker.units.qual.N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +28,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,27 +40,29 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DishServiceTest {
-
     @InjectMocks
-    private DishService service;
+    DishService service;
     @Mock
-    private DishRepository repository;
+    DishRepository repository;
     @Mock
-    private DishMapper mapper;
+    DishMapper mapper;
     @Mock
-    private IngredientRepository ingredientRepository;
+    IngredientRepository ingredientRepository;
     @Mock
-    private IngredientMapper ingredientMapper;
+    IngredientService ingredientService;
     @Mock
-    private DishCategoryRepository dishCategoryRepository;
+    DishCategoryRepository dishCategoryRepository;
     @Mock
-    private DishCategoryMapper dishCategoryMapper;
+    DishCategoryService dishCategoryService;
+    @Mock
+    RestaurantRepository restaurantRepository;
 
     private UUID restaurantId;
     private UUID dishId;
     private Dish dish;
     private DishDto dishDto;
     private NewDishDto newDishDto;
+    private EditDishDto editDishDto;
 
     @BeforeEach
     void setUp() {
@@ -73,24 +79,24 @@ class DishServiceTest {
                 Set.of()
         );
 
+        newDishDto = new NewDishDto(
+                "Name",
+                BigDecimal.valueOf(12),
+                restaurantId
+        );
+
+        editDishDto = new EditDishDto(
+                "Name",
+                BigDecimal.valueOf(12)
+        );
 
     }
 
     @Test
-    void testGetAllDishes_ShouldReturnList_WhenCalled() {
+    void testGetDishesByRestaurantId_ShouldReturnList_WhenCalled() {
         // when
-        when(repository.findAll()).thenReturn(List.of());
-        List<DishDto> list = service.getAllDishes();
-
-        // then
-        assertEquals(list.size(), 0);
-    }
-
-    @Test
-    void testGetDishesByRestaurant_ShouldReturnList_WhenCalled() {
-        // when
-        when(repository.findByRestaurant(restaurantId)).thenReturn(List.of());
-        List<DishDto> list = service.getDishesByRestaurant(restaurantId);
+        when(repository.findByRestaurantId(restaurantId)).thenReturn(List.of());
+        List<DishDto> list = service.getDishesByRestaurantId(restaurantId);
 
         // then
         assertEquals(list.size(), 0);
@@ -126,6 +132,7 @@ class DishServiceTest {
         when(mapper.dtoToDish(newDishDto)).thenReturn(dish);
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
+        when(restaurantRepository.findById(newDishDto.restaurantId())).thenReturn(Optional.of(new Restaurant()));
         DishDto expectedDishDto = service.saveNewDish(newDishDto);
 
         // then
@@ -138,10 +145,10 @@ class DishServiceTest {
     @Test
     void testUpdateDish_ShouldReturnDishDto_WhenCalled() {
         // when
-        when(mapper.dtoToDish(dishId, newDishDto)).thenReturn(dish);
+        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
-        DishDto expectedDishDto = service.updateDish(dishId, newDishDto);
+        DishDto expectedDishDto = service.updateDish(dishId, editDishDto);
 
         // then
         assertEquals(expectedDishDto.id(), dishDto.id());
@@ -166,8 +173,8 @@ class DishServiceTest {
     @Test
     void testAssignIngredientToDish_ShouldAppendIngredientsToDish_WhenCalled() {
         // given
-        NewIngredientDto newIngredientDtoOne = new NewIngredientDto("Pasta");
-        NewIngredientDto newIngredientDtoTwo = new NewIngredientDto("Tomato");
+        NewIngredientDto newIngredientDtoOne = new NewIngredientDto("pasta");
+        NewIngredientDto newIngredientDtoTwo = new NewIngredientDto("tomato");
 
         Ingredient ingredientOne = new Ingredient();
         ingredientOne.setName("Pasta");
@@ -192,13 +199,14 @@ class DishServiceTest {
     @Test
     void testAssignIngredientToDish_ShouldAppendOnlyIngredients_WhenNoAlreadyThere() {
         // given
-        NewIngredientDto newIngredientDtoOne = new NewIngredientDto("Pasta");
-        NewIngredientDto newIngredientDtoTwo = new NewIngredientDto("Tomato");
+        NewIngredientDto newIngredientDtoOne = new NewIngredientDto("pasta");
+        NewIngredientDto newIngredientDtoTwo = new NewIngredientDto("tomato");
+
         Ingredient ingredientOne = new Ingredient();
-        ingredientOne.setName("Pasta");
+        ingredientOne.setName("pasta");
+
         Ingredient ingredientTwo = new Ingredient();
-        ingredientTwo.setName("Tomato");
-        dish.assignIngredient(ingredientOne);
+        ingredientTwo.setName("tomato");
 
         Set<NewIngredientDto> ingredientDtoSet = Set.of(newIngredientDtoOne, newIngredientDtoTwo);
 
@@ -207,6 +215,7 @@ class DishServiceTest {
         when(ingredientRepository.findByName(newIngredientDtoOne.name())).thenReturn(Optional.of(ingredientOne));
         when(ingredientRepository.findByName(newIngredientDtoTwo.name())).thenReturn(Optional.of(ingredientTwo));
 
+        dish.assignIngredient(ingredientOne);
         service.assignIngredientToDish(dishId, ingredientDtoSet);
 
         // then
@@ -220,21 +229,23 @@ class DishServiceTest {
         NewIngredientDto newIngredientDtoOne = new NewIngredientDto("Pasta");
         NewIngredientDto newIngredientDtoTwo = new NewIngredientDto("Tomato");
 
-        Ingredient ingredientOne = new Ingredient();
-        ingredientOne.setName("Pasta");
+        IngredientDto ingredientDtoOne = new IngredientDto(
+                UUID.randomUUID(),
+                "Pasta"
+        );
 
-        Ingredient ingredientTwo = new Ingredient();
-        ingredientTwo.setName("Tomato");
+        IngredientDto ingredientDtoTwo = new IngredientDto(
+                UUID.randomUUID(),
+                "Tomato"
+        );
 
-        dish.assignIngredient(ingredientOne);
         Set<NewIngredientDto> ingredientDtoSet = Set.of(newIngredientDtoOne, newIngredientDtoTwo);
 
         // when
         when(repository.findById(dishId)).thenReturn(Optional.of(dish));
         when(ingredientRepository.findByName(anyString())).thenReturn(Optional.empty());
-        when(ingredientMapper.dtoToIngredient(newIngredientDtoOne)).thenReturn(ingredientOne);
-        when(ingredientMapper.dtoToIngredient(newIngredientDtoTwo)).thenReturn(ingredientTwo);
-
+        when(ingredientService.saveNewIngredient(newIngredientDtoOne)).thenReturn(ingredientDtoOne);
+        when(ingredientService.saveNewIngredient(newIngredientDtoTwo)).thenReturn(ingredientDtoTwo);
         service.assignIngredientToDish(dishId, ingredientDtoSet);
 
         // then
@@ -302,20 +313,24 @@ class DishServiceTest {
         NewDishCategoryDto newDishCategoryDtoOne = new NewDishCategoryDto("Pizza");
         NewDishCategoryDto newDishCategoryDtoTwo = new NewDishCategoryDto("Pasta");
 
-        DishCategory dishCategoryOne = new DishCategory();
-        dishCategoryOne.setCategory("Pizza");
+        DishCategoryDto dishCategoryDtoOne = new DishCategoryDto(
+                UUID.randomUUID(),
+                "Pasta"
+        );
 
-        DishCategory dishCategoryTwo = new DishCategory();
-        dishCategoryTwo.setCategory("Pasta");
+        DishCategoryDto dishCategoryDtoTwo = new DishCategoryDto(
+                UUID.randomUUID(),
+                "Tomato"
+        );
+
 
         Set<NewDishCategoryDto> newDishCategoryDtoSet = Set.of(newDishCategoryDtoOne, newDishCategoryDtoTwo);
-        dish.assignCategories(dishCategoryOne);
 
         // when
         when(repository.findById(dishId)).thenReturn(Optional.of(dish));
         when(dishCategoryRepository.findByCategory(anyString())).thenReturn(Optional.empty());
-        when(dishCategoryMapper.dtoToDishCategory(newDishCategoryDtoOne)).thenReturn(dishCategoryOne);
-        when(dishCategoryMapper.dtoToDishCategory(newDishCategoryDtoTwo)).thenReturn(dishCategoryTwo);
+        when(dishCategoryService.saveDishCategory(newDishCategoryDtoOne)).thenReturn(dishCategoryDtoOne);
+        when(dishCategoryService.saveDishCategory(newDishCategoryDtoTwo)).thenReturn(dishCategoryDtoTwo);
 
         service.assignDishCategoryToDish(dishId, newDishCategoryDtoSet);
 

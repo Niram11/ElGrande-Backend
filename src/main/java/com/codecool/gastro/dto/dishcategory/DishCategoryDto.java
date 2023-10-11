@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public record DishCategoryDto(
         UUID id,
-
         String category
 ) {
 }

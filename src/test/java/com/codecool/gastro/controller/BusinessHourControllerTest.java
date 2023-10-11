@@ -104,30 +104,6 @@ public class BusinessHourControllerTest {
     }
 
     @Test
-    void testCreateNewBusinessHour_ShouldReturnStatusCreatedAndBusinessHourDto_WhenCalled() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "dayOfWeek": 2,
-                    "openingHour": "13:30",
-                    "closingHour": "18:30"
-                }
-                """;
-
-        // when
-        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
-        when(service.saveNewBusinessHour(newBusinessHourDto)).thenReturn(businessHourDto);
-
-        // then
-        mockMvc.perform(post("/api/v1/business-hours")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentResponse)
-                );
-    }
-
-    @Test
     void testUpdateBusinessHour_ShouldReturnStatusCreatedAndBusinessHourDto_WhenCalled() throws Exception {
         // given
         String contentRequest = """
@@ -152,33 +128,7 @@ public class BusinessHourControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideDataForIsBlank")
-    void testCreateNewBusinessHour_ShouldReturnStatusBadRequestWithErrorMessages_WhenProvidingInvalidData(
-            String dayOfWeek, String openingHour, String closingHour, String dayErrMsg, String openingHourErrMsg,
-            String closingHourErrMsg) throws Exception {
-        // given
-        String content = """
-                {
-                    "dayOfWeek": "%s",
-                    "openingHour":"%s",
-                    "closingHour": "%s",
-                    "restaurantId": null
-                }
-                """.formatted(dayOfWeek, openingHour, closingHour);
-
-        // then
-        mockMvc.perform(post("/api/v1/business-hours")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString(dayErrMsg)),
-                        jsonPath("$.errorMessage", Matchers.containsString(openingHourErrMsg)),
-                        jsonPath("$.errorMessage", Matchers.containsString(closingHourErrMsg))
-                );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideDataForIsBlank")
+    @MethodSource("getArgsForBusinessHourValidation")
     void testUpdateBusinessHour_ShouldReturnStatusBadRequestWithErrorMessages_WhenProvidingInvalidData(
             String dayOfWeek, String openingHour, String closingHour, String dayErrMsg, String openingHourErrMsg,
             String closingHourErrMsg) throws Exception {
@@ -210,7 +160,7 @@ public class BusinessHourControllerTest {
                 .andExpectAll(status().isNoContent());
     }
 
-    private static Stream<Arguments> provideDataForIsBlank() {
+    private static Stream<Arguments> getArgsForBusinessHourValidation() {
         return Stream.of(
                 Arguments.of("", "", "", "Day of week cannot be null", "Opening hour cannot be null",
                         "Closing hour cannot be null"),

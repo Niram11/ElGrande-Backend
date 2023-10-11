@@ -7,6 +7,7 @@ import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.CustomerService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.checkerframework.checker.units.qual.C;
@@ -159,14 +160,17 @@ public class CustomerControllerTest {
                 """;
 
         // when
-        when(service.updateCustomer(any(UUID.class), any(EditCustomerDto.class))).thenReturn(customerDto);
+        when(service.updateCustomer(any(UUID.class), any(EditCustomerDto.class)))
+                .thenThrow(new ObjectNotFoundException(customerId, Customer.class));
 
         // then
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentResponseDto)
+                .andExpectAll(status().isNotFound(),
+                        jsonPath("$.errorMessage")
+                                .value("Object of class " + Customer.class.getSimpleName() + " and id "
+                                        + customerId + " cannot be found")
                 );
     }
 
@@ -187,6 +191,45 @@ public class CustomerControllerTest {
                 .andExpectAll(status().isBadRequest(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty"))
+                );
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldReturnStatusNoContent_WhenAllExists() throws Exception {
+        // then
+        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
+                .andExpectAll(status().isNoContent());
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldReturnStatusNotFoundAdnThrowObjectNotFoundException_WhenNoCustomer()
+            throws Exception {
+        // when
+        doThrow(new ObjectNotFoundException(customerId, Customer.class)).when(service)
+                .assignRestaurantToCustomer(customerId, restaurantId);
+
+        // then
+        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
+                .andExpectAll(status().isNotFound(),
+                        jsonPath("$.errorMessage")
+                                .value("Object of class " + Customer.class.getSimpleName() + " and id "
+                                        + customerId + " cannot be found")
+                );
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldReturnStatusNotFoundAdnThrowObjectNotFoundException_WhenNoRestaurant()
+            throws Exception {
+        // when
+        doThrow(new ObjectNotFoundException(restaurantId, Restaurant.class)).when(service)
+                .assignRestaurantToCustomer(customerId, restaurantId);
+
+        // then
+        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
+                .andExpectAll(status().isNotFound(),
+                        jsonPath("$.errorMessage")
+                                .value("Object of class " + Restaurant.class.getSimpleName() + " and id "
+                                        + restaurantId + " cannot be found")
                 );
     }
 

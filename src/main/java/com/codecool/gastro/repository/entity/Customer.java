@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
-public class Customer {
+public class Customer implements EntityObject {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -27,7 +27,7 @@ public class Customer {
     private LocalDate submissionTime;
     private String password;
     @Enumerated(EnumType.STRING)
-    private CustomerRole role = CustomerRole.ROLE_USER;
+    private CustomerRole role = CustomerRole.USER;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
     private Boolean isDeleted = false;

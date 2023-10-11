@@ -2,6 +2,7 @@ package com.codecool.gastro.dto.review;
 
 import com.codecool.gastro.controller.validation.CustomerExist;
 import com.codecool.gastro.controller.validation.RestaurantExist;
+import com.codecool.gastro.dto.NewEntityDto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -18,5 +19,5 @@ public record NewReviewDto(
         UUID customerId,
         @RestaurantExist
         UUID restaurantId
-) {
+) implements NewEntityDto {
 }

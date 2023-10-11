@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-public class Review {
+public class Review implements EntityObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

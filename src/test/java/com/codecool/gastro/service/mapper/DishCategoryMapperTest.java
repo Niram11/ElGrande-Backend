@@ -13,16 +13,29 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DishCategoryMapperTest {
+    DishCategoryMapper mapper = Mappers.getMapper(DishCategoryMapper.class);
 
-    private DishCategoryMapper mapper = Mappers.getMapper(DishCategoryMapper.class);
+    private UUID dishCategoryId;
+    private DishCategory dishCategory;
 
-    @Test
-    void testToDto_ShouldReturnDishCategoryDto_WhenCalled() {
-        // given
-        DishCategory dishCategory = new DishCategory();
+    private NewDishCategoryDto newDishCategoryDto;
+
+    @BeforeEach
+    void setUp() {
+        dishCategoryId = UUID.randomUUID();
+
+        dishCategory = new DishCategory();
         dishCategory.setId(UUID.randomUUID());
         dishCategory.setCategory("Category");
 
+        newDishCategoryDto = new NewDishCategoryDto(
+                "NewCategory"
+        );
+
+    }
+
+    @Test
+    void testToDto_ShouldReturnDishCategoryDto_WhenCalled() {
         // when
         DishCategoryDto dishCategoryDto = mapper.toDto(dishCategory);
 
@@ -32,20 +45,20 @@ public class DishCategoryMapperTest {
     }
 
     @Test
-    void testDtoToDishCategory_ShouldReturnDishCategory_WhenCalled() {
-        // given
-        UUID dishCategoryId = UUID.randomUUID();
-        NewDishCategoryDto newDishCategoryDto = new NewDishCategoryDto("Category");
-
+    void testDtoToDishCategory_ShouldReturnDishCategory_WhenProvidingId() {
         // when
-        DishCategory dishCategoryOne = mapper.dtoToDishCategory(dishCategoryId);
-        DishCategory dishCategoryTwo = mapper.dtoToDishCategory(dishCategoryId, newDishCategoryDto);
-        DishCategory dishCategoryThree = mapper.dtoToDishCategory(newDishCategoryDto);
+        DishCategory testedDishCategory = mapper.dtoToDishCategory(dishCategoryId);
 
         // then
-        assertEquals(dishCategoryOne.getId(), dishCategoryId);
-        assertEquals(dishCategoryTwo.getId(), dishCategoryId);
-        assertEquals(dishCategoryTwo.getCategory(), newDishCategoryDto.category());
-        assertEquals(dishCategoryThree.getCategory(), newDishCategoryDto.category());
+        assertEquals(testedDishCategory.getId(), dishCategoryId);
+    }
+
+    @Test
+    void testDtoToDishCategory_ShouldReturnDishCategory_WhenProvidingDto() {
+        // when
+        DishCategory testedDishCategory = mapper.dtoToDishCategory(newDishCategoryDto);
+
+        // then
+        assertEquals(testedDishCategory.getCategory(), newDishCategoryDto.category());
     }
 }

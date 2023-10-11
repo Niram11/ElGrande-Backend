@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Location {
+public class Location implements EntityObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

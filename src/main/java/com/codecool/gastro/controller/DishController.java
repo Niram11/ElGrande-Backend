@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.dish.DishDto;
+import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
@@ -30,7 +31,7 @@ public class DishController {
 
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<List<DishDto>> getDishesByRestaurant(@RequestParam("restaurantId") UUID restaurantId) {
-        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishesByRestaurant(restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.getDishesByRestaurantId(restaurantId));
     }
 
     @PostMapping
@@ -39,8 +40,8 @@ public class DishController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DishDto> updateDish(@PathVariable UUID id, @Valid @RequestBody NewDishDto newDishDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dishService.updateDish(id, newDishDto));
+    public ResponseEntity<DishDto> updateDish(@PathVariable UUID id, @Valid @RequestBody EditDishDto editDishDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dishService.updateDish(id, editDishDto));
     }
 
     @PutMapping("/{id}/ingredients")

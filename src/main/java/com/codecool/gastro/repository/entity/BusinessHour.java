@@ -1,6 +1,7 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-public class BusinessHour {
+public class BusinessHour implements EntityObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

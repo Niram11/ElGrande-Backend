@@ -14,10 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class DishRepositoryTest {
-
     @Autowired
-    private DishRepository repository;
-
+    DishRepository repository;
 
     private UUID dishId;
     private UUID restaurantId;
@@ -26,15 +24,6 @@ public class DishRepositoryTest {
     void setUp() {
         dishId = UUID.fromString("f454d079-4179-41b5-858e-bdc5ad953256");
         restaurantId = UUID.fromString("c728af54-0d03-4af1-a68e-6364db2370ee");
-    }
-
-    @Test
-    void testFindAll_ShouldReturnListOfDishes_WhenCalled() {
-        // when
-        List<Dish> list = repository.findAll();
-
-        // then
-        assertEquals(list.size(), 4);
     }
 
     @Test
@@ -58,7 +47,7 @@ public class DishRepositoryTest {
     @Test
     void testFindByRestaurant_ShouldReturnListOfDishes_WhenCalled() {
         // when
-        List<Dish> list = repository.findByRestaurant(restaurantId);
+        List<Dish> list = repository.findByRestaurantId(restaurantId);
 
         // then
         assertEquals(list.size(), 2);

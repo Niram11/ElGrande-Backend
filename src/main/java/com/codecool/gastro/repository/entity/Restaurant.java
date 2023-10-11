@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
-public class Restaurant {
+public class Restaurant implements EntityObject {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
