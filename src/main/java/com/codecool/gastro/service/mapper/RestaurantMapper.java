@@ -6,6 +6,8 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
 
@@ -17,6 +19,10 @@ public interface RestaurantMapper {
     DetailedRestaurantDto toDetailedDto(DetailedRestaurantProjection restaurant);
 
     Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    void updateRestaurantFromDto(NewRestaurantDto newRestaurantDto, @MappingTarget Restaurant restaurant);
 
     Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto, UUID id);
 
