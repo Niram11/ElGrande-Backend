@@ -46,6 +46,7 @@ public class ReviewService {
     }
 
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
+        //TODO: is restaurant and customer exists and put to class validation
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());
         return reviewMapper.toDto(reviewRepository.save(savedReview));

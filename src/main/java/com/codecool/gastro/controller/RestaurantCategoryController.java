@@ -27,21 +27,12 @@ public class RestaurantCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantCategoryService.getRestaurantCategories());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantCategoryDto> getRestaurantCategory(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantCategoryService.getRestaurantCategory(id));
-    }
 
     @PostMapping
     public ResponseEntity<RestaurantCategoryDto> createNewRestaurantCategory(@Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCategoryService.saveRestaurantCategory(newRestaurantCategoryDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RestaurantCategoryDto> updateRestaurantCategory(@PathVariable UUID id,
-                                                          @Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCategoryService.updateRestaurantCategory(id, newRestaurantCategoryDto));
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<RestaurantCategoryDto> deleteRestaurantCategory(@PathVariable UUID id) {
