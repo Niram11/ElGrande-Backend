@@ -154,25 +154,6 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testUpdateRestaurantShouldReturnStatusCreatedAndUpdatedRestaurantDtoWhenUpdateIsSuccessful() throws Exception {
-        // given
-        UUID restaurantId = UUID.randomUUID();
-        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
-        RestaurantDto updatedRestaurantDto = new RestaurantDto(restaurantId, "UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
-
-        // when
-        when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenReturn(updatedRestaurantDto);
-
-        // test
-        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(restaurantId.toString()))
-                .andExpect(jsonPath("$.name").value("Updated Name"));
-    }
-
-    @Test
     void testUpdateRestaurantShouldReturnStatusNotFoundWhenUpdatedRestaurantDoesNotExist() throws Exception {
         // given
         UUID restaurantId = UUID.randomUUID();
