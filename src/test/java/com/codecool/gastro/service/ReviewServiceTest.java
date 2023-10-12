@@ -2,6 +2,8 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
+import com.codecool.gastro.repository.CustomerRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Restaurant;
@@ -22,8 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
@@ -32,6 +33,10 @@ class ReviewServiceTest {
     private ReviewService service;
     @Mock
     private ReviewMapper mapper;
+    @Mock
+    private RestaurantRepository restaurantRepository;
+    @Mock
+    private CustomerRepository customerRepository;
     @Mock
     private ReviewRepository repository;
 
@@ -97,7 +102,7 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //When
-        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID,PAGEABLE)).thenReturn(List.of(review));
+        Mockito.when(repository.getReviewsByRestaurant(RESTAURANT_ID, PAGEABLE)).thenReturn(List.of(review));
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
         List<ReviewDto> reviews = service.getReviewsByRestaurant(RESTAURANT_ID, PAGEABLE);
 
@@ -126,15 +131,55 @@ class ReviewServiceTest {
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
-        //When
-        //TODO: captor local date
-        Mockito.when(repository.save(review)).thenReturn(review);
+        //Mocking interactions
+        Mockito.when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(Optional.of(restaurant));
+        Mockito.when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+        Mockito.when(repository.save(Mockito.any())).thenReturn(review);
         Mockito.when(mapper.dtoToReview(newReviewDto)).thenReturn(review);
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
+
+        //When
         ReviewDto testedReview = service.saveReview(newReviewDto);
 
         //Test
         assertEquals(reviewDto, testedReview);
+    }
+
+
+    @Test
+    void saveReviewReturnsNullWhenNeitherRestaurantIdNorCustomerIdExists() {
+        // Given
+        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, null);
+
+        // When
+        ReviewDto result = service.saveReview(newReviewDto);
+
+        // Then
+        assertNull(result);
+    }
+
+    @Test
+    void saveReviewReturnsNullWhenOnlyRestaurantIdExists() {
+        // Given
+        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, RESTAURANT_ID);
+
+        // When
+        ReviewDto result = service.saveReview(newReviewDto);
+
+        // Then
+        assertNull(result);
+    }
+
+    @Test
+    void saveReviewReturnsNullWhenOnlyCustomerIdExists() {
+        // Given
+        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, null);
+
+        // When
+        ReviewDto result = service.saveReview(newReviewDto);
+
+        // Then
+        assertEquals(result, null);
     }
 
 
