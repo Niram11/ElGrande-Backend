@@ -4,13 +4,11 @@ import com.codecool.gastro.dto.restaurantcategory.NewRestaurantCategoryDto;
 import com.codecool.gastro.dto.restaurantcategory.RestaurantCategoryDto;
 import com.codecool.gastro.service.RestaurantCategoryService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -49,7 +47,7 @@ public class RestaurantCategoryControllerTest {
     }
 
     @Test
-    void testGetAllRestaurantCategoriesShouldReturnStatusOkAndListOfCategories_WhenCalled() throws Exception {
+    void testGetAllRestaurantCategoriesShouldReturnStatusOkAndListOfCategoriesWhenCalled() throws Exception {
         RestaurantCategoryDto categoryDto = new RestaurantCategoryDto(UUID.randomUUID(), "CategoryName");
 
         when(service.getRestaurantCategories()).thenReturn(List.of(categoryDto));

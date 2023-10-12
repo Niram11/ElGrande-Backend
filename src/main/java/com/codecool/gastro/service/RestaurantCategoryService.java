@@ -31,12 +31,6 @@ public class RestaurantCategoryService {
                 .toList();
     }
 
-    public RestaurantCategoryDto getRestaurantCategory(UUID id) {
-        return restaurantCategoryRepository.findById(id)
-                .map(restaurantCategoryMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, RestaurantCategory.class));
-    }
-
     public RestaurantCategoryDto saveRestaurantCategory(NewRestaurantCategoryDto newRestaurantCategoryDTO) {
         RestaurantCategory savedRestaurantCategory = restaurantCategoryRepository
                 .save(restaurantCategoryMapper.dtoToRestaurantCategory(newRestaurantCategoryDTO));
