@@ -7,9 +7,9 @@ import com.codecool.gastro.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,33 +22,26 @@ public class LocationController {
         this.locationsService = locationsService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<LocationDto>> getAllLocation() {
-        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocations());
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<LocationDto> getLocation(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocationBy(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<LocationDto> createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.saveLocation(newLocationDTO));
+    public ResponseEntity<LocationDto> getLocationById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocationById(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<LocationDto> updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }
 
     @PutMapping ("/{id}/restaurants")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
         locationsService.assignRestaurantToLocation(id, restaurants);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LocationDto> deleteLocations(@PathVariable UUID id) {
         locationsService.deleteLocation(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

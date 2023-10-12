@@ -19,7 +19,7 @@ public interface CustomerMapper {
     DetailedCustomerDto toDetailedDto(DetailedCustomerProjection customer);
 
     @Mapping(target = "submissionTime", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)
@@ -27,7 +27,7 @@ public interface CustomerMapper {
     void updateCustomerFromDto(EditCustomerDto editCustomerDto, @MappingTarget Customer customer);
 
     @Mapping(target = "submissionTime", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     Customer dtoToCustomer(NewCustomerDto customerDto);

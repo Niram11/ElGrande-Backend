@@ -75,7 +75,8 @@ public class CustomerControllerTest {
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                LocalDate.of(2012, 12, 12)
+                LocalDate.of(2012, 12, 12),
+                Set.of()
         );
 
         contentResponseDetailedDto = """

@@ -27,6 +27,7 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<AddressDto> updateAddress(@PathVariable UUID id, @Valid @RequestBody NewAddressDto newAddressDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.updateAddress(id, newAddressDto));
     }

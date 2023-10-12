@@ -1,7 +1,8 @@
 package com.codecool.gastro.controller.advice;
 
-import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import com.codecool.gastro.service.exception.TokenAlreadyExistException;
+import com.codecool.gastro.service.exception.TokenRefreshException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -12,7 +13,9 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,9 +25,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(value = ObjectNotFoundException.class)
+    @ExceptionHandler(value = {ObjectNotFoundException.class, ObjectNotFoundException.class,
+            TokenAlreadyExistException.class, TokenRefreshException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotObjectFound(ObjectNotFoundException ex) {
+    public ErrorResponse handleNotObjectFound(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -65,37 +69,33 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    @ExceptionHandler(value = MalformedJwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMalformedJwtException(MalformedJwtException ex) {
-        String errMsg = "Invalid JWT token: " + ex.getMessage();
-        return new ErrorResponse(errMsg);
-    }
-    @ExceptionHandler(value = UnsupportedJwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUnsupportedJwtException(UnsupportedJwtException ex) {
-        String errMsg = "JWT token is unsupported: " + ex.getMessage();
-        return new ErrorResponse(errMsg);
-    }
-    @ExceptionHandler(value = SignatureException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleSignatureException(SignatureException ex) {
-        String errMsg = "Invalid JWT signature: " + ex.getMessage();
-        return new ErrorResponse(errMsg);
-    }
-    @ExceptionHandler(value = ExpiredJwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleExpiredJwtException(ExpiredJwtException ex) {
-        String errMsg = "JWT token is expired: " + ex.getMessage();
-        return new ErrorResponse(errMsg);
-    }
-
-    @ExceptionHandler(value = EmailNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEmailNotFoundException(EmailNotFoundException ex) {
-        String errMsg = ex.getMessage();
-        return new ErrorResponse(errMsg);
-    }
+//    @ExceptionHandler(value = MalformedJwtException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleMalformedJwtException(MalformedJwtException ex) {
+//        String errMsg = "Invalid JWT token: " + ex.getMessage();
+//        return new ErrorResponse(errMsg);
+//    }
+//
+//    @ExceptionHandler(value = UnsupportedJwtException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleUnsupportedJwtException(UnsupportedJwtException ex) {
+//        String errMsg = "JWT token is unsupported: " + ex.getMessage();
+//        return new ErrorResponse(errMsg);
+//    }
+//
+//    @ExceptionHandler(value = SignatureException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleSignatureException(SignatureException ex) {
+//        String errMsg = "Invalid JWT signature: " + ex.getMessage();
+//        return new ErrorResponse(errMsg);
+//    }
+//
+//    @ExceptionHandler(value = ExpiredJwtException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleExpiredJwtException(ExpiredJwtException ex) {
+//        String errMsg = "JWT token is expired: " + ex.getMessage();
+//        return new ErrorResponse(errMsg);
+//    }
 
     public record ErrorResponse(String errorMessage) {
 

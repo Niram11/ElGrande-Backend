@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,18 +24,13 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurants());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
 
     @GetMapping(params = {"page", "size", "sort"})
-    public ResponseEntity<List<DetailedRestaurantDto>> getTopRestaurantsDetailed(Pageable pageable) {
+    public ResponseEntity<List<DetailedRestaurantDto>> getDetailedRestaurants(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getDetailedRestaurants(pageable));
     }
 
@@ -46,16 +42,19 @@ public class RestaurantController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<RestaurantDto> createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.saveNewRestaurant(newRestaurantDto));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.updateRestaurant(id, newRestaurantDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<RestaurantDto> softDeleteRestaurant(@PathVariable UUID id) {
         restaurantService.softDelete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

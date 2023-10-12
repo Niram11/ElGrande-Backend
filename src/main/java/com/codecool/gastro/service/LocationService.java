@@ -34,7 +34,7 @@ public class LocationService {
                 .toList();
     }
 
-    public LocationDto getLocationBy(UUID id) {
+    public LocationDto getLocationById(UUID id) {
         return locationRepository.findById(id)
                 .map(locationMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Location.class));

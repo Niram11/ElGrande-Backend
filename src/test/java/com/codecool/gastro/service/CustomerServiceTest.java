@@ -80,7 +80,8 @@ public class CustomerServiceTest {
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                LocalDate.of(1212, 12, 12)
+                LocalDate.of(1212, 12, 12),
+                Set.of()
         );
 
         detailedCustomerDto = new DetailedCustomerDto(

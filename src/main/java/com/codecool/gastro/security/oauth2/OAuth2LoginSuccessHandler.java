@@ -1,8 +1,9 @@
-package com.codecool.gastro.security;
+package com.codecool.gastro.security.oauth2;
 
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.CustomerRole;
+import com.codecool.gastro.repository.entity.Role;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,8 +60,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     }
 
     private Customer createCustomer(String email, String name) {
+        Role role = new Role();
+        role.setRole(CustomerRole.ROLE_USER);
+
         Customer customer = new Customer();
-        customer.setRole(CustomerRole.USER);
+        customer.assignRole(role);
         customer.setEmail(email);
         customer.setName(name);
         customer.setSubmissionTime(LocalDate.now());
@@ -69,12 +73,13 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     }
 
     private void authenticateUser(Customer customer, Map<String, Object> attributes, OAuth2AuthenticationToken oAuth2AuthenticationToken) {
-        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(customer.getRole().name())),
-                attributes, "name");
+        List<SimpleGrantedAuthority> roles = customer.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole().name())).toList();
 
-        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(
-                new SimpleGrantedAuthority(customer.getRole().name())
-        ), oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
+        DefaultOAuth2User newUser = new DefaultOAuth2User(roles, attributes, "name");
+
+        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, roles
+                , oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
 
         SecurityContextHolder.getContext().setAuthentication(securityAuth);
     }

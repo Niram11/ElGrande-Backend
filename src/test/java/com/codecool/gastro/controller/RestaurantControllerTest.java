@@ -40,16 +40,6 @@ public class RestaurantControllerTest {
     private RestaurantService service;
 
     @Test
-    void testGetAllRestaurants_ShouldReturnStatusOk_WhenCalled() throws Exception {
-        // when
-        when(service.getRestaurants()).thenReturn(new ArrayList<>());
-
-        // test
-        mockMvc.perform(get("/api/v1/restaurants"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     void testGetRestaurantById_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();

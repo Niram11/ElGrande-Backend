@@ -6,6 +6,7 @@ import com.codecool.gastro.service.form.service.RestaurantFormService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class FormController {
     }
 
     @PostMapping("/restaurant")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<NewRestaurantFormDto> createNewRestaurant(@Valid @RequestBody NewRestaurantFormDto newFormRestaurantDto) {
         formService.submitRestaurantForm(newFormRestaurantDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
