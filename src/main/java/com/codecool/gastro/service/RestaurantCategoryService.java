@@ -37,12 +37,6 @@ public class RestaurantCategoryService {
         return restaurantCategoryMapper.toDto(savedRestaurantCategory);
     }
 
-    public RestaurantCategoryDto updateRestaurantCategory(UUID id, NewRestaurantCategoryDto newRestaurantCategoryDTO) {
-        RestaurantCategory updatedRestaurantCategory = restaurantCategoryRepository
-                .save(restaurantCategoryMapper.dtoToRestaurantCategory(newRestaurantCategoryDTO, id));
-        return restaurantCategoryMapper.toDto(updatedRestaurantCategory);
-    }
-
     public void deleteRestaurantCategory(UUID id) {
         restaurantCategoryRepository.delete(restaurantCategoryMapper.dtoToRestaurantCategory(id));
     }

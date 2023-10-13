@@ -1,8 +1,6 @@
 package com.codecool.gastro.service;
 
 
-import com.codecool.gastro.dto.customer.CustomerDto;
-import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
@@ -14,6 +12,7 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
+import com.codecool.gastro.service.validate.ValidateReview;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -28,13 +27,15 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
     private final ReviewMapper reviewMapper;
+    private final ValidateReview validateReview;
 
     public ReviewService(ReviewRepository reviewRepository, RestaurantRepository restaurantRepository,
-                         CustomerRepository customerRepository, ReviewMapper reviewMapper) {
+                         CustomerRepository customerRepository, ReviewMapper reviewMapper, ValidateReview validateReview) {
         this.reviewRepository = reviewRepository;
         this.restaurantRepository = restaurantRepository;
         this.customerRepository = customerRepository;
         this.reviewMapper = reviewMapper;
+        this.validateReview = validateReview;
     }
 
     public ReviewDto getReviewById(UUID id) {
@@ -58,11 +59,7 @@ public class ReviewService {
     }
 
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        Optional<Restaurant> restaurant = restaurantRepository.findById(newReviewDTO.restaurantId());
-        Optional<Customer> customer = customerRepository.findById(newReviewDTO.customerId());
-        if (!restaurant.isPresent() || !customer.isPresent()) {
-            return null;
-        }
+        validateReview.validateUpdateReview(newReviewDTO);
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());
         return reviewMapper.toDto(reviewRepository.save(savedReview));

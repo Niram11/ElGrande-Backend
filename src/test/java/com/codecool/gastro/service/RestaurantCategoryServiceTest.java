@@ -74,20 +74,7 @@ public class RestaurantCategoryServiceTest {
         assertEquals(categoryDto, result);
     }
 
-    @Test
-    void testUpdateRestaurantCategory_ShouldReturnUpdatedRestaurantCategoryDto_WhenCategoryExists() {
-        // given
-        NewRestaurantCategoryDto newCategoryDto = new NewRestaurantCategoryDto("UpdatedItalian");
-        when(mapper.dtoToRestaurantCategory(newCategoryDto, categoryId)).thenReturn(category);
-        when(repository.save(category)).thenReturn(category);
-        when(mapper.toDto(category)).thenReturn(categoryDto);
 
-        // test
-        RestaurantCategoryDto result = service.updateRestaurantCategory(categoryId, newCategoryDto);
-
-        // assert
-        assertEquals(categoryDto, result);
-    }
 
     @Test
     void testDeleteRestaurantCategory_ShouldCallRepositoryDelete_WhenCalled() {

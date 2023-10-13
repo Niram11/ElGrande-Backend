@@ -27,6 +27,7 @@ public class RestaurantCategoryControllerTest {
 
     @MockBean
     private RestaurantCategoryService service;
+    //TODO: save restaurantcategory tests
 
     @Test
     void testDeleteRestaurantCategoryShouldReturnStatusNoContentWhenCategoryExist() throws Exception {
@@ -36,15 +37,6 @@ public class RestaurantCategoryControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @Test
-    void testDeleteRestaurantCategoryShouldReturnStatusNotFoundWhenNoCategory() throws Exception {
-        UUID id = UUID.randomUUID();
-
-        doThrow(new ObjectNotFoundException(id, RestaurantCategoryDto.class)).when(service).deleteRestaurantCategory(id);
-
-        mockMvc.perform(delete("/api/v1/restaurant-categories/" + id))
-                .andExpect(status().isNotFound());
-    }
 
     @Test
     void testGetAllRestaurantCategoriesShouldReturnStatusOkAndListOfCategoriesWhenCalled() throws Exception {

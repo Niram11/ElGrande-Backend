@@ -13,7 +13,4 @@ import java.util.UUID;
 public interface PromotedLocalRepository extends JpaRepository<PromotedLocal, UUID> {
     @Query("SELECT pl FROM PromotedLocal pl")
     List<PromotedLocal> findAll();
-    @Query("SELECT pl FROM PromotedLocal pl WHERE pl.id = :id")
-    Optional<PromotedLocal> findBy(UUID id);
-
 }

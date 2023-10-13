@@ -22,15 +22,6 @@ public class LocationController {
         this.locationsService = locationsService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<LocationDto>> getAllLocation() {
-        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocations());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<LocationDto> getLocation(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocationBy(id));
-    }
 
     @PostMapping
     public ResponseEntity<LocationDto> createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
@@ -49,7 +40,7 @@ public class LocationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<LocationDto> deleteLocations(@PathVariable UUID id) {
+    public ResponseEntity<LocationDto> deleteLocation(@PathVariable UUID id) {
         locationsService.deleteLocation(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
