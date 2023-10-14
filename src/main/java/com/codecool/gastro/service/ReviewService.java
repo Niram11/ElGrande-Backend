@@ -59,7 +59,7 @@ public class ReviewService {
     }
 
     public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        validateReview.validateUpdateReview(newReviewDTO);
+        validateReview.validateUpdate(newReviewDTO);
         Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
         savedReview.setSubmissionTime(LocalDate.now());
         return reviewMapper.toDto(reviewRepository.save(savedReview));

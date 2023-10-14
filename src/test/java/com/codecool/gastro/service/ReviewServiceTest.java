@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
+    //TODO: change tests names
 
     @InjectMocks
     private ReviewService service;
@@ -132,6 +133,7 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //Mocking interactions
+        //TODO:inject validation
         Mockito.when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(Optional.of(restaurant));
         Mockito.when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         Mockito.when(repository.save(Mockito.any())).thenReturn(review);
@@ -145,7 +147,7 @@ class ReviewServiceTest {
         assertEquals(reviewDto, testedReview);
     }
 
-
+    //TODO: improve tests to catch errors
     @Test
     void saveReviewReturnsNullWhenNeitherRestaurantIdNorCustomerIdExists() {
         // Given
@@ -180,10 +182,5 @@ class ReviewServiceTest {
 
         // Then
         assertEquals(result, null);
-    }
-
-
-    @Test
-    void deleteReview() {
     }
 }

@@ -14,9 +14,6 @@ import java.util.UUID;
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
-    @Query("SELECT res from Restaurant res where res.isDeleted = false ")
-    List<Restaurant> findAll();
-
     @Query("SELECT res from Restaurant res where res.id = :id and res.isDeleted = false ")
     Optional<Restaurant> findById(UUID id);
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -27,7 +28,8 @@ public class RestaurantCategoryControllerTest {
 
     @MockBean
     private RestaurantCategoryService service;
-    //TODO: save restaurantcategory tests
+
+    private final String RESTAURANT_CATEGORY_NAME = "CategoryName";
 
     @Test
     void testDeleteRestaurantCategoryShouldReturnStatusNoContentWhenCategoryExist() throws Exception {
@@ -47,5 +49,31 @@ public class RestaurantCategoryControllerTest {
         mockMvc.perform(get("/api/v1/restaurant-categories"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(categoryDto.id().toString()));
+    }
+
+    @Test
+    void testCreateNewRestaurantCategoryShouldReturnStatusCreatedWhenValidDataProvided() throws Exception {
+        NewRestaurantCategoryDto newCategoryDto = new NewRestaurantCategoryDto(RESTAURANT_CATEGORY_NAME);
+
+        RestaurantCategoryDto createdCategoryDto = new RestaurantCategoryDto(UUID.randomUUID(), RESTAURANT_CATEGORY_NAME);
+
+        when(service.saveRestaurantCategory(newCategoryDto)).thenReturn(createdCategoryDto);
+
+        mockMvc.perform(post("/api/v1/restaurant-categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"category\": \"CategoryName\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(createdCategoryDto.id().toString()))
+                .andExpect(jsonPath("$.category").value(RESTAURANT_CATEGORY_NAME));
+    }
+
+    @Test
+    void testCreateNewRestaurantCategoryShouldReturnStatusBadRequestWhenNameIsEmpty() throws Exception {
+        NewRestaurantCategoryDto newCategoryDto = new NewRestaurantCategoryDto("");
+
+        mockMvc.perform(post("/api/v1/restaurant-categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"category\": \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 }

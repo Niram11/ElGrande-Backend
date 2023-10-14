@@ -6,8 +6,7 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 
-public class ValidateReview {
-
+public class ValidateReview implements Validate {
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
@@ -16,7 +15,8 @@ public class ValidateReview {
         this.customerRepository = customerRepository;
     }
 
-    public void validateUpdateReview(NewReviewDto newReviewDto) {
+    @Override
+    public void validateUpdate(NewReviewDto newReviewDto) {
         restaurantRepository.findById(newReviewDto.restaurantId())
                 .orElseThrow(() -> new ObjectNotFoundException(newReviewDto.restaurantId(), Restaurant.class));
         customerRepository.findById(newReviewDto.customerId())

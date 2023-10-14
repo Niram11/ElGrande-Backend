@@ -76,7 +76,7 @@ class ReviewRepositoryTest {
         projectionTwo.setName("Tomek");
 
 
-        // todo: fix that test is true even though fields are different
+        // todo: fix that test is true even though fields are different(not now)
         List<DetailedReviewProjection> expected = List.of(projectionOne, projectionTwo);
         assertThat(actual)
                 .usingRecursiveComparison()

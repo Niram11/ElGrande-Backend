@@ -157,11 +157,38 @@ public class ReviewControllerTest {
                 );
     }
 
+    @ParameterizedTest
+    @MethodSource("provideIntForIsBlank")
+    void testCreateNewReview_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues(String comment, int grade,
+                                                                                            String expectedErrMsg)
+            throws Exception {
+        String contentRequest = """
+                {
+                    "comment": "%s",
+                    "grade" : "%d",
+                    "customerId": "3466582c-580b-4d87-aa1d-615350e9598c",
+                    "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
+                }
+                """.formatted(comment, grade);
+
+        // when
+        Mockito.when(reviewService.saveReview(newReviewDto)).thenReturn(reviewDto);
+        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
+        Mockito.when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
+
+        // then
+        mockMvc.perform(post("/api/v1/reviews")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentRequest))
+                .andExpectAll(status().isBadRequest(),
+                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg))
+                );
+    }
 
     private static Stream<Arguments> provideIntForIsBlank() {
         return Stream.of(
                 Arguments.of("comment", -1, "Grade must be greater then or equal 1"),
-                Arguments.of("comment", 11, "Grade must be less then or equal 10"),
+                Arguments.of("comment", 11, "Grade must be less then or equal 5"),
                 Arguments.of("", 5, "Comment cannot be empty")
         );
     }

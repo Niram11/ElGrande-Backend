@@ -35,7 +35,7 @@ public class RestaurantMapperTest {
         // when
         RestaurantDto restaurantDto = mapper.toDto(restaurant);
 
-        // test
+        // then
         assertEquals(restaurantDto.id(), restaurant.getId());
         assertEquals(restaurantDto.name(), restaurant.getName());
         assertEquals(restaurantDto.description(), restaurant.getDescription());
@@ -47,8 +47,6 @@ public class RestaurantMapperTest {
     @Test
     void testDtoToRestaurantShouldMapToRestaurantWhenProvidingValidData() {
         // given
-        UUID id = UUID.randomUUID();
-
         NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
                 "Name",
                 "Desc",
@@ -58,11 +56,10 @@ public class RestaurantMapperTest {
         );
 
         // when
-        Restaurant restaurant = mapper.dtoToRestaurant(newRestaurantDto, id);
+        Restaurant restaurant = mapper.dtoToRestaurant(newRestaurantDto);
 
-        // test
+        // then
 
-        assertEquals(id, restaurant.getId());
         assertEquals(newRestaurantDto.name(), restaurant.getName());
         assertEquals(newRestaurantDto.description(), restaurant.getDescription());
         assertEquals(newRestaurantDto.website(), restaurant.getWebsite());
@@ -85,10 +82,10 @@ public class RestaurantMapperTest {
         restaurant.setImagesPaths(new String[]{"image1", "image2"});
         restaurant.setAverageGrade(BigDecimal.valueOf(1.34));
 
-        // then
+        // when
         DetailedRestaurantDto restaurantDto = mapper.toDetailedDto(restaurant);
 
-        // test
+        // then
         assertEquals(restaurantDto.id(), restaurant.getId());
         assertEquals(restaurantDto.name(), restaurant.getName());
         assertEquals(restaurantDto.description(), restaurant.getDescription());
@@ -124,7 +121,7 @@ public class RestaurantMapperTest {
         // when
         mapper.updateRestaurantFromDto(newRestaurantDto, restaurant);
 
-        // test
+        // then
         assertEquals(newRestaurantDto.name(), restaurant.getName());
         assertEquals(newRestaurantDto.description(), restaurant.getDescription());
         assertEquals(newRestaurantDto.website(), restaurant.getWebsite());

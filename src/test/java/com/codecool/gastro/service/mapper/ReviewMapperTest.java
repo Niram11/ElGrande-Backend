@@ -23,7 +23,7 @@ class ReviewMapperTest {
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
 
     @Test
-    void toDto() {
+    void testMappingReviewToDtoShouldMapReviewToDtoWhenProvidingValidData() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -50,7 +50,7 @@ class ReviewMapperTest {
     }
 
     @Test
-    void dtoToReview() {
+    void testMappingDtoToReviewShouldMapDtoToReviewWhenProvidingValidData() {
         //Given
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
 
@@ -66,7 +66,7 @@ class ReviewMapperTest {
 
 
     @Test
-    void testDtoToReview1() {
+    void testMappingDtoToReviewWithIdShouldMapDtoToReviewWithIdWhenProvidingValidData() {
         //When
         Review review = mapper.dtoToReview(REVIEW_ID);
 

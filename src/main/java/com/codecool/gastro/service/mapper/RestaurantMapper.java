@@ -20,8 +20,6 @@ public interface RestaurantMapper {
 
     Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto);
 
-    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto, UUID id);
-
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "id", ignore = true)
     void updateRestaurantFromDto(NewRestaurantDto newRestaurantDto,@MappingTarget Restaurant restaurant);
