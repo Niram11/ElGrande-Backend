@@ -22,6 +22,13 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query("SELECT res from Restaurant res where res.id = :id and res.isDeleted = false ")
     Optional<Restaurant> findById(UUID id);
 
+    @Query(nativeQuery = true, value = """
+            select res.id, res.name, res.description, res.contact_email, res.contact_number, res.website, res.is_deleted from restaurant res
+            left join customer_restaurants on res.id = customer_restaurants.restaurants_id
+            left join customer c on customer_restaurants.customer_id = c.id where c.id = :customerId
+            """)
+    List<Restaurant> findAllByCustomerId(UUID customerId);
+
 
     @Query(nativeQuery = true, value = """
             SELECT
@@ -68,7 +75,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
             averageGrade DESC
             """)
     List<DetailedRestaurantProjection> findAllDetailedRestaurants(Pageable pageable);
-
 
 
 //    @Query(value =

@@ -205,8 +205,4 @@ class ReviewServiceTest {
         //Test
         assertThrows(ObjectNotFoundException.class, () -> service.updateReview(REVIEW_ID, newReviewDto));
     }
-
-    @Test
-    void deleteReview() {
-    }
 }

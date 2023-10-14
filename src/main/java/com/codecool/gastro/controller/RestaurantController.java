@@ -28,6 +28,10 @@ public class RestaurantController {
     public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
+    @GetMapping(params = "customerId")
+    public ResponseEntity<List<RestaurantDto>> getRestaurantByCustomerId(@RequestParam("customerId") UUID customerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantByCustomerId(customerId));
+    }
 
     @GetMapping(params = {"page", "size", "sort"})
     public ResponseEntity<List<DetailedRestaurantDto>> getDetailedRestaurants(Pageable pageable) {

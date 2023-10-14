@@ -47,6 +47,12 @@ public class RestaurantService {
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
+    public List<RestaurantDto> getRestaurantByCustomerId(UUID customerId) {
+        return restaurantRepository.findAllByCustomerId(customerId).stream()
+                .map(restaurantMapper::toDto)
+                .toList();
+    }
+
     public List<DetailedRestaurantDto> getDetailedRestaurants(Pageable pageable) {
         return restaurantRepository.findAllDetailedRestaurants(pageable)
                 .stream()
@@ -98,5 +104,6 @@ public class RestaurantService {
         String emailSuffix = restaurant.getContactEmail().split("@")[1];
         restaurant.setContactEmail(UUID.randomUUID() + "@" + emailSuffix);
     }
+
 
 }

@@ -12,8 +12,6 @@ import com.codecool.gastro.security.jwt.entity.RefreshToken;
 import com.codecool.gastro.security.jwt.service.RefreshTokenService;
 import com.codecool.gastro.service.CustomerService;
 import com.codecool.gastro.service.exception.TokenRefreshException;
-import io.jsonwebtoken.MalformedJwtException;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +27,6 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auths")
@@ -75,7 +69,7 @@ public class AuthController {
                 refreshToken.getToken(),
                 customerDto.id(),
                 customerDto.email(),
-                customerDto.roles().stream().map(r -> r.getRole().name()).collect(Collectors.toSet())
+                customerDto.roles()
         ));
     }
 
@@ -86,7 +80,6 @@ public class AuthController {
     }
 
     @PostMapping("/jwt/refresh")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<TokenRefreshResponse> refreshToken(
             @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
 
@@ -104,11 +97,14 @@ public class AuthController {
     }
 
     @PostMapping("/jwt/logout")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> logoutCustomer() {
-        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        refreshTokenService.deleteByCustomerId(customer.getId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        try {
+            Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            refreshTokenService.deleteByCustomerId(customer.getId());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+        }
     }
 
     @GetMapping("/oauth2")

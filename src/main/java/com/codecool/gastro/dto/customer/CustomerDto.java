@@ -1,6 +1,6 @@
 package com.codecool.gastro.dto.customer;
 
-import com.codecool.gastro.repository.entity.Role;
+import com.codecool.gastro.dto.role.RoleDto;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -12,6 +12,6 @@ public record CustomerDto(
         String surname,
         String email,
         LocalDate submissionTime,
-        Set<Role> roles
+        Set<RoleDto> roles
 ) {
 }
