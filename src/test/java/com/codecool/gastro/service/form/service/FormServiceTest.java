@@ -24,8 +24,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RestaurantFormServiceTest {
-    RestaurantFormService restaurantFormService;
+public class FormServiceTest {
+    FormService restaurantFormService;
     @Mock
     FormHandler<Restaurant> restaurantHandler;
     @Mock
@@ -39,7 +39,7 @@ public class RestaurantFormServiceTest {
 
     @BeforeEach
     void setUp() {
-        restaurantFormService = new RestaurantFormService(
+        restaurantFormService = new FormService(
                 restaurantHandler,
                 addressHandler,
                 businessHourHandler,

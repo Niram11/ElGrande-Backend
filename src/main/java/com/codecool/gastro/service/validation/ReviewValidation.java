@@ -1,4 +1,4 @@
-package com.codecool.gastro.service.validate;
+package com.codecool.gastro.service.validation;
 
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.repository.CustomerRepository;
@@ -9,11 +9,11 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateReview implements Validate<NewReviewDto> {
+public class ReviewValidation implements Validation<NewReviewDto> {
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
-    public ValidateReview(RestaurantRepository restaurantRepository, CustomerRepository customerRepository) {
+    public ReviewValidation(RestaurantRepository restaurantRepository, CustomerRepository customerRepository) {
         this.restaurantRepository = restaurantRepository;
         this.customerRepository = customerRepository;
     }

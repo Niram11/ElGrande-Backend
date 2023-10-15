@@ -4,7 +4,7 @@ import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
-import com.codecool.gastro.service.form.service.RestaurantFormService;
+import com.codecool.gastro.service.form.service.FormService;
 import com.codecool.gastro.service.mapper.AddressMapper;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.service.mapper.LocationMapper;
@@ -16,9 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class RestaurantFormServiceTest {
+public class FormServiceTest {
     @InjectMocks
-    private RestaurantFormService service;
+    private FormService service;
     @Mock
     private RestaurantRepository restaurantRepository;
     @Mock

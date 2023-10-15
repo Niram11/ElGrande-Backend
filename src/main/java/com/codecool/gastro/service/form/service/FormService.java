@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RestaurantFormService {
+public class FormService {
     private final FormHandler<Restaurant> restaurantHandler;
     private final FormHandler<Address> addressHandler;
     private final FormHandler<BusinessHour> businessHourHandler;
     private final FormHandler<Location> locationHandler;
 
-    public RestaurantFormService(FormHandler<Restaurant> restaurantHandler,
-                                 FormHandler<Address> addressHandler,
-                                 FormHandler<BusinessHour> businessHourHandler,
-                                 FormHandler<Location> locationHandler) {
+    public FormService(FormHandler<Restaurant> restaurantHandler,
+                       FormHandler<Address> addressHandler,
+                       FormHandler<BusinessHour> businessHourHandler,
+                       FormHandler<Location> locationHandler) {
         this.restaurantHandler = restaurantHandler;
         this.addressHandler = addressHandler;
         this.businessHourHandler = businessHourHandler;
