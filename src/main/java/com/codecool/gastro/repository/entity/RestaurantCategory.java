@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class RestaurantCategory {
+public class RestaurantCategory implements EntityObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

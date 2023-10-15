@@ -5,8 +5,11 @@ import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
+import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,11 +40,16 @@ public class CustomerServiceTest {
     @Mock
     CustomerRepository repository;
     @Mock
+    RestaurantRepository restaurantRepository;
+    @Mock
     CustomerMapper mapper;
     @Mock
     PasswordEncoder encoder;
 
     private UUID customerId;
+    private UUID restaurantId;
+    private UUID ownershipId;
+    private Restaurant restaurant;
     private Customer customer;
     private CustomerDto customerDto;
     ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
@@ -53,15 +61,26 @@ public class CustomerServiceTest {
     @BeforeEach
     void setUp() {
         customerId = UUID.randomUUID();
-        UUID ownershipId = UUID.randomUUID();
+        ownershipId = UUID.randomUUID();
+        restaurantId = UUID.randomUUID();
+
+        restaurant = new Restaurant();
+        restaurant.setId(restaurantId);
+
         customer = new Customer();
+        customer.setId(customerId);
+        customer.setName("Name");
+        customer.setSurname("Surname");
+        customer.setEmail("Email@wp.pl");
+        customer.setPassword("PW");
+        customer.setSubmissionTime(LocalDate.of(1212, 12, 12));
 
         customerDto = new CustomerDto(
                 customerId,
                 "Name",
                 "Surname",
                 "Email@wp.pl",
-                LocalDate.of(2012, 12, 12),
+                LocalDate.of(1212, 12, 12),
                 Set.of()
         );
 
@@ -89,45 +108,13 @@ public class CustomerServiceTest {
     }
 
     @Test
-    void testGetCustomerById_ShouldReturnCustomerDto_WhenExist() {
-        // when
-        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
-        when(mapper.toDto(customer)).thenReturn(customerDto);
-
-        // then
-        CustomerDto testedCustomerDto = service.getCustomerById(customerId);
-
-        // test
-        assertEquals(testedCustomerDto.id(), customerDto.id());
-        assertEquals(testedCustomerDto.name(), customerDto.name());
-        assertEquals(testedCustomerDto.surname(), customerDto.surname());
-        assertEquals(testedCustomerDto.email(), customerDto.email());
-        assertEquals(testedCustomerDto.submissionTime(), customerDto.submissionTime());
-        assertEquals(testedCustomerDto.restaurants(), customerDto.restaurants());
-        verify(repository, times(1)).findById(customerId);
-        verify(mapper, times(1)).toDto(customer);
-    }
-
-    @Test
-    void testGetCustomerById_ShouldThrownObjectNotFoundException_WhenNoCustomer() {
-        // when
-        when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
-
-        // test
-        assertThrows(ObjectNotFoundException.class, () -> service.getCustomerById(customerId));
-        verify(repository, times(1)).findById(customerId);
-    }
-
-    @Test
     void testGetDetailedCustomerById_ShouldReturnDetailedCustomer_WhenExist() {
         // when
         when(repository.findDetailedById(customerId)).thenReturn(Optional.of(projection));
         when(mapper.toDetailedDto(projection)).thenReturn(detailedCustomerDto);
-
-        // then
         DetailedCustomerDto testedDetailedCustomerDto = service.getDetailedCustomerById(customerId);
 
-        // test
+        // then
         assertEquals(testedDetailedCustomerDto.id(), detailedCustomerDto.id());
         assertEquals(testedDetailedCustomerDto.name(), detailedCustomerDto.name());
         assertEquals(testedDetailedCustomerDto.surname(), detailedCustomerDto.surname());
@@ -144,7 +131,7 @@ public class CustomerServiceTest {
         // when
         when(repository.findDetailedById(customerId)).thenThrow(ObjectNotFoundException.class);
 
-        // test
+        // then
         assertThrows(ObjectNotFoundException.class, () -> service.getDetailedCustomerById(customerId));
         verify(repository, times(1)).findDetailedById(customerId);
     }
@@ -153,18 +140,18 @@ public class CustomerServiceTest {
     ArgumentCaptor<Customer> captor;
 
     @Test
-    void testSaveCustomer_ShouldReturnCustomerDtoWithSubmissionTime_WhenCalled() {
+    void testSaveCustomer_ShouldSetSubmissionTimeAndPasswordAndReturnCustomerDto_WhenCalled() {
         // when
         when(mapper.dtoToCustomer(newCustomerDto)).thenReturn(customer);
+        when(encoder.encode(anyString())).thenReturn("EnCoDeDpAsSwOrD");
         when(repository.save(customer)).thenReturn(customer);
         when(mapper.toDto(customer)).thenReturn(customerDto);
-
-        // then
         CustomerDto testedCustomerDto = service.saveCustomer(newCustomerDto);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
-        assertEquals(customer.getSubmissionTime(), captor.getValue().getSubmissionTime());
+        assertEquals(captor.getValue().getPassword(), "EnCoDeDpAsSwOrD");
+        assertNotEquals(captor.getValue().getSubmissionTime(), LocalDate.of(1212, 12, 12));
         assertEquals(testedCustomerDto.name(), newCustomerDto.name());
         assertEquals(testedCustomerDto.surname(), newCustomerDto.surname());
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
@@ -173,22 +160,20 @@ public class CustomerServiceTest {
     }
 
     @Test
-    void testUpdateCustomer_ShouldReturnUpdatedCustomerDto_WhenIsNotDeleted() {
+    void testUpdateCustomer_ShouldReturnUpdatedCustomerDto_WhenExist() {
         // when
         when(repository.findById(customerId)).thenReturn(Optional.of(customer));
         when(repository.save(customer)).thenReturn(customer);
         when(mapper.toDto(customer)).thenReturn(customerDto);
-
-        // then
         CustomerDto testedCustomerDto = service.updateCustomer(customerId, editCustomerDto);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
         assertEquals(testedCustomerDto.id(), customerId);
         assertEquals(testedCustomerDto.name(), newCustomerDto.name());
         assertEquals(testedCustomerDto.surname(), newCustomerDto.surname());
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
-        assertNotEquals(testedCustomerDto.submissionTime(), captor.getValue().getSubmissionTime());
+        assertEquals(testedCustomerDto.submissionTime(), captor.getValue().getSubmissionTime());
         verify(repository, times(1)).findById(customerId);
         verify(mapper, times(1)).toDto(customer);
     }
@@ -198,7 +183,7 @@ public class CustomerServiceTest {
         // when
         when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
 
-        // test
+        // then
         assertThrows(ObjectNotFoundException.class, () -> service.updateCustomer(customerId, editCustomerDto));
         verify(repository, times(1)).findById(customerId);
     }
@@ -211,13 +196,11 @@ public class CustomerServiceTest {
 
         // when
         when(repository.findById(customerId)).thenReturn(Optional.of(customer));
-
-        // then
         service.softDelete(customerId);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
-        assertEquals(captor.getValue().getSurname(), "*".repeat(customer.getSurname().length()));
+        assertEquals(captor.getValue().getSurname(), "*" .repeat(customer.getSurname().length()));
         assertNotEquals(captor.getValue().getEmail(), "Email@wp.pl");
         verify(repository, times(1)).findById(customerId);
     }
@@ -227,8 +210,62 @@ public class CustomerServiceTest {
         // when
         when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
 
-        // test
+        // then
         assertThrows(ObjectNotFoundException.class, () -> service.softDelete(customerId));
     }
 
+    @Test
+    void testGetCustomerByEmail_ShouldReturnCustomerDto_WhenExist() {
+        // when
+        when(repository.findByEmail(customer.getEmail())).thenReturn(Optional.of(customer));
+        when(mapper.toDto(customer)).thenReturn(customerDto);
+        CustomerDto testedCustomerDto = service.getCustomerByEmail(customer.getEmail());
+
+        // then
+        assertEquals(customer.getId(), testedCustomerDto.id());
+        assertEquals(customer.getName(), testedCustomerDto.name());
+        assertEquals(customer.getSurname(), testedCustomerDto.surname());
+        assertEquals(customer.getEmail(), testedCustomerDto.email());
+        assertEquals(customer.getSubmissionTime(), testedCustomerDto.submissionTime());
+    }
+
+    @Test
+    void testSoftDelete_ShouldThrowEmailNotFoundException_WhenNoCustomerOrDeleted() {
+        // when
+        when(repository.findByEmail(customer.getEmail())).thenThrow(EmailNotFoundException.class);
+
+        // then
+        assertThrows(EmailNotFoundException.class, () -> service.getCustomerByEmail(customer.getEmail()));
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldSaveCustomerWithAssignedRestaurant_WhenExist() {
+        // when
+        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
+        service.assignRestaurantToCustomer(customerId, restaurantId);
+
+        // then
+        verify(repository, times(1)).save(captor.capture());
+        assertTrue(captor.getValue().getRestaurants().contains(restaurant));
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldThrowObjectNotFoundException_WhenNoCustomer() {
+        // when
+        when(repository.findById(customerId)).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(ObjectNotFoundException.class, () -> service.assignRestaurantToCustomer(customerId, restaurantId));
+    }
+
+    @Test
+    void testAssignRestaurantToCustomer_ShouldThrowObjectNotFoundException_WhenNoRestaurant() {
+        // when
+        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(ObjectNotFoundException.class, () -> service.assignRestaurantToCustomer(customerId, restaurantId));
+    }
 }

@@ -1,6 +1,7 @@
 package com.codecool.gastro.repository;
 
 import com.codecool.gastro.repository.entity.DishCategory;
+import com.codecool.gastro.repository.entity.Ingredient;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,41 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class DishCategoryRepositoryTest {
-
     @Autowired
-    private DishCategoryRepository repository;
-
-    private UUID dishCategoryId;
-
-    @BeforeEach
-    void setUp() {
-        dishCategoryId = UUID.fromString("0188a205-ed29-405e-9245-4b714a0db157");
-    }
+    DishCategoryRepository repository;
 
     @Test
-    void testFindAll_ShouldReturnListOfDishCategories_WhenCalled() {
+    void testFindAll_ShouldReturnList_WhenCalled() {
         // when
         List<DishCategory> list = repository.findAll();
 
         // then
         assertEquals(list.size(), 2);
-    }
-
-    @Test
-    void testFindById_ShouldReturnDishCategory_WhenExist() {
-        // when
-        Optional<DishCategory> dishCategory = repository.findById(dishCategoryId);
-
-        // then
-        assertTrue(dishCategory.isPresent());
-    }
-    @Test
-    void testFindById_ShouldReturnEmptyOptional_WhenNoDishCategory() {
-        // when
-        Optional<DishCategory> dishCategory = repository.findById(UUID.randomUUID());
-
-        // then
-        assertTrue(dishCategory.isEmpty());
     }
 
     @Test

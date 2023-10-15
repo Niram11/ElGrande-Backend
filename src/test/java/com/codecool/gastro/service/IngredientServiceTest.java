@@ -64,27 +64,6 @@ public class IngredientServiceTest {
         assertEquals(list.size(), 0);
     }
 
-    @Test
-    void testGetIngredientById_ShouldReturnIngredientDto_WhenExist() {
-        // when
-        when(repository.findById(ingredientId)).thenReturn(Optional.of(ingredient));
-        when(mapper.toDto(ingredient)).thenReturn(ingredientDto);
-        IngredientDto testedIngredientDto = service.getIngredientById(ingredientId);
-
-        // then
-        assertEquals(ingredientDto.id(), testedIngredientDto.id());
-        assertEquals(ingredientDto.name(), testedIngredientDto.name());
-    }
-
-    @Test
-    void testGetIngredientById_ShouldThrowObjectNotFoundException_WhenNoIngredient() {
-        // when
-        doThrow(ObjectNotFoundException.class).when(repository).findById(ingredientId);
-
-        // then
-        assertThrows(ObjectNotFoundException.class, () -> service.getIngredientById(ingredientId));
-    }
-
     @Captor
     ArgumentCaptor<Ingredient> captor;
 
@@ -95,19 +74,6 @@ public class IngredientServiceTest {
         when(repository.save(ingredient)).thenReturn(ingredient);
         when(mapper.toDto(ingredient)).thenReturn(ingredientDto);
         service.saveNewIngredient(newIngredientDto);
-
-        // then
-        verify(repository, times(1)).save(captor.capture());
-        assertEquals(captor.getValue().getName(), "tomato");
-    }
-
-    @Test
-    void testUpdateIngredient_ShouldParseNameToLowerCaseBeforeSaving_WhenCalled() {
-        // when
-        when(mapper.dtoToIngredient(ingredientId, newIngredientDto)).thenReturn(ingredient);
-        when(repository.save(ingredient)).thenReturn(ingredient);
-        when(mapper.toDto(ingredient)).thenReturn(ingredientDto);
-        service.updateIngredient(ingredientId, newIngredientDto);
 
         // then
         verify(repository, times(1)).save(captor.capture());

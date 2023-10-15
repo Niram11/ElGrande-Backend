@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import java.util.UUID;
 
 @Entity
-public class Ingredient {
+public class Ingredient implements EntityObject {
 
     public static final String REGEX_FOR_INGREDIENT = "^[a-zA-Z][a-zA-Z ]*$";
 

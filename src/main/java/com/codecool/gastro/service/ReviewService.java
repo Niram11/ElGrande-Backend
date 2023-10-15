@@ -4,32 +4,33 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
+import com.codecool.gastro.repository.CustomerRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.ReviewRepository;
+import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
+import com.codecool.gastro.service.validate.ValidateReview;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
+    private final ValidateReview validateReview;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, ValidateReview validateReview) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
-    }
-
-    public List<ReviewDto> getReviews() {
-        return reviewRepository.findAll()
-                .stream()
-                .map(reviewMapper::toDto)
-                .toList();
+        this.validateReview = validateReview;
     }
 
     public ReviewDto getReviewById(UUID id) {
@@ -52,18 +53,14 @@ public class ReviewService {
                 .toList();
     }
 
-    public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
+    public ReviewDto saveReview(NewReviewDto newReviewDto) {
+        validateReview.validateUpdate(newReviewDto);
+        Review savedReview = reviewMapper.dtoToReview(newReviewDto);
         savedReview.setSubmissionTime(LocalDate.now());
         return reviewMapper.toDto(reviewRepository.save(savedReview));
     }
 
-    public ReviewDto updateReview(UUID id, NewReviewDto newReviewDTO) {
-        reviewRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Review.class));
-        Review updatedReview = reviewRepository.save(reviewMapper.dtoToReview(id, newReviewDTO));
-        return reviewMapper.toDto(updatedReview);
-    }
+
 
     public void deleteReview(UUID id) {
         reviewRepository.delete(reviewMapper.dtoToReview(id));

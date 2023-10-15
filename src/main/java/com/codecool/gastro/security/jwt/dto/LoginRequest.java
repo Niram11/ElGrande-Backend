@@ -1,4 +1,4 @@
-package com.codecool.gastro.dto.auth;
+package com.codecool.gastro.security.jwt.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

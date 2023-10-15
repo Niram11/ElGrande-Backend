@@ -13,8 +13,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ImageMapperTest {
-
-    private ImageMapper mapper = Mappers.getMapper(ImageMapper.class);
+    ImageMapper mapper = Mappers.getMapper(ImageMapper.class);
 
     private UUID imageId;
     private UUID restaurantId;
@@ -51,22 +50,22 @@ public class ImageMapperTest {
     }
 
     @Test
-    void testDtoToImage_ShouldReturnImage_WhenCalled() {
+    void testDtoToImage_ShouldReturnImage_WhenProvidingId() {
         // when
-        Image imageOne = mapper.dtoToImage(imageId);
-        Image imageTwo = mapper.dtoToImage(imageId, newImageDto);
-        Image imageThree = mapper.dtoToImage(newImageDto);
+        Image testedImage = mapper.dtoToImage(imageId);
 
         // then
-        assertEquals(imageId, imageOne.getId());
-
-        assertEquals(imageId, imageTwo.getId());
-        assertEquals(newImageDto.pathToImage(), imageTwo.getPathToImage());
-        assertEquals(newImageDto.restaurantId(), imageTwo.getRestaurant().getId());
-
-        assertEquals(newImageDto.pathToImage(), imageThree.getPathToImage());
-        assertEquals(newImageDto.restaurantId(), imageThree.getRestaurant().getId());
-
+        assertEquals(imageId, testedImage.getId());
     }
 
+    @Test
+    void testDtoToImage_ShouldReturnImage_WhenProvidingDto() {
+        // when
+        Image testedImage = mapper.dtoToImage(newImageDto);
+
+        // then
+        assertEquals(newImageDto.pathToImage(), testedImage.getPathToImage());
+        assertEquals(newImageDto.restaurantId(), testedImage.getRestaurant().getId());
+
+    }
 }

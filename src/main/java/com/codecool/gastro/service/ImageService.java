@@ -3,7 +3,9 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.repository.ImageRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Image;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ImageMapper;
 import org.springframework.stereotype.Service;
@@ -15,26 +17,16 @@ import java.util.UUID;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
+    private final RestaurantRepository restaurantRepository;
 
-    public ImageService(ImageRepository imageRepository, ImageMapper imageMapper) {
+    public ImageService(ImageRepository imageRepository, ImageMapper imageMapper,
+                        RestaurantRepository restaurantRepository) {
         this.imageRepository = imageRepository;
         this.imageMapper = imageMapper;
+        this.restaurantRepository = restaurantRepository;
     }
 
-    public List<ImageDto> getImages() {
-        return imageRepository.findALl()
-                .stream()
-                .map(imageMapper::toDto)
-                .toList();
-    }
-
-    public ImageDto getImageById(UUID id) {
-        return imageRepository.findById(id)
-                .map(imageMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Image.class));
-    }
-
-    public List<ImageDto> getImagesByRestaurant(UUID id) {
+    public List<ImageDto> getImagesByRestaurantId(UUID id) {
         return imageRepository.findAllByRestaurant(id)
                 .stream()
                 .map(imageMapper::toDto)
@@ -42,13 +34,11 @@ public class ImageService {
     }
 
     public ImageDto saveNewImage(NewImageDto newImageDto) {
+        restaurantRepository.findById(newImageDto.restaurantId())
+                .orElseThrow(() -> new ObjectNotFoundException(newImageDto.restaurantId(), Restaurant.class));
+
         Image savedImage = imageRepository.save(imageMapper.dtoToImage(newImageDto));
         return imageMapper.toDto(savedImage);
-    }
-
-    public ImageDto updateImage(UUID id, NewImageDto newImageDto) {
-        Image updatedImage = imageRepository.save(imageMapper.dtoToImage(id, newImageDto));
-        return imageMapper.toDto(updatedImage);
     }
 
     public void deleteImage(UUID id) {

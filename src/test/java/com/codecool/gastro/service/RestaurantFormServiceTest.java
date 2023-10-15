@@ -1,10 +1,10 @@
 package com.codecool.gastro.service;
 
-import com.codecool.gastro.dto.form.NewFormRestaurantDto;
 import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
+import com.codecool.gastro.service.form.service.RestaurantFormService;
 import com.codecool.gastro.service.mapper.AddressMapper;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.service.mapper.LocationMapper;
@@ -15,12 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
-public class FormServiceTest {
+public class RestaurantFormServiceTest {
     @InjectMocks
-    private FormService service;
+    private RestaurantFormService service;
     @Mock
     private RestaurantRepository restaurantRepository;
     @Mock

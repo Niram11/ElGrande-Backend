@@ -19,13 +19,6 @@ public class IngredientRepositoryTest {
     @Autowired
     private IngredientRepository repository;
 
-    private UUID ingredientId;
-
-    @BeforeEach
-    void setUp() {
-        ingredientId = UUID.fromString("7f357c2a-a0ce-4a8f-9c07-ad34e3be7497");
-    }
-
     @Test
     void testFindAll_ShouldReturnList_WhenCalled() {
         // when
@@ -33,24 +26,6 @@ public class IngredientRepositoryTest {
 
         // then
         assertEquals(list.size(), 2);
-    }
-
-    @Test
-    void testFindById_ShouldReturnIngredient_WhenExist() {
-        // when
-        Optional<Ingredient> ingredient = repository.findById(ingredientId);
-
-        // then
-        assertTrue(ingredient.isPresent());
-    }
-
-    @Test
-    void testFindById_ShouldReturnEmptyOptional_WhenNoIngredient() {
-        // when
-        Optional<Ingredient> ingredient = repository.findById(UUID.randomUUID());
-
-        // then
-        assertTrue(ingredient.isEmpty());
     }
 
     @Test

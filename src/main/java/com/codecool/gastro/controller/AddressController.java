@@ -21,35 +21,15 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<AddressDto>> getAllAddresses() {
-        return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddresses());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AddressDto> getAddress(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddressById(id));
-    }
-
     @GetMapping(params = {"restaurantId"})
     public ResponseEntity<AddressDto> getAddressByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(addressService.getAddressByRestaurantId(restaurantId));
     }
 
-    @PostMapping
-    public ResponseEntity<AddressDto> createNewAddress(@Valid @RequestBody NewAddressDto newAddressDto) {
-        AddressDto addressDto = addressService.saveNewAddress(newAddressDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
-    }
-
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<AddressDto> updateAddress(@PathVariable UUID id, @Valid @RequestBody NewAddressDto newAddressDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.updateAddress(id, newAddressDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<AddressDto> deleteAddress(@PathVariable UUID id) {
-        addressService.deleteAddress(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }

@@ -20,10 +20,6 @@ public interface ReviewMapper {
     @Mapping(source = "restaurantId", target = "restaurant.id")
     Review dtoToReview(NewReviewDto newReviewDto);
 
-    @Mapping(source = "newReviewDto.customerId", target = "customer.id")
-    @Mapping(source = "newReviewDto.restaurantId", target = "restaurant.id")
-    Review dtoToReview(UUID id, NewReviewDto newReviewDto);
-
     Review dtoToReview(UUID id);
 
     DetailedReview toDetailedDto(DetailedReviewProjection detailedReviewProjection);

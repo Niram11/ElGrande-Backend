@@ -3,7 +3,9 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.repository.ImageRepository;
+import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Image;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ImageMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,11 +27,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ImageServiceTest {
     @InjectMocks
-    private ImageService service;
+    ImageService service;
     @Mock
-    private ImageRepository repository;
+    ImageRepository repository;
     @Mock
-    private ImageMapper mapper;
+    ImageMapper mapper;
+    @Mock
+    RestaurantRepository restaurantRepository;
 
     private UUID imageId;
     private UUID restaurantId;
@@ -56,36 +60,9 @@ class ImageServiceTest {
     }
 
     @Test
-    void testGetImages_ShouldReturnList_WhenCalled() {
-        // when
-        List<ImageDto> list = service.getImages();
-
-        // then
-        assertEquals(list.size(), 0);
-    }
-
-    @Test
-    void testGetImageById_ShouldReturnImageDto_WhenExist() {
-        // when
-        when(repository.findById(imageId)).thenReturn(Optional.of(image));
-        when(mapper.toDto(image)).thenReturn(imageDto);
-        ImageDto testedImageDto = service.getImageById(imageId);
-
-        // then
-        assertEquals(imageDto.id(), testedImageDto.id());
-        assertEquals(imageDto.pathToImage(), testedImageDto.pathToImage());
-    }
-
-    @Test
-    void testGetImageById_ShouldThrowObjectNotFoundException_WhenNoImage() {
-        // then
-        assertThrows(ObjectNotFoundException.class, () -> service.getImageById(imageId));
-    }
-
-    @Test
     void testGetImagesByRestaurant_ShouldReturnList_WhenCalled() {
         // when
-        List<ImageDto> list = service.getImagesByRestaurant(restaurantId);
+        List<ImageDto> list = service.getImagesByRestaurantId(restaurantId);
 
         // then
         assertEquals(list.size(), 0);
@@ -97,22 +74,10 @@ class ImageServiceTest {
         when(mapper.dtoToImage(newImageDto)).thenReturn(image);
         when(repository.save(image)).thenReturn(image);
         when(mapper.toDto(image)).thenReturn(imageDto);
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
         ImageDto testedImageDto = service.saveNewImage(newImageDto);
 
         // then
-        assertEquals(newImageDto.pathToImage(), testedImageDto.pathToImage());
-    }
-
-    @Test
-    void testUpdateImage_ShouldReturnImageDto_WhenCalled() {
-        // when
-        when(mapper.dtoToImage(imageId, newImageDto)).thenReturn(image);
-        when(repository.save(image)).thenReturn(image);
-        when(mapper.toDto(image)).thenReturn(imageDto);
-        ImageDto testedImageDto = service.updateImage(imageId, newImageDto);
-
-        // then
-        assertEquals(imageId, testedImageDto.id());
         assertEquals(newImageDto.pathToImage(), testedImageDto.pathToImage());
     }
 

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
-public class Image {
+public class Image implements EntityObject {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

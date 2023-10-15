@@ -8,6 +8,9 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 public class IngredientControllerTest {
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
     @MockBean
-    private IngredientService service;
+    IngredientService service;
 
     private UUID ingredientId;
     private IngredientDto ingredientDto;
@@ -62,30 +66,6 @@ public class IngredientControllerTest {
     }
 
     @Test
-    void testGetIngredientById_ShouldReturnStatusOkAndIngredientDto_WhenExist() throws Exception {
-        // when
-        when(service.getIngredientById(ingredientId)).thenReturn(ingredientDto);
-
-        // then
-        mockMvc.perform(get("/api/v1/ingredients/" + ingredientId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentResponse)
-                );
-    }
-
-    @Test
-    void testGetIngredientById_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoIngredient() throws Exception {
-        // when
-        when(service.getIngredientById(ingredientId)).thenThrow(new ObjectNotFoundException(ingredientId, Ingredient.class));
-
-        // then
-        mockMvc.perform(get("/api/v1/ingredients/" + ingredientId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage").value("Object of class Ingredient and id " + ingredientId + " cannot be found")
-                );
-    }
-
-    @Test
     void testCreateIngredient_ShouldReturnStatusCreatedAndIngredientDto_WhenValidValues() throws Exception {
         // given
         String contentRequest = """
@@ -105,63 +85,36 @@ public class IngredientControllerTest {
                         content().json(contentResponse)
                 );
     }
-
-    @Test
-    void testCreateIngredient_ShouldReturnStatusBadRequestAndErrorMessages_WhenValidValues() throws Exception {
+    private static Stream<Arguments> getArgsForIngredientsValidation() {
+        return Stream.of(
+                Arguments.of("", "Name cannot be empty"),
+                Arguments.of("123asd", "Name must contain only letters and not start with number or whitespace")
+        );
+    }
+    @ParameterizedTest
+    @MethodSource("getArgsForIngredientsValidation")
+    void testCreateIngredient_ShouldReturnStatusBadRequestAndErrorMessages_WhenValidValues(
+            String name, String nameErrMsg) throws Exception {
         // given
         String contentRequest = """
                 {
-                    "name": ""
+                    "name": "%s"
                 }
-                """;
+                """.formatted(name);
 
         // then
         mockMvc.perform(post("/api/v1/ingredients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must contain only letters and not start with number or whitespace"))
+                        jsonPath("$.errorMessage", Matchers.containsString(nameErrMsg))
                 );
     }
 
     @Test
-    void testUpdateIngredient_ShouldReturnStatusCreatedAndIngredientDto_WhenValidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "name": "Tomato"
-                }
-                """;
-
-        // when
-        when(service.updateIngredient(any(UUID.class), any(NewIngredientDto.class))).thenReturn(ingredientDto);
-
+    void testDeleteIngredient_ShouldReturnStatusNoContent_WhenCalled() throws Exception {
         // then
-        mockMvc.perform(put("/api/v1/ingredients/" + ingredientId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentResponse)
-                );
-    }
-
-    @Test
-    void testUpdateIngredient_ShouldReturnStatusBadRequestAndErrorMessages_WhenValidValues() throws Exception {
-        // given
-        String contentRequest = """
-                {
-                    "name": ""
-                }
-                """;
-
-        // then
-        mockMvc.perform(put("/api/v1/ingredients/" + ingredientId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name must contain only letters and not start with number or whitespace"))
-                );
+        mockMvc.perform(delete("/api/v1/ingredients/" + ingredientId))
+                .andExpectAll(status().isNoContent());
     }
 }

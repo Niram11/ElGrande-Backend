@@ -11,7 +11,6 @@ import com.codecool.gastro.service.ReviewService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,7 +29,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ReviewController.class)
@@ -82,14 +82,6 @@ public class ReviewControllerTest {
                 """;
     }
 
-    @Test
-    void testGetAllReviews_ShouldReturnStatusOkAndList_WhenCalled() throws Exception {
-        // then
-        mockMvc.perform(get("/api/v1/reviews"))
-                .andExpectAll(status().isOk(),
-                        content().json("[]")
-                );
-    }
 
     @Test
     void testGetReviewById_ShouldReturnStatusOkAndReviewDto_WhenExist() throws Exception {
@@ -122,7 +114,7 @@ public class ReviewControllerTest {
 
         // then
         mockMvc.perform(get("/api/v1/reviews")
-                        .param("customerId", "3466582c-580b-4d87-aa1d-615350e9598c"))
+                        .param("customerId", String.valueOf(customerId)))
                 .andExpectAll(status().isOk(),
                         content().json("[]")
                 );
@@ -142,7 +134,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    void testCreateNewReview_ShouldReturnStatusCreatedAndReviewDto_WhenValidValues() throws Exception {
+    void testCreateNewReviewShouldReturnStatusCreatedAndReviewDtoWhenValidValues() throws Exception {
         String contentRequest = """
                 {
                     "comment": "Comment",
@@ -168,7 +160,8 @@ public class ReviewControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideIntForIsBlank")
-    void testCreateNewReview_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues(String comment, int grade, String expectedErrMsg)
+    void testCreateNewReviewShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues(String comment, int grade,
+                                                                                          String expectedErrMsg)
             throws Exception {
         String contentRequest = """
                 {
@@ -189,70 +182,14 @@ public class ReviewControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg)),
-                        jsonPath("$.errorMessage", Matchers.containsString("Customer with this id does not exist")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
-                );
-    }
-
-    @Test
-    void testUpdateReview_ShouldReturnStatusCreatedAndReviewDto_WhenValidValues() throws Exception {
-        String contentRequest = """
-                {
-                    "comment": "Comment",
-                    "grade" : 5,
-                    "customerId": "3466582c-580b-4d87-aa1d-615350e9598c",
-                    "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
-                }
-                """;
-
-        // when
-        Mockito.when(reviewService.updateReview(reviewId, newReviewDto)).thenReturn(reviewDto);
-        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(new Customer()));
-        Mockito.when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
-
-        // then
-        mockMvc.perform(put("/api/v1/reviews/" + reviewId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        content().json(contentRespond)
-                );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideIntForIsBlank")
-    void testUpdateReview_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues(String comment, int grade, String expectedErrMsg)
-            throws Exception {
-        String contentRequest = """
-                {
-                    "comment": "%s",
-                    "grade" : "%d",
-                    "customerId": "3466582c-580b-4d87-aa1d-615350e9598c",
-                    "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
-                }
-                """.formatted(comment, grade);
-
-        // when
-        Mockito.when(reviewService.updateReview(reviewId, newReviewDto)).thenReturn(reviewDto);
-        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
-        Mockito.when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
-
-        // then
-        mockMvc.perform(put("/api/v1/reviews/" + reviewId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg)),
-                        jsonPath("$.errorMessage", Matchers.containsString("Customer with this id does not exist")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
+                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg))
                 );
     }
 
     private static Stream<Arguments> provideIntForIsBlank() {
         return Stream.of(
                 Arguments.of("comment", -1, "Grade must be greater then or equal 1"),
-                Arguments.of("comment", 11, "Grade must be less then or equal 10"),
+                Arguments.of("comment", 11, "Grade must be less then or equal 5"),
                 Arguments.of("", 5, "Comment cannot be empty")
         );
     }
