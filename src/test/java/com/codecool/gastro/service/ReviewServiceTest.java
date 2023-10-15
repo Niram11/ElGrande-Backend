@@ -2,14 +2,13 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
-import com.codecool.gastro.repository.CustomerRepository;
-import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.ReviewRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
+import com.codecool.gastro.service.validate.ValidateReview;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,21 +24,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
-    //TODO: change tests names
 
     @InjectMocks
     private ReviewService service;
     @Mock
     private ReviewMapper mapper;
     @Mock
-    private RestaurantRepository restaurantRepository;
-    @Mock
-    private CustomerRepository customerRepository;
-    @Mock
     private ReviewRepository repository;
+    @Mock
+    private ValidateReview validateReview;
 
     private final static String COMMENT = "comment";
     private final static int GRADE = 6;
@@ -50,7 +47,7 @@ class ReviewServiceTest {
     public static final Pageable PAGEABLE = PageRequest.of(0, 100000);
 
     @Test
-    void getReviewBy() {
+    void testGetReviewByShouldReturnValidDataWhenValidDataProvided() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -84,7 +81,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void getReviewsByRestaurant() {
+    void getReviewsByRestaurantShouldReturnListOfReviewsWhenProvidedValidData() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -113,7 +110,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void saveReview() {
+    void testSaveReviewShouldReturnStatusOkAndValidReviewWhenValidDataProvided() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -133,9 +130,7 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //Mocking interactions
-        //TODO:inject validation
-        Mockito.when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(Optional.of(restaurant));
-        Mockito.when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+        doNothing().when(validateReview).validateUpdate(newReviewDto);
         Mockito.when(repository.save(Mockito.any())).thenReturn(review);
         Mockito.when(mapper.dtoToReview(newReviewDto)).thenReturn(review);
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
@@ -147,40 +142,33 @@ class ReviewServiceTest {
         assertEquals(reviewDto, testedReview);
     }
 
-    //TODO: improve tests to catch errors
     @Test
-    void saveReviewReturnsNullWhenNeitherRestaurantIdNorCustomerIdExists() {
+    void testSaveReviewThrowsObjectNotFoundExceptionWhenNeitherRestaurantIdNorCustomerIdExists() {
         // Given
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, null);
 
         // When
-        ReviewDto result = service.saveReview(newReviewDto);
-
-        // Then
-        assertNull(result);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 
     @Test
-    void saveReviewReturnsNullWhenOnlyRestaurantIdExists() {
+    void testSaveReviewThrowsObjectNotFoundExceptionWhenOnlyRestaurantIdExists() {
         // Given
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, RESTAURANT_ID);
 
         // When
-        ReviewDto result = service.saveReview(newReviewDto);
-
-        // Then
-        assertNull(result);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 
     @Test
-    void saveReviewReturnsNullWhenOnlyCustomerIdExists() {
+    void testSaveReviewThrowsObjectNotFoundExceptionWhenOnlyCustomerIdExists() {
         // Given
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, null);
 
         // When
-        ReviewDto result = service.saveReview(newReviewDto);
-
-        // Then
-        assertEquals(result, null);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 }

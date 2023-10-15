@@ -24,16 +24,11 @@ import java.util.UUID;
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final CustomerRepository customerRepository;
     private final ReviewMapper reviewMapper;
     private final ValidateReview validateReview;
 
-    public ReviewService(ReviewRepository reviewRepository, RestaurantRepository restaurantRepository,
-                         CustomerRepository customerRepository, ReviewMapper reviewMapper, ValidateReview validateReview) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, ValidateReview validateReview) {
         this.reviewRepository = reviewRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.customerRepository = customerRepository;
         this.reviewMapper = reviewMapper;
         this.validateReview = validateReview;
     }
@@ -58,9 +53,9 @@ public class ReviewService {
                 .toList();
     }
 
-    public ReviewDto saveReview(NewReviewDto newReviewDTO) {
-        validateReview.validateUpdate(newReviewDTO);
-        Review savedReview = reviewMapper.dtoToReview(newReviewDTO);
+    public ReviewDto saveReview(NewReviewDto newReviewDto) {
+        validateReview.validateUpdate(newReviewDto);
+        Review savedReview = reviewMapper.dtoToReview(newReviewDto);
         savedReview.setSubmissionTime(LocalDate.now());
         return reviewMapper.toDto(reviewRepository.save(savedReview));
     }

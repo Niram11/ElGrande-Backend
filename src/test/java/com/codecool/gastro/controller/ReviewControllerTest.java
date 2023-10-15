@@ -133,7 +133,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    void testCreateNewReview_ShouldReturnStatusCreatedAndReviewDto_WhenValidValues() throws Exception {
+    void testCreateNewReviewShouldReturnStatusCreatedAndReviewDtoWhenValidValues() throws Exception {
         String contentRequest = """
                 {
                     "comment": "Comment",
@@ -159,7 +159,7 @@ public class ReviewControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideIntForIsBlank")
-    void testCreateNewReview_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues(String comment, int grade,
+    void testCreateNewReviewShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues(String comment, int grade,
                                                                                             String expectedErrMsg)
             throws Exception {
         String contentRequest = """

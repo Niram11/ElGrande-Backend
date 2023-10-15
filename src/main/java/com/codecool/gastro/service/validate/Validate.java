@@ -3,8 +3,7 @@ package com.codecool.gastro.service.validate;
 
 import com.codecool.gastro.dto.review.NewReviewDto;
 
-public interface Validate {
-    //TODO: improve dto extension)
+public interface Validate <T>{
 
-    void validateUpdate(NewReviewDto newReviewDto);
+    void validateUpdate(T dto);
 }
