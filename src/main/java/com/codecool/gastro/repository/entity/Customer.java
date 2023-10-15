@@ -26,8 +26,11 @@ public class Customer implements EntityObject {
     private String email;
     private LocalDate submissionTime;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private CustomerRole role = CustomerRole.USER;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinTable(name = "customer_role",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private final Set<Role> roles = new HashSet<>();
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();
     private Boolean isDeleted = false;
@@ -83,12 +86,8 @@ public class Customer implements EntityObject {
         this.password = password;
     }
 
-    public CustomerRole getRole() {
-        return role;
-    }
-
-    public void setRole(CustomerRole role) {
-        this.role = role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public Set<Restaurant> getRestaurants() {
@@ -105,6 +104,9 @@ public class Customer implements EntityObject {
 
     public void assignRestaurant(Restaurant restaurant) {
         restaurants.add(restaurant);
+    }
+    public void assignRole(Role role) {
+        roles.add(role);
     }
 }
 

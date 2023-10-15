@@ -6,6 +6,7 @@ import com.codecool.gastro.service.PromotedLocalService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,23 +26,21 @@ public class PromotedLocalController {
         return ResponseEntity.status(HttpStatus.OK).body(promotedLocalService.getPromotedLocals());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PromotedLocalDto> getPromotedLocal(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(promotedLocalService.getPromotedLocalBy(id));
-    }
-
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PromotedLocalDto> createNewPromotedLocal(@Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.saveNewPromotedLocal(newPromotedLocalDto));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PromotedLocalDto> updatePromotedLocal(@PathVariable UUID id,
                                                 @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PromotedLocalDto> deletePromotedLocal(@PathVariable UUID id) {
         promotedLocalService.deletePromotedLocal(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

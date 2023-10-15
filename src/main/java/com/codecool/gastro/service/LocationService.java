@@ -27,19 +27,6 @@ public class LocationService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public List<LocationDto> getLocations() {
-        return locationRepository.findAll()
-                .stream()
-                .map(locationMapper::toDto)
-                .toList();
-    }
-
-    public LocationDto getLocationBy(UUID id) {
-        return locationRepository.findById(id)
-                .map(locationMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Location.class));
-    }
-
     public LocationDto saveLocation(NewLocationDto newLocationsDTO) {
         Location savedLocations = locationRepository.save(locationMapper.dtoToLocation(newLocationsDTO));
         return locationMapper.toDto(savedLocations);

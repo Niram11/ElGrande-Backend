@@ -1,7 +1,6 @@
 package com.codecool.gastro.security.jwt;
 
 
-import com.codecool.gastro.security.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
-
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -28,15 +27,15 @@ public class JwtUtils {
     @Value("${gastro.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${gastro.app.jwtExpirationMs}")
+    @Value("${gastro.app.jwtTokenExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(principal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
@@ -80,7 +79,6 @@ public class JwtUtils {
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty: {}", ex.getMessage());
         }
-
         return false;
     }
 
@@ -90,7 +88,7 @@ public class JwtUtils {
         }
 
         Optional<Cookie> jwtToken = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("JWTTOKEN"))
+                .filter(cookie -> cookie.getName().equals("JWT_TOKEN"))
                 .findFirst();
 
         return jwtToken.map(Cookie::getValue).orElse(null);

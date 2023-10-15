@@ -28,7 +28,7 @@ public class PromotedLocalService {
                 .toList();
     }
 
-    public PromotedLocalDto getPromotedLocalBy(UUID id) {
+    public PromotedLocalDto getPromotedLocalById(UUID id) {
         return promotedLocalRepository.findById(id)
                 .map(promotedLocalMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, PromotedLocal.class));

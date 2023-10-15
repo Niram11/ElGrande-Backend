@@ -25,6 +25,10 @@ public class FilteredRestaurantsSpecification {
 
         Subquery<Double> averageRatingSubQuery = averageRatingSubQuery(criteriaQuery, root, criteriaBuilder);
 
+        if (filteredRestaurantsCriteria.name() != null && !filteredRestaurantsCriteria.name().isEmpty()) {
+            predicates.add(namePredicate(root, criteriaBuilder, filteredRestaurantsCriteria.name()));
+        }
+
         if (filteredRestaurantsCriteria.category() != null) {
             predicates.add(categoryPredicate(root, criteriaQuery, filteredRestaurantsCriteria.category()));
         }
@@ -34,21 +38,17 @@ public class FilteredRestaurantsSpecification {
         if (filteredRestaurantsCriteria.dishName() != null) {
             predicates.add(dishPredicate(root, criteriaQuery, filteredRestaurantsCriteria.dishName()));
         }
-        if (filteredRestaurantsCriteria.reviewMin() != null && filteredRestaurantsCriteria.reviewMax() != null) {
+        if (filteredRestaurantsCriteria.reviewMin() != null) {
             predicates.add(reviewRangePredicate(criteriaBuilder, averageRatingSubQuery,
-                    filteredRestaurantsCriteria.reviewMin(), filteredRestaurantsCriteria.reviewMax()));
-        }
-        Order order = null;
-        if (filteredRestaurantsCriteria.reviewSort().equals("ASC") ||
-                filteredRestaurantsCriteria.reviewSort().equals("DESC")) {
-            order = determineOrder(criteriaBuilder, averageRatingSubQuery, filteredRestaurantsCriteria.reviewSort());
-        }
-        if (order != null) {
-            criteriaQuery.orderBy(order);
+                    filteredRestaurantsCriteria.reviewMin()));
         }
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    private Predicate namePredicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, String name) {
+        return criteriaBuilder.like(root.get("name"), "%" + name + "%");
     }
 
     private Predicate categoryPredicate(Root<Restaurant> root, CriteriaQuery<Restaurant> criteriaQuery,
@@ -70,26 +70,8 @@ public class FilteredRestaurantsSpecification {
     }
 
     private Predicate reviewRangePredicate(CriteriaBuilder criteriaBuilder, Subquery<Double> reviewSubQuery,
-                                           Double reviewMin, Double reviewMax) {
-        if (reviewMin != null && reviewMax == null) {
+                                           Double reviewMin) {
             return criteriaBuilder.greaterThanOrEqualTo(reviewSubQuery, reviewMin);
-        } else if (reviewMax != null && reviewMin == null) {
-            return criteriaBuilder.lessThanOrEqualTo(reviewSubQuery, reviewMax);
-        } else {
-            return criteriaBuilder.and(
-                    criteriaBuilder.greaterThanOrEqualTo(reviewSubQuery, reviewMin),
-                    criteriaBuilder.lessThanOrEqualTo(reviewSubQuery, reviewMax)
-            );
-        }
-    }
-
-    private Order determineOrder(CriteriaBuilder criteriaBuilder, Subquery<Double> averageRatingSubQuery,
-                                 String reviewSort) {
-        if ("ASC".equalsIgnoreCase(reviewSort)) {
-            return criteriaBuilder.asc(averageRatingSubQuery);
-        } else {
-            return criteriaBuilder.desc(averageRatingSubQuery);
-        }
     }
 
     private Subquery<UUID> categorySubQuery(CriteriaQuery<?> criteriaQuery, List<String> category) {

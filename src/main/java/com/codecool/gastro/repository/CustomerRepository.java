@@ -16,7 +16,7 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     Optional<Customer> findByEmail(String email);
 
     @Query(nativeQuery = true, value = """
-            select cus.id, cus.name, cus.surname, cus.email, cus.submission_time,
+            select cus.id, cus.name, cus.surname, cus.email, cus.submission_time as submissionTime,
             array_agg(cr.restaurants_id) as restaurants, ow.id as ownershipId
             from customer as cus left join ownership as ow on cus.id = ow.customer_id
             left join public.customer_restaurants cr on cus.id = cr.customer_id

@@ -6,6 +6,7 @@ import com.codecool.gastro.service.ImageService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,11 +27,13 @@ public class ImageController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ImageDto> createNewImage(@Valid @RequestBody NewImageDto newImageDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveNewImage(newImageDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<ImageDto> deleteImage(@PathVariable UUID id) {
         imageService.deleteImage(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

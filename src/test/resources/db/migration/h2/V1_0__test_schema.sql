@@ -8,9 +8,39 @@ create table customer
     is_deleted      boolean,
     name            varchar(255),
     password        varchar(255),
-    role            varchar(255),
     submission_time date,
     surname         varchar(255)
+);
+
+create table role
+(
+    id   uuid not null
+        primary key,
+    role varchar(255)
+);
+
+create table customer_role
+(
+    customer_id uuid not null
+        constraint fkipr3etk2mjwkv6ahb4x4vwqy3
+            references customer,
+    role_id     uuid not null
+        constraint fkmwml8muyov9xhw4423lp88n2u
+            references role,
+    primary key (customer_id, role_id)
+);
+
+create table refresh_token
+(
+    id          uuid not null
+        primary key,
+    expiry_date timestamp(6) with time zone,
+    token       varchar(255),
+    customer_id uuid
+        constraint uk_lkiact1vrl4cqy99j4v3yiwgq
+            unique
+        constraint fkthlbvd34s3un1d4pxxqv2ni6c
+            references customer
 );
 
 create table dish_category

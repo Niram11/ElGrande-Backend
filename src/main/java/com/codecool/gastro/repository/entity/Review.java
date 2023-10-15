@@ -18,7 +18,7 @@ public class Review implements EntityObject {
     @NotBlank(message = "Comment cannot be empty")
     private String comment;
     @Min(value = 1, message = "Grade must be greater then or equal 1")
-    @Max(value = 10, message = "Grade must be less then or equal 10")
+    @Max(value = 5, message = "Grade must be less then or equal 5")
     private int grade;
 
     private LocalDate submissionTime;

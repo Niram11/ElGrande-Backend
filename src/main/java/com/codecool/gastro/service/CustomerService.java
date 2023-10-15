@@ -7,7 +7,9 @@ import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.entity.CustomerRole;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.Role;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
@@ -18,13 +20,14 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-public class CustomerService {
+public class CustomerService  {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder encoder;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, RestaurantRepository restaurantRepository, PasswordEncoder encoder) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper,
+                           RestaurantRepository restaurantRepository, PasswordEncoder encoder) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
         this.restaurantRepository = restaurantRepository;
@@ -39,10 +42,13 @@ public class CustomerService {
 
     public CustomerDto saveCustomer(NewCustomerDto newCustomerDto) {
         Customer customerToSave = customerMapper.dtoToCustomer(newCustomerDto);
+        assignRole(customerToSave);
         setCreationTime(customerToSave);
         encodePassword(customerToSave);
         return customerMapper.toDto(customerRepository.save(customerToSave));
     }
+
+
 
     public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
         Customer updatedCustomer = customerRepository.findById(id)
@@ -81,7 +87,7 @@ public class CustomerService {
 
         // Mask surname by filling with *
         int surnameLength = customer.getSurname().length();
-        customer.setSurname("*" .repeat(surnameLength));
+        customer.setSurname("*".repeat(surnameLength));
 
         // Mask email by filling first part of the email (before @) with *
         int atIndex = customer.getEmail().indexOf('@');
@@ -98,4 +104,11 @@ public class CustomerService {
     private void setCreationTime(Customer customerToSave) {
         customerToSave.setSubmissionTime(LocalDate.now());
     }
+
+    private void assignRole(Customer customerToSave) {
+        Role role = new Role();
+        role.setRole(CustomerRole.ROLE_USER);
+        customerToSave.assignRole(role);
+    }
+
 }
