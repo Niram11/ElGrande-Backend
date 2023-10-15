@@ -28,19 +28,6 @@ public class RestaurantService {
         this.entityManager = entityManager;
     }
 
-    public List<RestaurantDto> getRestaurants() {
-        return restaurantRepository.findAll()
-                .stream()
-                .map(restaurantMapper::toDto)
-                .toList();
-    }
-    public List<RestaurantDto> getRestaurants(Pageable pageable) {
-        return restaurantRepository.findAll(pageable)
-                .stream()
-                .map(restaurantMapper::toDto)
-                .toList();
-    }
-
     public RestaurantDto getRestaurantById(UUID id) {
         return restaurantRepository.findById(id)
                 .map(restaurantMapper::toDto)
@@ -75,8 +62,10 @@ public class RestaurantService {
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
-        Restaurant updatedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto, id));
-        return restaurantMapper.toDto(updatedRestaurant);
+        Restaurant updatedRestaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id,Restaurant.class));
+        restaurantMapper.updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
+        return restaurantMapper.toDto(restaurantRepository.save(updatedRestaurant));
     }
 
     public void softDelete(UUID id) {
@@ -104,6 +93,4 @@ public class RestaurantService {
         String emailSuffix = restaurant.getContactEmail().split("@")[1];
         restaurant.setContactEmail(UUID.randomUUID() + "@" + emailSuffix);
     }
-
-
 }

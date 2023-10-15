@@ -66,21 +66,23 @@ class ReviewRepositoryTest {
         DetailedReviewProjection projectionOne = factory.createProjection(DetailedReviewProjection.class);
         projectionOne.setComment("new comment");
         projectionOne.setGrade(6);
-        projectionOne.setSubmissionTime(LocalDate.of(2023,10,7));
+        projectionOne.setSubmissionTime(LocalDate.of(2023, 10, 7));
         projectionOne.setName("Tomek");
 
         DetailedReviewProjection projectionTwo = factory.createProjection(DetailedReviewProjection.class);
         projectionTwo.setComment("this igrwgwld comment");
         projectionTwo.setGrade(10);
-        projectionTwo.setSubmissionTime(LocalDate.of(2022,5,7));
+        projectionTwo.setSubmissionTime(LocalDate.of(2022, 5, 7));
         projectionTwo.setName("Tomek");
 
 
-        // todo: fix that test is true even though fields are different
+        // todo: fix that test is true even though fields are different(not now)
         List<DetailedReviewProjection> expected = List.of(projectionOne, projectionTwo);
         assertThat(actual)
                 .usingRecursiveComparison()
                 .comparingOnlyFields("getComment", "getGrade", "getName", "getSubmissionTime")
                 .isEqualTo(expected);
     }
+
+
 }

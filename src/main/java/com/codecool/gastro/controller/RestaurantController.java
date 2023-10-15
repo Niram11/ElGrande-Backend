@@ -44,13 +44,6 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.getFilteredRestaurants(filteredRestaurantsCriteria));
     }
-
-    @PostMapping
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<RestaurantDto> createNewRestaurant(@Valid @RequestBody NewRestaurantDto newRestaurantDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.saveNewRestaurant(newRestaurantDto));
-    }
-
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable UUID id, @Valid @RequestBody NewRestaurantDto newRestaurantDto) {

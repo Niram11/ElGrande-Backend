@@ -6,8 +6,9 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.RestaurantService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import org.hamcrest.Matchers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,17 +18,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = RestaurantController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -40,21 +46,21 @@ public class RestaurantControllerTest {
     private RestaurantService service;
 
     @Test
-    void testGetRestaurantById_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
+    void testGetRestaurantByIdShouldReturnStatusNotFoundWhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
         // when
         when(service.getRestaurantById(id)).thenThrow(new ObjectNotFoundException(id, Restaurant.class));
 
-        // test
+        // then
         mockMvc.perform(get("/api/v1/restaurants/" + id))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(("$.errorMessage")).value("Object of class Restaurant and id " + id + " cannot be found"));
     }
 
     @Test
-    void testGetRestaurantById_ShouldReturnStatusOkAndRestaurantDto_WhenRestaurantExist() throws Exception {
+    void testGetRestaurantByIdShouldReturnStatusOkAndRestaurantDtoWhenRestaurantExist() throws Exception {
         // given
         RestaurantDto restaurantDto = new RestaurantDto(
                 UUID.randomUUID(),
@@ -68,7 +74,7 @@ public class RestaurantControllerTest {
         // when
         when(service.getRestaurantById(restaurantDto.id())).thenReturn(restaurantDto);
 
-        // test
+        // then
         mockMvc.perform(get("/api/v1/restaurants/" + restaurantDto.id()))
                 .andExpectAll(status().isOk(),
                         jsonPath(("$.id")).value(restaurantDto.id().toString()),
@@ -81,119 +87,30 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    void testCreateNewRestaurant_ShouldReturnStatusOkAndRestaurantDto_WhenProvidedValidDataInBody() throws Exception {
+    void testSoftDeleteRestaurantShouldReturnStatusNoContentWhenRestaurantExist() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
-        RestaurantDto restaurantDto = new RestaurantDto(
-                id,
-                "Name",
-                "Desc",
-                "Website.pl",
-                123123123,
-                "Email@wp.pl"
-        );
-
-        String contentRequest = """
-                {
-                "name": "Name",
-                "description": "Desc",
-                "website": "Website.pl",
-                "contactNumber": 123123123,
-                "contactEmail": "Email@wp.pl"
-                }
-                """;
-
-        // when
-        when(service.saveNewRestaurant(any(NewRestaurantDto.class))).thenReturn(restaurantDto);
-        when(service.updateRestaurant(any(UUID.class), any(NewRestaurantDto.class))).thenReturn(restaurantDto);
-
-        // test
-        mockMvc.perform(post("/api/v1/restaurants")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        jsonPath("$.id").value(id.toString()),
-                        content().json(contentRequest));
-
-        mockMvc.perform(put("/api/v1/restaurants/" + id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentRequest))
-                .andExpectAll(status().isCreated(),
-                        jsonPath("$.id").value(id.toString()),
-                        content().json(contentRequest));
-
-    }
-
-    @Test
-    void testCreateNewRestaurantAndUpdateRestaurant_ShouldReturnStatusBadRequest_WhenProvidingInvalidJson() throws Exception {
-        // given
-
-        String contentOne = """
-                {
-                "name": "",
-                "description": "",
-                "website": "Website.pl",
-                "contactNumber": 1231231231,
-                "contactEmail": "Emailwp.pl"
-                }
-                """;
-
-        String contentTwo = """
-                {
-                "name": "",
-                "description": "",
-                "website": "Website.pl",
-                "contactNumber": 1231231231,
-                "contactEmail": "Emailwp.pl"
-                }
-                """;
-
-        // test
-        mockMvc.perform(post("/api/v1/restaurants")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentOne))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
-                );
-
-        mockMvc.perform(put("/api/v1/restaurants/" + UUID.randomUUID())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(contentOne))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Description cannot be empty")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Invalid email"))
-                );
-    }
-
-    @Test
-    void testSoftDeleteRestaurant_ShouldReturnStatusNoContent_WhenRestaurantExist() throws Exception {
-        // given
-        UUID id = UUID.randomUUID();
-
-        // test
+        // then
         mockMvc.perform(delete("/api/v1/restaurants/" + id))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void testSoftDeleteRestaurant_ShouldReturnStatusNotFound_WhenNoRestaurant() throws Exception {
+    void testSoftDeleteRestaurantShouldReturnStatusNotFoundWhenNoRestaurant() throws Exception {
         // given
         UUID id = UUID.randomUUID();
 
         //when
         doThrow(new ObjectNotFoundException(id, Restaurant.class)).when(service).softDelete(id);
 
-        // test
+        // then
         mockMvc.perform(delete("/api/v1/restaurants/" + id))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void testGetTopRestaurantsDetailed_ShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
+    void testGetTopRestaurantsDetailedShouldReturnStatusOkAndListOfDetailedRestaurantDto_WhenCalled() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
 
@@ -231,7 +148,7 @@ public class RestaurantControllerTest {
         // when
         when(service.getDetailedRestaurants(pageable)).thenReturn(List.of(detailedRestaurantDto));
 
-        // test
+        // then
         mockMvc.perform(get("/api/v1/restaurants")
                         .param("size", "1")
                         .param("page", "0")
@@ -240,4 +157,63 @@ public class RestaurantControllerTest {
                         content().json(contentRespond)
                 );
     }
+
+    @Test
+    void testUpdateRestaurantShouldReturnStatusNotFoundWhenUpdatedRestaurantDoesNotExist() throws Exception {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+
+        // when
+        when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class))).thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));
+
+        // then
+        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorMessage").value("Object of class Restaurant and id " + restaurantId + " cannot be found"));
+    }
+
+    @Test
+    void testUpdateRestaurantWithInvalidDataShouldReturnBadRequest() throws Exception {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+
+        // when
+        when(service.updateRestaurant(eq(restaurantId), any(NewRestaurantDto.class)))
+                .thenThrow(new ObjectNotFoundException(restaurantId, Restaurant.class));
+
+        // then
+        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage").value("Name cannot be empty"));
+    }
+
+    @Test
+    void testUpdateRestaurantShouldReturnStatusOkWhenRestaurantIsUpdatedSuccessfully() throws Exception {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto("UpdatedName", "UpdatedDesc", "UpdatedWebsite.pl", 555555555, "UpdatedEmail@gmail.com");
+        RestaurantDto updatedRestaurantDto = new RestaurantDto(restaurantId, newRestaurantDto.name(), newRestaurantDto.description(), newRestaurantDto.website(), newRestaurantDto.contactNumber(), newRestaurantDto.contactEmail());
+
+        // when
+        when(service.updateRestaurant(ArgumentMatchers.eq(restaurantId), ArgumentMatchers.any(NewRestaurantDto.class))).thenReturn(updatedRestaurantDto);
+
+        // then
+        mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(restaurantId.toString()))
+                .andExpect(jsonPath("$.name").value(updatedRestaurantDto.name()))
+                .andExpect(jsonPath("$.description").value(updatedRestaurantDto.description()))
+                .andExpect(jsonPath("$.website").value(updatedRestaurantDto.website()))
+                .andExpect(jsonPath("$.contactNumber").value(updatedRestaurantDto.contactNumber().toString()))
+                .andExpect(jsonPath("$.contactEmail").value(updatedRestaurantDto.contactEmail()));
+    }
+    //TODO: add tests for get detailed restaurant (not now)
 }

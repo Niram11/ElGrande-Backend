@@ -23,7 +23,7 @@ class ReviewMapperTest {
     private final static LocalDate LOCAL_DATE = LocalDate.of(2023, 9, 24);
 
     @Test
-    void toDto() {
+    void testMappingReviewToDtoShouldMapReviewToDtoWhenProvidingValidData() {
         //Given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
@@ -50,7 +50,7 @@ class ReviewMapperTest {
     }
 
     @Test
-    void dtoToReview() {
+    void testMappingDtoToReviewShouldMapDtoToReviewWhenProvidingValidData() {
         //Given
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
 
@@ -64,24 +64,9 @@ class ReviewMapperTest {
         assertEquals(review.getCustomer().getId(), newReviewDto.customerId());
     }
 
-    @Test
-    void testDtoToReview() {
-        //Given
-        NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, RESTAURANT_ID);
-
-        //When
-        Review review = mapper.dtoToReview(REVIEW_ID, newReviewDto);
-
-        //Then
-        assertEquals(review.getId(), REVIEW_ID);
-        assertEquals(review.getComment(), newReviewDto.comment());
-        assertEquals(review.getGrade(), newReviewDto.grade());
-        assertEquals(review.getRestaurant().getId(), newReviewDto.restaurantId());
-        assertEquals(review.getCustomer().getId(), newReviewDto.customerId());
-    }
 
     @Test
-    void testDtoToReview1() {
+    void testMappingDtoToReviewWithIdShouldMapDtoToReviewWithIdWhenProvidingValidData() {
         //When
         Review review = mapper.dtoToReview(REVIEW_ID);
 

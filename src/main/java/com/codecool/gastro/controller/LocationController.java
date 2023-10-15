@@ -22,9 +22,9 @@ public class LocationController {
         this.locationsService = locationsService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LocationDto> getLocationById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getLocationById(id));
+    @PostMapping
+    public ResponseEntity<LocationDto> createNewLocation(@Valid @RequestBody NewLocationDto newLocationDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.saveLocation(newLocationDTO));
     }
 
     @PutMapping("/{id}")

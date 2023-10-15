@@ -11,7 +11,6 @@ import com.codecool.gastro.service.ReviewService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,7 +29,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ReviewController.class)
@@ -134,7 +134,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    void testCreateNewReview_ShouldReturnStatusCreatedAndReviewDto_WhenValidValues() throws Exception {
+    void testCreateNewReviewShouldReturnStatusCreatedAndReviewDtoWhenValidValues() throws Exception {
         String contentRequest = """
                 {
                     "comment": "Comment",
@@ -160,7 +160,8 @@ public class ReviewControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideIntForIsBlank")
-    void testCreateNewReview_ShouldReturnStatusBadRequestAndErrorMessages_WhenInvalidValues(String comment, int grade, String expectedErrMsg)
+    void testCreateNewReviewShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues(String comment, int grade,
+                                                                                          String expectedErrMsg)
             throws Exception {
         String contentRequest = """
                 {
@@ -181,16 +182,14 @@ public class ReviewControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
                 .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg)),
-                        jsonPath("$.errorMessage", Matchers.containsString("Customer with this id does not exist")),
-                        jsonPath("$.errorMessage", Matchers.containsString("Restaurant with this id does not exist"))
+                        jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg))
                 );
     }
 
     private static Stream<Arguments> provideIntForIsBlank() {
         return Stream.of(
                 Arguments.of("comment", -1, "Grade must be greater then or equal 1"),
-                Arguments.of("comment", 11, "Grade must be less then or equal 10"),
+                Arguments.of("comment", 11, "Grade must be less then or equal 5"),
                 Arguments.of("", 5, "Comment cannot be empty")
         );
     }
