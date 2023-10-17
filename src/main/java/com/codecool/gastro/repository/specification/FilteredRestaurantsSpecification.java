@@ -19,26 +19,19 @@ public class FilteredRestaurantsSpecification {
     public FilteredRestaurantsSpecification(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
     public List<Restaurant> getFilteredRestaurants(FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Restaurant> criteriaQuery = criteriaBuilder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (!filteredRestaurantsCriteria.name().equals(null) && !filteredRestaurantsCriteria.name().isEmpty()) {
-            predicates.add(predicateByName.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria.name()));
-        }
-        if (!filteredRestaurantsCriteria.category().equals(null)) {
-            predicates.add(predicateByCategory.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria.category()));
-        }
-        if (!filteredRestaurantsCriteria.city().equals(null)) {
-            predicates.add(predicateByCity.predicate(root,criteriaBuilder,criteriaQuery, filteredRestaurantsCriteria.city()));
-        }
-        if (!filteredRestaurantsCriteria.dishName().equals(null)) {
-            predicates.add(predicateByDish.predicate(root,criteriaBuilder,criteriaQuery,filteredRestaurantsCriteria.dishName()));
-        }
-        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        predicates.add(predicateByName.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
+        predicates.add(predicateByCategory.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
+        predicates.add(predicateByCity.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
+        predicates.add(predicateByDish.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
 
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }

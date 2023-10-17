@@ -1,5 +1,6 @@
 package com.codecool.gastro.repository.specification;
 
+import com.codecool.gastro.dto.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.RestaurantCategory;
 import jakarta.persistence.criteria.*;
@@ -7,12 +8,15 @@ import jakarta.persistence.criteria.*;
 import java.util.List;
 import java.util.UUID;
 
-public class RestaurantPredicateByRestaurantCategory implements RestaurantPredicate<List<String>>{
+public class RestaurantPredicateByRestaurantCategory implements RestaurantPredicate {
 
     @Override
-    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, List<String> restaurantCategory) {
-        Subquery<UUID> categorySubQuery = categorySubQuery(criteriaQuery, restaurantCategory);
-        return root.get("id").in(categorySubQuery);
+    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+        if (!filteredRestaurantsCriteria.category().equals(null)) {
+            Subquery<UUID> categorySubQuery = categorySubQuery(criteriaQuery, filteredRestaurantsCriteria.category());
+            return root.get("id").in(categorySubQuery);
+        }
+        return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
     }
 
     private Subquery<UUID> categorySubQuery(CriteriaQuery<?> criteriaQuery, List<String> category) {
