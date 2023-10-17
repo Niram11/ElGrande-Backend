@@ -28,12 +28,6 @@ public class PromotedLocalService {
                 .toList();
     }
 
-    public PromotedLocalDto getPromotedLocalById(UUID id) {
-        return promotedLocalRepository.findById(id)
-                .map(promotedLocalMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, PromotedLocal.class));
-    }
-
     public PromotedLocalDto saveNewPromotedLocal(NewPromotedLocalDto newPromotedLocalDto) {
         PromotedLocal savedPromotedLocal = promotedLocalRepository.save(promotedLocalMapper.dtoToPromotedLocal(newPromotedLocalDto));
         return promotedLocalMapper.toDto(savedPromotedLocal);
@@ -47,5 +41,4 @@ public class PromotedLocalService {
     public void deletePromotedLocal(UUID id) {
         promotedLocalRepository.delete(promotedLocalMapper.dtoToPromotedLocal(id));
     }
-
 }
