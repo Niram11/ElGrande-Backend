@@ -65,7 +65,7 @@ public class LocationServiceTest {
         restaurantDtoSet = new HashSet<>();
     }
     @Test
-    void testSaveLocation_ShouldReturnLocationDto() {
+    void testSaveLocationShouldReturnLocationDto() {
         // Arrange
         when(locationMapper.dtoToLocation(newLocationDto)).thenReturn(location);
         when(locationRepository.save(location)).thenReturn(location);
@@ -81,7 +81,7 @@ public class LocationServiceTest {
     }
 
     @Test
-    void testAssignRestaurantToLocation_ShouldAddRestaurantsToLocation() {
+    void testAssignRestaurantToLocationShouldAddRestaurantsToLocation() {
         // Arrange
         Location location = new Location();
         location.setId(locationId);
