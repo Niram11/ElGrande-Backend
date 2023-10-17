@@ -25,7 +25,7 @@ public class FilteredRestaurantsSpecification {
         CriteriaQuery<Restaurant> criteriaQuery = criteriaBuilder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
         List<Predicate> predicates = new ArrayList<>();
-
+        //TODO: split to private functions
         predicates.add(predicateByName.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCategory.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCity.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));

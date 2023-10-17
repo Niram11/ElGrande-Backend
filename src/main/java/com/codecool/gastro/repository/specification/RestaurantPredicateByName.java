@@ -10,7 +10,8 @@ import jakarta.persistence.criteria.Root;
 public class RestaurantPredicateByName implements RestaurantPredicate{
 
     @Override
-    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery,
+                               FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         if (!filteredRestaurantsCriteria.name().equals(null) && !filteredRestaurantsCriteria.name().isEmpty()) {
             return criteriaBuilder.like(root.get("name"), "%" + filteredRestaurantsCriteria.name() + "%");
         }

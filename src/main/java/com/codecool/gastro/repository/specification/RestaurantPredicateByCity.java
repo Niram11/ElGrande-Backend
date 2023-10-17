@@ -9,7 +9,8 @@ import java.util.UUID;
 
 public class RestaurantPredicateByCity implements RestaurantPredicate {
     @Override
-    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+    public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery,
+                               FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         if (!filteredRestaurantsCriteria.city().equals(null)) {
             Subquery<UUID> citySubQuery = addressSubQuery(criteriaQuery, criteriaBuilder, filteredRestaurantsCriteria.city());
             return root.get("id").in(citySubQuery);

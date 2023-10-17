@@ -87,6 +87,7 @@ public class LocationControllerTest {
         // then
         mockMvc.perform(post("/api/v1/locations")
                         .contentType(MediaType.APPLICATION_JSON)
+                //TODO:to multiline string
                         .content("{\"latitude\": 52.5200, \"longitude\": 13.4050}"))
                 .andExpectAll(status().isCreated(),
                         content().json(contentResponse)
@@ -99,7 +100,7 @@ public class LocationControllerTest {
                 Arguments.of(new BigDecimal("52.5200"), "Longitude cannot be null")
         );
     }
-
+    //TODO: to parametrized test
     @Test
     void testCreateNewLocationShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues() throws Exception {
         // given
@@ -145,6 +146,7 @@ public class LocationControllerTest {
         // When and Then
         mockMvc.perform(put("/api/v1/locations/{id}/restaurants", locationId)
                         .contentType(MediaType.APPLICATION_JSON)
+                //TODO:to multiline string
                         .content("[{\"id\": \"" + restaurantId + "\", \"name\": \"Restaurant Name\"}]"))
                 .andExpect(status().isNoContent());
     }
