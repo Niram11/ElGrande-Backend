@@ -1,9 +1,9 @@
 package com.codecool.gastro.service.validate;
 
 
-import com.codecool.gastro.dto.review.NewReviewDto;
+import com.codecool.gastro.dto.NewEntityDto;
 
-public interface Validate <T>{
+public interface Validate <T extends NewEntityDto>{
 
     void validateUpdate(T dto);
 }
