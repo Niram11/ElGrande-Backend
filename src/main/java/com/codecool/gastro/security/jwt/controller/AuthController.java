@@ -9,23 +9,18 @@ import com.codecool.gastro.security.jwt.dto.LoginRequest;
 import com.codecool.gastro.security.jwt.dto.TokenRefreshRequest;
 import com.codecool.gastro.security.jwt.dto.TokenRefreshResponse;
 import com.codecool.gastro.security.jwt.entity.RefreshToken;
+import com.codecool.gastro.security.jwt.service.OAuth2ClientTokenService;
 import com.codecool.gastro.security.jwt.service.RefreshTokenService;
 import com.codecool.gastro.service.CustomerService;
-import com.codecool.gastro.service.exception.TokenRefreshException;
+import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,16 +29,16 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final CustomerService customerService;
     private final JwtUtils jwtUtils;
-    private final OAuth2AuthorizedClientService authorizedClientService;
+    private final OAuth2ClientTokenService oAuth2ClientTokenService;
     private final RefreshTokenService refreshTokenService;
 
     public AuthController(AuthenticationManager authenticationManager, CustomerService customerService,
-                          JwtUtils jwtUtils, OAuth2AuthorizedClientService authorizedClientService,
-                          RefreshTokenService refreshTokenService) {
+                          JwtUtils jwtUtils,
+                          OAuth2ClientTokenService oAuth2ClientTokenService, RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.customerService = customerService;
         this.jwtUtils = jwtUtils;
-        this.authorizedClientService = authorizedClientService;
+        this.oAuth2ClientTokenService = oAuth2ClientTokenService;
         this.refreshTokenService = refreshTokenService;
     }
 
@@ -101,6 +96,7 @@ public class AuthController {
         try {
             Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             refreshTokenService.deleteByCustomerId(customer.getId());
+            oAuth2ClientTokenService.deleteByCustomerId(customer.getId());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
@@ -108,17 +104,9 @@ public class AuthController {
     }
 
     @GetMapping("/oauth2")
-    public ResponseEntity<CustomerDto> getOAuth2User(@AuthenticationPrincipal OAuth2User user) {
+    public ResponseEntity<JwtResponse> getOAuth2User(@CookieValue("JSESSIONID") String jSessionId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(customerService.getCustomerByEmail(user.getAttribute("email")));
-    }
-
-    @GetMapping("/oauth2/refresh")
-    public ResponseEntity<?> refreshOAuth2Token(
-            @RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient user) {
-        authorizedClientService.removeAuthorizedClient(user.getClientRegistration().getRegistrationId(),
-                user.getPrincipalName());
-        return ResponseEntity.status(HttpStatus.OK).build();
+                .body(oAuth2ClientTokenService.getTokenByJSessionId(jSessionId));
     }
 
 }

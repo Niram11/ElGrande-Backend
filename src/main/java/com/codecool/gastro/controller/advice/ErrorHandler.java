@@ -1,21 +1,15 @@
 package com.codecool.gastro.controller.advice;
 
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import com.codecool.gastro.service.exception.TokenAlreadyExistException;
-import com.codecool.gastro.service.exception.TokenRefreshException;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
+import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
+import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.TransientPropertyValueException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

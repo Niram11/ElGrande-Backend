@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -31,11 +33,15 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String email;
+        try {
+            email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        } catch (ClassCastException ex) {
+            email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
+        }
 
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)

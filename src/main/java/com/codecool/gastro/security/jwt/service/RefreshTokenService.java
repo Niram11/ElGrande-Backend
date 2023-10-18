@@ -5,8 +5,8 @@ import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.security.jwt.entity.RefreshToken;
 import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import com.codecool.gastro.service.exception.TokenAlreadyExistException;
-import com.codecool.gastro.service.exception.TokenRefreshException;
+import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
+import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +61,7 @@ public class RefreshTokenService {
 
     @Transactional
     public void deleteByCustomerId(UUID customerId) {
-        refreshTokenRepository.deleteByCustomer(customerRepository.findById(customerId)
-                .orElseThrow(() -> new ObjectNotFoundException(customerId, Customer.class)));
+        refreshTokenRepository.findByCustomerId(customerId)
+                        .ifPresent(refreshTokenRepository::delete);
     }
 }
