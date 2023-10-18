@@ -84,11 +84,17 @@ public class LocationControllerTest {
         // when
         when(service.saveLocation(any(NewLocationDto.class))).thenReturn(locationDto);
 
+        String requestBody = """
+        {
+            "latitude": 52.5200,
+            "longitude": 13.4050
+        }
+        """;
+
         // then
         mockMvc.perform(post("/api/v1/locations")
                         .contentType(MediaType.APPLICATION_JSON)
-                //TODO:to multiline string
-                        .content("{\"latitude\": 52.5200, \"longitude\": 13.4050}"))
+                        .content(requestBody))
                 .andExpectAll(status().isCreated(),
                         content().json(contentResponse)
                 );

@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class RestaurantCategoryServiceTest {
 
-    //TODO: do tests for mapper an repo
 
 
     @InjectMocks

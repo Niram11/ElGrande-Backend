@@ -4,6 +4,7 @@ import com.codecool.gastro.dto.criteria.FilteredRestaurantsCriteria;
 import com.codecool.gastro.repository.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
+import org.springframework.data.util.Predicates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +26,18 @@ public class FilteredRestaurantsSpecification {
         CriteriaQuery<Restaurant> criteriaQuery = criteriaBuilder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
         List<Predicate> predicates = new ArrayList<>();
-        //TODO: split to private functions
+        predicates = addPredicates(predicates, root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria);
+
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    private List<Predicate> addPredicates(List<Predicate> predicates, Root root, CriteriaBuilder criteriaBuilder,
+                                          CriteriaQuery criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         predicates.add(predicateByName.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCategory.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCity.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByDish.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
-
-        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return predicates;
     }
 }
