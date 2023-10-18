@@ -2,7 +2,7 @@ package com.codecool.gastro.security;
 
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
-import com.codecool.gastro.security.jwt.JwtUtils;
+import com.codecool.gastro.security.jwt.service.JwtUtils;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

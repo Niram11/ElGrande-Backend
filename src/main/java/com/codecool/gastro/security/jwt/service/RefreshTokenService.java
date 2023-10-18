@@ -2,17 +2,17 @@ package com.codecool.gastro.security.jwt.service;
 
 import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.security.jwt.dto.TokenRefreshRequest;
+import com.codecool.gastro.security.jwt.dto.TokenRefreshResponse;
 import com.codecool.gastro.security.jwt.entity.RefreshToken;
 import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
 import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
+import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,14 +21,27 @@ public class RefreshTokenService {
     private Long refreshTokenDurationMs;
     private final RefreshTokenRepository refreshTokenRepository;
     private final CustomerRepository customerRepository;
+    private final JwtUtils jwtUtils;
 
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, CustomerRepository customerRepository) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, CustomerRepository customerRepository, JwtUtils jwtUtils) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.customerRepository = customerRepository;
+        this.jwtUtils = jwtUtils;
     }
 
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
+
+    public TokenRefreshResponse handleRefreshTokenRequest(TokenRefreshRequest tokenRefreshRequest) {
+        return refreshTokenRepository.findByToken(tokenRefreshRequest.token())
+                .map(this::verifyExpiration)
+                .map(RefreshToken::getCustomer)
+                .map(customer -> {
+                    String token = jwtUtils.generateTokenFromEmail(customer.getEmail());
+                    deleteByCustomerId(customer.getId());
+                    RefreshToken newRefreshToken = createRefreshToken(customer.getId());
+                    return new TokenRefreshResponse(token, newRefreshToken.getToken(), "Bearer");
+                })
+                .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.token()));
+
     }
 
     public RefreshToken createRefreshToken(UUID customerId) {
@@ -59,9 +72,8 @@ public class RefreshTokenService {
                 });
     }
 
-    @Transactional
     public void deleteByCustomerId(UUID customerId) {
         refreshTokenRepository.findByCustomerId(customerId)
-                        .ifPresent(refreshTokenRepository::delete);
+                .ifPresent(refreshTokenRepository::delete);
     }
 }
