@@ -12,6 +12,19 @@ create table customer
     surname         varchar(255)
 );
 
+create table oauth2client_token
+(
+    id           uuid not null
+        primary key,
+    jwt_token    varchar(255),
+    customer_id  uuid
+        constraint uk_lvol746x803urxrwxob8du8fe
+            unique
+        constraint fk9rykg42gcq3pa0efjtmf571dc
+            references customer,
+    j_session_id varchar(255)
+);
+
 create table role
 (
     id   uuid not null
