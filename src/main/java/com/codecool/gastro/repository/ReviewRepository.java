@@ -29,7 +29,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> getReviewsByCustomerId(UUID id);
 
     @Query(nativeQuery = true, value = """
-            select r.comment, r.grade, r.submission_time, c.name from review r left join customer c on r.customer_id = c.id
+            select r.comment, r.grade, c.name, r.submission_time as submissionTime from review r left join customer c on r.customer_id = c.id
             where restaurant_id = :restaurantId
             """)
     List<DetailedReviewProjection> findDetailedReviewsByRestaurantId(UUID restaurantId);

@@ -78,8 +78,8 @@ create table location
 (
     id        uuid           not null
         primary key,
-    latitude  numeric(38, 2) not null,
-    longitude numeric(38, 2) not null
+    latitude  numeric(32, 10) not null,
+    longitude numeric(32, 10) not null
 );
 
 create table ownership

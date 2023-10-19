@@ -15,8 +15,10 @@ public class Location implements EntityObject {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotNull(message = "Latitude cannot be null")
+    @Column(precision = 32, scale = 10)
     private BigDecimal latitude;
     @NotNull(message = "Longitude cannot be null")
+    @Column(precision = 32, scale = 10)
     private BigDecimal longitude;
     @OneToMany
     private final Set<Restaurant> restaurants = new HashSet<>();

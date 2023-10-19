@@ -41,18 +41,19 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
-
+        // todo handle empty surname
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();
-            String name = attributes.getOrDefault("name", "").toString();
+            String name = attributes.getOrDefault("given_name", "").toString();
+            String surname = attributes.getOrDefault("family_name", "").toString();
             customerRepository.findByEmail(email)
                     .ifPresentOrElse(customer ->
                                     authenticateUser(customer, attributes, oAuth2AuthenticationToken, request),
                             () -> {
-                                Customer customer = createCustomer(email, name);
+                                Customer customer = createCustomer(email, name, surname);
                                 authenticateUser(customer, attributes, oAuth2AuthenticationToken, request);
                             });
         }
@@ -62,7 +63,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    private Customer createCustomer(String email, String name) {
+    private Customer createCustomer(String email, String name, String surname) {
         Role role = new Role();
         role.setRole(CustomerRole.ROLE_USER);
 
@@ -70,6 +71,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         customer.assignRole(role);
         customer.setEmail(email);
         customer.setName(name);
+        customer.setSurname(surname);
         customer.setSubmissionTime(LocalDate.now());
         customerRepository.save(customer);
         return customer;

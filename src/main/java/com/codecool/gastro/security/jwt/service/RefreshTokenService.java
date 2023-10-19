@@ -9,8 +9,11 @@ import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
 import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
 import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -22,6 +25,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final CustomerRepository customerRepository;
     private final JwtUtils jwtUtils;
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, CustomerRepository customerRepository, JwtUtils jwtUtils) {
         this.refreshTokenRepository = refreshTokenRepository;
@@ -45,31 +49,26 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(UUID customerId) {
-        deleteTokenOnValidation(customerId);
-
+        logger.info("Creating new refresh token");
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setCustomer(customerRepository.findById(customerId)
                 .orElseThrow(() -> new ObjectNotFoundException(customerId, Customer.class)));
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
         refreshToken.setToken(UUID.randomUUID().toString());
 
+        logger.info("Saving refresh token");
         refreshTokenRepository.save(refreshToken);
         return refreshToken;
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
+        logger.info("Verifying refresh token...");
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
-            refreshTokenRepository.delete(token);
+            logger.error("Refresh token expired");
             throw new TokenRefreshException(token.getToken());
         }
+        logger.info("Refresh token is valid");
         return token;
-    }
-
-    public void deleteTokenOnValidation(UUID customerId) {
-        refreshTokenRepository.findByCustomerId(customerId)
-                .ifPresent(rt -> {
-                    throw new TokenAlreadyExistException(customerId);
-                });
     }
 
     public void deleteByCustomerId(UUID customerId) {
