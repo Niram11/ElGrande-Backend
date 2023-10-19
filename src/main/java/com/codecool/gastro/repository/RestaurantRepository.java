@@ -24,7 +24,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
             """)
     List<Restaurant> findAllByCustomerId(UUID customerId);
 
-
+    //TODO: add sum of reviews here and in projection
     @Query(nativeQuery = true, value = """
             SELECT
                 res_data.id,

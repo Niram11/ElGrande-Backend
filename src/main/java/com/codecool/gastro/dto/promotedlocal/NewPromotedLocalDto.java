@@ -12,7 +12,6 @@ public record NewPromotedLocalDto(
         LocalTime startDate,
         @NotBlank(message = "End date cannot be empty")
         LocalTime endDate,
-        @RestaurantExist
         UUID restaurantId
 ) implements NewEntityDto {
 
