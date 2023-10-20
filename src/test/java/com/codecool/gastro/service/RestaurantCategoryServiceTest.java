@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 public class RestaurantCategoryServiceTest {
 
 
+
     @InjectMocks
     private RestaurantCategoryService service;
 

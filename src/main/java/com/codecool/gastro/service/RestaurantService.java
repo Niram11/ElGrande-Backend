@@ -55,12 +55,6 @@ public class RestaurantService {
                 .toList();
     }
 
-
-    public RestaurantDto saveNewRestaurant(NewRestaurantDto newRestaurantDto) {
-        Restaurant savedRestaurant = restaurantRepository.save(restaurantMapper.dtoToRestaurant(newRestaurantDto));
-        return restaurantMapper.toDto(savedRestaurant);
-    }
-
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
         Restaurant updatedRestaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id,Restaurant.class));
