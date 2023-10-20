@@ -8,7 +8,7 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
-import com.codecool.gastro.service.validate.ValidateReview;
+import com.codecool.gastro.service.validation.ReviewValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +37,7 @@ class ReviewServiceTest {
     @Mock
     private ReviewRepository repository;
     @Mock
-    private ValidateReview validateReview;
+    private ReviewValidation validateReview;
 
     private final static String COMMENT = "comment";
     private final static int GRADE = 6;

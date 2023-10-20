@@ -4,30 +4,25 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.review.DetailedReview;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
-import com.codecool.gastro.repository.CustomerRepository;
-import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.ReviewRepository;
-import com.codecool.gastro.repository.entity.Customer;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
-import com.codecool.gastro.service.validate.ValidateReview;
+import com.codecool.gastro.service.validation.ReviewValidation;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
-    private final ValidateReview validateReview;
+    private final ReviewValidation validateReview;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, ValidateReview validateReview) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, ReviewValidation validateReview) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
         this.validateReview = validateReview;

@@ -1,4 +1,4 @@
-package com.codecool.gastro.security.jwt;
+package com.codecool.gastro.security.jwt.service;
 
 
 import io.jsonwebtoken.*;
@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
+@Service
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
@@ -31,20 +32,21 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String email;
+        try {
+            email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        } catch (ClassCastException ex) {
+            email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
+        }
 
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-    }
 
     public String generateTokenFromEmail(String email) {
         return Jwts.builder()
@@ -61,6 +63,17 @@ public class JwtUtils {
                     .parseClaimsJws(token).getBody().getSubject();
         } catch (ExpiredJwtException ex) {
             return ex.getClaims().getSubject();
+        }
+    }
+
+    public boolean hasTokenExpired(String authToken) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
+            return false;
+        } catch (ExpiredJwtException ex) {
+            return true;
+        } catch (Exception ex) {
+            return false;
         }
     }
 
@@ -93,4 +106,9 @@ public class JwtUtils {
 
         return jwtToken.map(Cookie::getValue).orElse(null);
     }
+
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    }
+
 }

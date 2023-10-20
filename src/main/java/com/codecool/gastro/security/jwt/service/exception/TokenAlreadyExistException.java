@@ -1,4 +1,4 @@
-package com.codecool.gastro.service.exception;
+package com.codecool.gastro.security.jwt.service.exception;
 
 import java.util.UUID;
 

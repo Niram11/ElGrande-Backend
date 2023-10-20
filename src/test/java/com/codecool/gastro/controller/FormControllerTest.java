@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
 import com.codecool.gastro.dto.form.NewRestaurantFormDto;
-import com.codecool.gastro.service.form.service.RestaurantFormService;
+import com.codecool.gastro.service.form.service.FormService;
 import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class FormControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private RestaurantFormService service;
+    private FormService service;
 
     @Test
     void testCreateNewRestaurant_ShouldReturnStatusCreated_WhenValidValues() throws Exception {
