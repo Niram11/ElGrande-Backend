@@ -6,14 +6,12 @@ import com.codecool.gastro.security.jwt.dto.TokenRefreshRequest;
 import com.codecool.gastro.security.jwt.dto.TokenRefreshResponse;
 import com.codecool.gastro.security.jwt.entity.RefreshToken;
 import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
-import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
 import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -49,6 +47,12 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(UUID customerId) {
+        logger.error("Refresh token already exist");
+        refreshTokenRepository.findByCustomerId(customerId)
+                .ifPresent(refreshToken -> {
+                    throw new TokenRefreshException(refreshToken.getToken());
+                });
+
         logger.info("Creating new refresh token");
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setCustomer(customerRepository.findById(customerId)
