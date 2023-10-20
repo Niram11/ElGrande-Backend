@@ -1,6 +1,7 @@
 package com.codecool.gastro.controller.advice;
 
 import com.codecool.gastro.security.jwt.service.exception.SessionNotRegisteredException;
+import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.security.jwt.service.exception.TokenAlreadyExistException;
 import com.codecool.gastro.security.jwt.service.exception.TokenRefreshException;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class ErrorHandler {
 
     @ExceptionHandler(value = {ObjectNotFoundException.class, ObjectNotFoundException.class,
-            TokenAlreadyExistException.class, TokenRefreshException.class})
+            TokenAlreadyExistException.class, TokenRefreshException.class, EmailNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotObjectFound(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());

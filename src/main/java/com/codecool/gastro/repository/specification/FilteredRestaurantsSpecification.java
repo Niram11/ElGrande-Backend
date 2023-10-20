@@ -1,10 +1,12 @@
 package com.codecool.gastro.repository.specification;
 
 import com.codecool.gastro.dto.criteria.FilteredRestaurantsCriteria;
-import com.codecool.gastro.repository.entity.*;
+import com.codecool.gastro.repository.entity.Restaurant;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.*;
-import org.springframework.data.util.Predicates;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +28,19 @@ public class FilteredRestaurantsSpecification {
         CriteriaQuery<Restaurant> criteriaQuery = criteriaBuilder.createQuery(Restaurant.class);
         Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
         List<Predicate> predicates = new ArrayList<>();
-        predicates = addPredicates(predicates, root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria);
+        addPredicates(predicates, root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria);
 
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    private List<Predicate> addPredicates(List<Predicate> predicates, Root root, CriteriaBuilder criteriaBuilder,
-                                          CriteriaQuery criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
+    private void addPredicates(List<Predicate> predicates, Root<Restaurant> root,
+                               CriteriaBuilder criteriaBuilder,
+                               CriteriaQuery<Restaurant> criteriaQuery,
+                               FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
         predicates.add(predicateByName.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCategory.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByCity.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
         predicates.add(predicateByDish.predicate(root, criteriaBuilder, criteriaQuery, filteredRestaurantsCriteria));
-        return predicates;
     }
 }

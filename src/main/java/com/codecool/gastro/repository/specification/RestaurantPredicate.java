@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-public interface RestaurantPredicate{
-    Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery, FilteredRestaurantsCriteria filteredRestaurantsCriteria);
+public interface RestaurantPredicate {
+    Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery,
+                        FilteredRestaurantsCriteria filteredRestaurantsCriteria);
 }

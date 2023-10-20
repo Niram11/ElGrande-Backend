@@ -47,9 +47,9 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(UUID customerId) {
-        logger.error("Refresh token already exist");
         refreshTokenRepository.findByCustomerId(customerId)
                 .ifPresent(refreshToken -> {
+                    logger.error("Refresh token already exist");
                     throw new TokenRefreshException(refreshToken.getToken());
                 });
 

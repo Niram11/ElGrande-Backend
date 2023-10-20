@@ -10,6 +10,8 @@ import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.CustomerRole;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Role;
+import com.codecool.gastro.security.jwt.repository.OAuth2ClientTokenRepository;
+import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
@@ -20,17 +22,21 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-public class CustomerService  {
+public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final RestaurantRepository restaurantRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final OAuth2ClientTokenRepository oAuth2ClientTokenRepository;
     private final PasswordEncoder encoder;
 
     public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper,
-                           RestaurantRepository restaurantRepository, PasswordEncoder encoder) {
+                           RestaurantRepository restaurantRepository, RefreshTokenRepository refreshTokenRepository, OAuth2ClientTokenRepository oAuth2ClientTokenRepository, PasswordEncoder encoder) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
         this.restaurantRepository = restaurantRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.oAuth2ClientTokenRepository = oAuth2ClientTokenRepository;
         this.encoder = encoder;
     }
 
@@ -49,7 +55,6 @@ public class CustomerService  {
     }
 
 
-
     public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
         Customer updatedCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
@@ -61,6 +66,9 @@ public class CustomerService  {
     public void softDelete(UUID id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
+
+        refreshTokenRepository.findByCustomerId(id).ifPresent(refreshTokenRepository::delete);
+        oAuth2ClientTokenRepository.findByCustomerId(id).ifPresent(oAuth2ClientTokenRepository::delete);
 
         obfuscateData(customer);
         customerRepository.save(customer);

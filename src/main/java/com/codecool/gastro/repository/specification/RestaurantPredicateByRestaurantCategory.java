@@ -13,7 +13,7 @@ public class RestaurantPredicateByRestaurantCategory implements RestaurantPredic
     @Override
     public Predicate predicate(Root<Restaurant> root, CriteriaBuilder criteriaBuilder, CriteriaQuery<?> criteriaQuery,
                                FilteredRestaurantsCriteria filteredRestaurantsCriteria) {
-        if (!filteredRestaurantsCriteria.category().equals(null)) {
+        if (filteredRestaurantsCriteria.category() != null) {
             Subquery<UUID> categorySubQuery = categorySubQuery(criteriaQuery, filteredRestaurantsCriteria.category());
             return root.get("id").in(categorySubQuery);
         }

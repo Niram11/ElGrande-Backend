@@ -6,6 +6,7 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Location;
+import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.LocationMapper;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class LocationService {
     public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDto) {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new ObjectNotFoundException(locationId, Location.class));
+
         addRestaurantToLocation(restaurantDto, location);
         locationRepository.save(location);
     }
