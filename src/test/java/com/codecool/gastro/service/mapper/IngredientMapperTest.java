@@ -12,8 +12,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IngredientMapperTest {
-
-    private IngredientMapper mapper = Mappers.getMapper(IngredientMapper.class);
+    IngredientMapper mapper = Mappers.getMapper(IngredientMapper.class);
 
     private UUID ingredientId;
     private Ingredient ingredient;
@@ -43,18 +42,20 @@ public class IngredientMapperTest {
     }
 
     @Test
-    void testDtoToIngredient_ShouldReturnIngredient_WhenCalled() {
+    void testDtoToIngredient_ShouldReturnIngredient_WhenProvidingId() {
         // when
-        Ingredient ingredientOne = mapper.dtoToIngredient(ingredientId);
-        Ingredient ingredientTwo = mapper.dtoToIngredient(ingredientId, newIngredientDto);
-        Ingredient ingredientThree = mapper.dtoToIngredient(newIngredientDto);
+        Ingredient testedIngredient = mapper.dtoToIngredient(ingredientId);
 
         // then
-        assertEquals(ingredientOne.getId(), ingredientId);
+        assertEquals(testedIngredient.getId(), ingredientId);
+    }
 
-        assertEquals(ingredientTwo.getId(), ingredientId);
-        assertEquals(ingredientTwo.getName(), newIngredientDto.name());
+    @Test
+    void testDtoToIngredient_ShouldReturnIngredient_WhenProvidingDto() {
+        // when
+        Ingredient testedIngredient = mapper.dtoToIngredient(newIngredientDto);
 
-        assertEquals(ingredientThree.getName(), newIngredientDto.name());
+        // then
+        assertEquals(testedIngredient.getName(), newIngredientDto.name());
     }
 }

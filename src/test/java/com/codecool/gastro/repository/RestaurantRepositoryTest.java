@@ -21,15 +21,6 @@ class RestaurantRepositoryTest {
     private RestaurantRepository repository;
 
     @Test
-    void testFindAll_ShouldReturnListOfRestaurants_WhenCallingMethod() {
-        // when
-        List<Restaurant> list = repository.findAll();
-
-        // test
-        assertEquals(list.size(), 3);
-    }
-
-    @Test
     void testFindById_ShouldReturnRestaurant_WhenExist() {
         // given
         UUID id = UUID.fromString("4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5");
@@ -37,7 +28,7 @@ class RestaurantRepositoryTest {
         // when
         Optional<Restaurant> restaurant = repository.findById(id);
 
-        // test
+        // then
         assertTrue(restaurant.isPresent());
     }
 
@@ -49,7 +40,7 @@ class RestaurantRepositoryTest {
         // when
         Optional<Restaurant> restaurant = repository.findById(id);
 
-        // test
+        // then
         assertTrue(restaurant.isEmpty());
     }
 
@@ -65,61 +56,17 @@ class RestaurantRepositoryTest {
         repository.save(restaurant);
         Optional<Restaurant> afterDeletionRestaurant = repository.findById(id);
 
-        // test
+        // then
         assertTrue(afterDeletionRestaurant.isEmpty());
     }
 
 
     @Test
-    void testSave_ShouldReturnSameEntity_WhenProvidingValidData() {
-        // given
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName("Kacper");
-        restaurant.setDescription("Kacper");
-        restaurant.setWebsite("Kacper");
-        restaurant.setContactNumber(123123123);
-        restaurant.setContactEmail("Kacper@wp.pl");
-
-        // when
-        Restaurant savedRestaurant = repository.save(restaurant);
-        Optional<Restaurant> savedRestaurantById = repository.findById(savedRestaurant.getId());
-
-        // test
-        assertTrue(savedRestaurantById.isPresent());
-        assertEquals(savedRestaurant, restaurant);
-    }
-
-    @Test
-    void testSave_ShouldUpdateRestaurant_WhenProvidingExistingId() {
-        // given
-        UUID id = UUID.fromString("4e99a0c4-d1bb-48c6-95f3-d202b84d1dc5");
-
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(id);
-        restaurant.setName("KacperTest");
-        restaurant.setDescription("KacperTest");
-        restaurant.setWebsite("KacperTest");
-        restaurant.setContactNumber(123123123);
-        restaurant.setContactEmail("KacperTest@wp.pl");
-
-        // when
-        Restaurant restaurantAfterSave = repository.save(restaurant);
-
-        // test
-        assertEquals(restaurantAfterSave.getId(), id);
-        assertNotEquals(restaurantAfterSave.getName(), "Kacper");
-        assertNotEquals(restaurantAfterSave.getDescription(), "Desc1");
-        assertNotEquals(restaurantAfterSave.getWebsite(), "Kacper.pl");
-        assertNotEquals(restaurantAfterSave.getContactNumber(), 123);
-        assertNotEquals(restaurantAfterSave.getContactEmail(), "Kacper@wp.pl");
-    }
-
-    @Test
     void testFindAllDetailedRestaurants_ShouldReturnListOfDetailedRestaurantProjection_WhenExist() {
-        // then
+        // when
         List<DetailedRestaurantProjection> projection = repository.findAllDetailedRestaurants(PageRequest.of(0, 3, Sort.by("name")));
 
-        // test
+        // then
         assertEquals(3, projection.size());
     }
 

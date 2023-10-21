@@ -15,8 +15,6 @@ public interface RestaurantCategoryMapper {
 
     RestaurantCategory dtoToRestaurantCategory(NewRestaurantCategoryDto newRestaurantCategoryDto);
 
-    RestaurantCategory dtoToRestaurantCategory(NewRestaurantCategoryDto newRestaurantCategoryDto, UUID id);
-
     RestaurantCategory dtoToRestaurantCategory(UUID id);
 
 }

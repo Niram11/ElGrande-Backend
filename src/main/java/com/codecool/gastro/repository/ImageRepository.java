@@ -12,11 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, UUID> {
 
-    @Query("SELECT image FROM Image image")
-    List<Image> findALl();
-    @Query("SELECT image FROM Image image WHERE image.id = :id")
-    Optional<Image> findById(UUID id);
-
     @Query("SELECT image FROM Image image WHERE image.restaurant.id = :id")
     List<Image> findAllByRestaurant(UUID id);
 

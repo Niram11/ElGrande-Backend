@@ -22,12 +22,7 @@ public class OwnershipService {
         this.ownershipRepository = ownershipRepository;
     }
 
-
-    public List<OwnershipDto> getAllOwnerships() {
-        return ownershipRepository.findAll().stream().map(ownershipMapper::toDto).toList();
-    }
-
-    public OwnershipDto getOwnership(UUID id) {
+    public OwnershipDto getOwnershipById(UUID id) {
         return ownershipRepository.findById(id)
                 .map(ownershipMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, DishCategory.class));

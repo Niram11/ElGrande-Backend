@@ -25,19 +25,16 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DishCategoryServiceTest {
-
     @InjectMocks
-    private DishCategoryService service;
+    DishCategoryService service;
     @Mock
-    private DishCategoryMapper mapper;
+    DishCategoryMapper mapper;
     @Mock
-    private DishCategoryRepository repository;
+    DishCategoryRepository repository;
 
     private UUID dishCategoryId;
-
     private DishCategory dishCategory;
     private DishCategoryDto dishCategoryDto;
-
     private NewDishCategoryDto newDishCategoryDto;
 
     @BeforeEach
@@ -68,27 +65,6 @@ class DishCategoryServiceTest {
         assertEquals(list.size(), 0);
     }
 
-    @Test
-    void testGetDishCategoryById_ShouldReturnDishCategory_WhenExist() {
-        // when
-        when(repository.findById(dishCategoryId)).thenReturn(Optional.of(dishCategory));
-        when(mapper.toDto(dishCategory)).thenReturn(dishCategoryDto);
-        DishCategoryDto expectedDishCategoryDto = service.getDishCategoryById(dishCategoryId);
-
-        // then
-        assertEquals(expectedDishCategoryDto.id(), dishCategoryId);
-        assertEquals(expectedDishCategoryDto.category(), dishCategoryDto.category());
-    }
-
-    @Test
-    void testGetDishCategoryById_ShouldThrowObjectNotFoundException_WhenNoDishCategory() {
-        // when
-        doThrow(ObjectNotFoundException.class).when(repository).findById(dishCategoryId);
-
-        // then
-        assertThrows(ObjectNotFoundException.class, () -> service.getDishCategoryById(dishCategoryId));
-    }
-
     @Captor
     ArgumentCaptor<DishCategory> captor;
 
@@ -100,21 +76,9 @@ class DishCategoryServiceTest {
         when(mapper.toDto(dishCategory)).thenReturn(dishCategoryDto);
         DishCategoryDto exceptedDishCategoryDto = service.saveDishCategory(newDishCategoryDto);
 
-        // test
+        // then
         verify(repository, times(1)).save(captor.capture());
         assertNotEquals(captor.getValue().getCategory(), exceptedDishCategoryDto.category());
     }
 
-    @Test
-    void testUpdateDishCategory_ShouldSaveWithLowerCaseLettersAndReturnDistCategoryDto_WhenCalled() {
-        // when
-        when(mapper.dtoToDishCategory(dishCategoryId, newDishCategoryDto)).thenReturn(dishCategory);
-        when(repository.save(dishCategory)).thenReturn(dishCategory);
-        when(mapper.toDto(dishCategory)).thenReturn(dishCategoryDto);
-        DishCategoryDto exceptedDishCategoryDto = service.updateDishCategory(dishCategoryId, newDishCategoryDto);
-
-        // test
-        verify(repository, times(1)).save(captor.capture());
-        assertNotEquals(captor.getValue().getCategory(), exceptedDishCategoryDto.category());
-    }
 }

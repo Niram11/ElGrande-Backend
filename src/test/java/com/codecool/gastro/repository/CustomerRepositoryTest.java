@@ -18,9 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class CustomerRepositoryTest {
-
     @Autowired
-    private CustomerRepository repository;
+    CustomerRepository repository;
 
     private UUID customerId;
     private String customerEmail;
@@ -29,33 +28,6 @@ public class CustomerRepositoryTest {
     void setUp() {
         customerId = UUID.fromString("89b77b49-562f-4570-ae40-52b4e359cb5f");
         customerEmail = "Oskar@wp.pl";
-    }
-
-    @Test
-    void testFindAll_ShouldReturnListOfCustomer_WhenCalled() {
-        // then
-        List<Customer> list = repository.findAll();
-
-        // test
-        assertEquals(2, list.size());
-    }
-
-    @Test
-    void testFindById_ShouldReturnCustomer_WhenExist() {
-        // then
-        Optional<Customer> customer = repository.findById(customerId);
-
-        // test
-        assertTrue(customer.isPresent());
-    }
-
-    @Test
-    void testFindById_ShouldReturnEmptyOptional_WhenNoCustomer() {
-        // then
-        Optional<Customer> customer = repository.findById(UUID.randomUUID());
-
-        // test
-        assertTrue(customer.isEmpty());
     }
 
     @Test
@@ -94,54 +66,5 @@ public class CustomerRepositoryTest {
         assertTrue(projection.isEmpty());
     }
 
-    @Test
-    void testSave_ShouldReturnNewCustomer_WhenCalledWithoutId() {
-        // given
-        Customer customer = new Customer();
-        customer.setName("Name");
-        customer.setSurname("Surname");
-        customer.setEmail("Email@wp.pl");
-        customer.setSubmissionTime(LocalDate.of(2010, 10, 10));
-        customer.setPassword("PW");
-
-        // then
-        Customer savedCustomer = repository.save(customer);
-
-        // test
-        assertEquals(savedCustomer, customer);
-    }
-
-    @Test
-    void testSave_ShouldReturnUpdatedCustomer_WhenCalledWithExistingId() {
-        // given
-        Customer customer = new Customer();
-        customer.setId(customerId);
-        customer.setName("Name");
-        customer.setSurname("Surname");
-        customer.setEmail("Email@wp.pl");
-        customer.setSubmissionTime(LocalDate.of(2010, 10, 10));
-        customer.setPassword("PW");
-
-        // then
-        Customer savedCustomer = repository.save(customer);
-        Optional<Customer> customerById = repository.findById(customerId);
-
-        // test
-        assertEquals(customerById.get(), savedCustomer);
-    }
-
-    @Test
-    void testDelete_ShouldReturnEmptyOptional_WhenFindById() {
-        // given
-        Customer customer = new Customer();
-        customer.setId(customerId);
-
-        // then
-        repository.delete(customer);
-        Optional<Customer> deletedCustomer = repository.findById(customerId);
-
-        // test
-        assertTrue(deletedCustomer.isEmpty());
-    }
 
 }

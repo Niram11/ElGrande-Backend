@@ -31,22 +31,10 @@ public class RestaurantCategoryService {
                 .toList();
     }
 
-    public RestaurantCategoryDto getRestaurantCategory(UUID id) {
-        return restaurantCategoryRepository.findById(id)
-                .map(restaurantCategoryMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, RestaurantCategory.class));
-    }
-
     public RestaurantCategoryDto saveRestaurantCategory(NewRestaurantCategoryDto newRestaurantCategoryDTO) {
         RestaurantCategory savedRestaurantCategory = restaurantCategoryRepository
                 .save(restaurantCategoryMapper.dtoToRestaurantCategory(newRestaurantCategoryDTO));
         return restaurantCategoryMapper.toDto(savedRestaurantCategory);
-    }
-
-    public RestaurantCategoryDto updateRestaurantCategory(UUID id, NewRestaurantCategoryDto newRestaurantCategoryDTO) {
-        RestaurantCategory updatedRestaurantCategory = restaurantCategoryRepository
-                .save(restaurantCategoryMapper.dtoToRestaurantCategory(newRestaurantCategoryDTO, id));
-        return restaurantCategoryMapper.toDto(updatedRestaurantCategory);
     }
 
     public void deleteRestaurantCategory(UUID id) {

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class RestaurantMapperTest {
@@ -21,7 +22,7 @@ public class RestaurantMapperTest {
     private final RestaurantMapper mapper = Mappers.getMapper(RestaurantMapper.class);
 
     @Test
-    void testToDto_ShouldMapRestaurantToDto_WhenProvidingValidData() {
+    void testToDtoShouldMapRestaurantToDtoWhenProvidingValidData() {
         // given
         Restaurant restaurant = new Restaurant();
         restaurant.setId(UUID.randomUUID());
@@ -34,7 +35,7 @@ public class RestaurantMapperTest {
         // when
         RestaurantDto restaurantDto = mapper.toDto(restaurant);
 
-        // test
+        // then
         assertEquals(restaurantDto.id(), restaurant.getId());
         assertEquals(restaurantDto.name(), restaurant.getName());
         assertEquals(restaurantDto.description(), restaurant.getDescription());
@@ -44,10 +45,8 @@ public class RestaurantMapperTest {
     }
 
     @Test
-    void testDtoToRestaurant_ShouldMapToRestaurant_WhenProvidingValidData() {
+    void testDtoToRestaurantShouldMapToRestaurantWhenProvidingValidData() {
         // given
-        UUID id = UUID.randomUUID();
-
         NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
                 "Name",
                 "Desc",
@@ -57,11 +56,10 @@ public class RestaurantMapperTest {
         );
 
         // when
-        Restaurant restaurant = mapper.dtoToRestaurant(newRestaurantDto, id);
+        Restaurant restaurant = mapper.dtoToRestaurant(newRestaurantDto);
 
-        // test
+        // then
 
-        assertEquals(id, restaurant.getId());
         assertEquals(newRestaurantDto.name(), restaurant.getName());
         assertEquals(newRestaurantDto.description(), restaurant.getDescription());
         assertEquals(newRestaurantDto.website(), restaurant.getWebsite());
@@ -70,7 +68,7 @@ public class RestaurantMapperTest {
     }
 
     @Test
-    void testToDetailedDto_ShouldReturnDetailedRestaurantDto_WhenCalled() {
+    void testToDetailedDtoShouldReturnDetailedRestaurantDtoWhenCalled() {
         // given
         ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 
@@ -84,10 +82,10 @@ public class RestaurantMapperTest {
         restaurant.setImagesPaths(new String[]{"image1", "image2"});
         restaurant.setAverageGrade(BigDecimal.valueOf(1.34));
 
-        // then
+        // when
         DetailedRestaurantDto restaurantDto = mapper.toDetailedDto(restaurant);
 
-        // test
+        // then
         assertEquals(restaurantDto.id(), restaurant.getId());
         assertEquals(restaurantDto.name(), restaurant.getName());
         assertEquals(restaurantDto.description(), restaurant.getDescription());
@@ -96,4 +94,41 @@ public class RestaurantMapperTest {
         assertEquals(restaurantDto.imagesPaths().length, restaurant.getImagesPaths().length);
         assertEquals(restaurantDto.averageGrade(), restaurant.getAverageGrade());
     }
+
+    @Test
+    void testUpdateRestaurantFromDtoShouldUpdateProvidedRestaurantFieldsFromDtoExceptIdAndDeleted() {
+        // given
+        UUID restaurantId = UUID.randomUUID();
+        boolean deletedFlag = true;
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setId(restaurantId);
+        restaurant.setName("OldName");
+        restaurant.setDescription("OldDesc");
+        restaurant.setWebsite("oldWebsite.pl");
+        restaurant.setContactNumber(987654321);
+        restaurant.setContactEmail("oldEmail@wp.pl");
+        restaurant.setDeleted(deletedFlag);
+
+        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
+                "NewName",
+                "NewDesc",
+                "newWebsite.pl",
+                123123123,
+                "newEmail@wp.pl"
+        );
+
+        // when
+        mapper.updateRestaurantFromDto(newRestaurantDto, restaurant);
+
+        // then
+        assertEquals(newRestaurantDto.name(), restaurant.getName());
+        assertEquals(newRestaurantDto.description(), restaurant.getDescription());
+        assertEquals(newRestaurantDto.website(), restaurant.getWebsite());
+        assertEquals(newRestaurantDto.contactNumber(), restaurant.getContactNumber());
+        assertEquals(newRestaurantDto.contactEmail(), restaurant.getContactEmail());
+        assertEquals(restaurantId, restaurant.getId());
+        assertTrue(restaurant.getDeleted());
+    }
+
 }

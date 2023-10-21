@@ -23,18 +23,6 @@ public class BusinessHourService {
         this.businessHourMapper = businessHourMapper;
     }
 
-    public List<BusinessHourDto> getBusinessHours() {
-        return businessHourRepository.findAll().stream()
-                .map(businessHourMapper::toDto)
-                .toList();
-    }
-
-    public BusinessHourDto getBusinessHourById(UUID id) {
-        return businessHourRepository.findById(id)
-                .map(businessHourMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
-    }
-
     public List<BusinessHourDto> getBusinessHoursByRestaurantId(UUID restaurantId) {
         return businessHourRepository.findAllByRestaurantId(restaurantId)
                 .stream()
@@ -42,29 +30,16 @@ public class BusinessHourService {
                 .toList();
     }
 
-    public BusinessHourDto saveNewBusinessHour(NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository
-                .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto));
-        return businessHourMapper.toDto(savedBusinessHour);
-    }
-
-    @Transactional
-    public List<BusinessHourDto> saveMultipleNewBusinessHour(List<NewBusinessHourDto> newBusinessHourDtoList) {
-        List<BusinessHour> listOfSavedBusinessHours = new ArrayList<>();
-        newBusinessHourDtoList.forEach(businessHourDto -> listOfSavedBusinessHours
-                .add(businessHourRepository.save(businessHourMapper.dtoToBusinessHour(businessHourDto))));
-        return listOfSavedBusinessHours.stream().map(businessHourMapper::toDto).toList();
-    }
-
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour savedBusinessHour = businessHourRepository
-                .save(businessHourMapper.dtoToBusinessHour(newBusinessHourDto, id));
-        return businessHourMapper.toDto(savedBusinessHour);
+        BusinessHour updatedBusinessHour = businessHourRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
+
+        businessHourMapper.updateBusinessHourFromDto(newBusinessHourDto, updatedBusinessHour);
+        return businessHourMapper.toDto(businessHourRepository.save(updatedBusinessHour));
     }
 
     public void deleteBusinessHour(UUID id) {
         businessHourRepository.delete(businessHourMapper.dtoToBusinessHour(id));
     }
-
 
 }

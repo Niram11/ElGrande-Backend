@@ -13,72 +13,75 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddressMapperTest {
+    AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
 
-    private final AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
+    private Restaurant restaurant;
+    private UUID restaurantId;
+    private UUID addressId;
+    private Address address;
+    private NewAddressDto newAddressDto;
 
-    @Test
-    void testToDto_ShouldMapAddressToDto_WhenProvidingValidData() {
-        // given
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(UUID.randomUUID());
+    @BeforeEach
+    void setUp() {
+        addressId = UUID.randomUUID();
 
-        Address address = new Address();
-        address.setId(UUID.randomUUID());
+        address = new Address();
+        address.setId(addressId);
         address.setCountry("PL");
         address.setCity("Wrocław");
         address.setPostalCode("66612");
         address.setStreet("Ulica1");
         address.setStreetNumber("11C");
-        address.setRestaurant(restaurant);
 
-        // when
-        AddressDto addressDto = mapper.toDto(address);
-
-        // test
-        assertEquals(addressDto.id(), address.getId());
-        assertEquals(addressDto.country(), address.getCountry());
-        assertEquals(addressDto.city(), address.getCity());
-        assertEquals(addressDto.postalCode(), address.getPostalCode());
-        assertEquals(addressDto.street(), address.getStreet());
-        assertEquals(addressDto.streetNumber(), address.getStreetNumber());
-
-    }
-
-    @Test
-    void testDtoToAddress_ShouldMapToAddress_WhenProvidingValidData() {
-        // given
-        UUID restaurantId = UUID.randomUUID();
-        UUID addressId = UUID.randomUUID();
-
-        NewAddressDto newAddressDto = new NewAddressDto(
+        newAddressDto = new NewAddressDto(
                 "Poland",
                 "Opole",
                 "78900",
                 "Warszawska",
                 "55Z",
-                "",
-                restaurantId
-                );
+                ""
+        );
+    }
 
+    @Test
+    void testToDto_ShouldMapAddressToDto_WhenProvidingValidData() {
         // when
-        Address addressOne = mapper.dtoToAddress(newAddressDto);
-        Address addressTwo = mapper.dtoToAddress(addressId, newAddressDto);
+        AddressDto testedAddressDto = mapper.toDto(address);
 
-        // test
-        assertEquals(newAddressDto.country(), addressOne.getCountry());
-        assertEquals(newAddressDto.city(), addressOne.getCity());
-        assertEquals(newAddressDto.postalCode(), addressOne.getPostalCode());
-        assertEquals(newAddressDto.street(), addressOne.getStreet());
-        assertEquals(newAddressDto.streetNumber(), addressOne.getStreetNumber());
-        assertEquals(newAddressDto.restaurantId(), addressOne.getRestaurant().getId());
+        // then
+        assertEquals(testedAddressDto.id(), address.getId());
+        assertEquals(testedAddressDto.country(), address.getCountry());
+        assertEquals(testedAddressDto.city(), address.getCity());
+        assertEquals(testedAddressDto.postalCode(), address.getPostalCode());
+        assertEquals(testedAddressDto.street(), address.getStreet());
+        assertEquals(testedAddressDto.streetNumber(), address.getStreetNumber());
 
-        assertEquals(addressId, addressTwo.getId());
-        assertEquals(newAddressDto.country(), addressTwo.getCountry());
-        assertEquals(newAddressDto.city(), addressTwo.getCity());
-        assertEquals(newAddressDto.postalCode(), addressTwo.getPostalCode());
-        assertEquals(newAddressDto.street(), addressTwo.getStreet());
-        assertEquals(newAddressDto.streetNumber(), addressTwo.getStreetNumber());
-        assertEquals(newAddressDto.restaurantId(), addressTwo.getRestaurant().getId());
+    }
 
+    @Test
+    void testDtoToAddress_ShouldMapToAddress_WhenProvidingDto() {
+        // when
+        Address testedAddress = mapper.dtoToAddress(newAddressDto);
+
+        // then
+        assertEquals(newAddressDto.country(), testedAddress.getCountry());
+        assertEquals(newAddressDto.city(), testedAddress.getCity());
+        assertEquals(newAddressDto.postalCode(), testedAddress.getPostalCode());
+        assertEquals(newAddressDto.street(), testedAddress.getStreet());
+        assertEquals(newAddressDto.streetNumber(), testedAddress.getStreetNumber());
+    }
+
+    @Test
+    void testDtoToAddress_ShouldMapToAddress_WhenProvidingIdAndDto() {
+        // when
+        mapper.updateAddressFromDto(newAddressDto, address);
+
+        // then
+        assertEquals(addressId, address.getId());
+        assertEquals(newAddressDto.country(), address.getCountry());
+        assertEquals(newAddressDto.city(), address.getCity());
+        assertEquals(newAddressDto.postalCode(), address.getPostalCode());
+        assertEquals(newAddressDto.street(), address.getStreet());
+        assertEquals(newAddressDto.streetNumber(), address.getStreetNumber());
     }
 }

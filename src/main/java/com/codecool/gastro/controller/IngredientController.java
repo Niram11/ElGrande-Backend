@@ -6,6 +6,7 @@ import com.codecool.gastro.service.IngredientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,22 +27,14 @@ public class IngredientController {
         return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getAllIngredients());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<IngredientDto> getIngredientById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(ingredientService.getIngredientById(id));
-    }
-
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<IngredientDto> createIngredient(@Valid @RequestBody NewIngredientDto newIngredientDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.saveNewIngredient(newIngredientDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<IngredientDto> updateIngredient(@PathVariable UUID id, @Valid @RequestBody NewIngredientDto newIngredientDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ingredientService.updateIngredient(id, newIngredientDto));
-    }
-
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<IngredientDto> deleteIngredient(@PathVariable UUID id) {
         ingredientService.deleteIngredient(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

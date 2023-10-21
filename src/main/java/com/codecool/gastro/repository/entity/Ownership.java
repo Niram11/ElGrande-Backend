@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Ownership {
+public class Ownership implements EntityObject {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

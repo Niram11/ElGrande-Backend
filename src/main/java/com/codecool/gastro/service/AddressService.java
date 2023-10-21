@@ -9,7 +9,6 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.AddressMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,36 +21,17 @@ public class AddressService {
         this.addressMapper = addressMapper;
     }
 
-    public List<AddressDto> getAddresses() {
-        return addressRepository.findAll().stream()
-                .map(addressMapper::toDto)
-                .toList();
-    }
-
-    public AddressDto getAddressById(UUID id) {
-        return addressRepository.findById(id)
-                .map(addressMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Address.class));
-    }
-
     public AddressDto getAddressByRestaurantId(UUID restaurantId) {
         return addressRepository.findByRestaurantId(restaurantId)
                 .map(addressMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Restaurant.class));
     }
 
-    public AddressDto saveNewAddress(NewAddressDto newAddressDto) {
-        Address savedAddress = addressRepository.save(addressMapper.dtoToAddress(newAddressDto));
-        return addressMapper.toDto(savedAddress);
-    }
-
     public AddressDto updateAddress(UUID id, NewAddressDto newAddressDto) {
-        Address updatedAddress = addressRepository.save(addressMapper.dtoToAddress(id, newAddressDto));
-        return addressMapper.toDto(updatedAddress);
-    }
+        Address updatedAddress = addressRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, Address.class));
 
-    public void deleteAddress(UUID id) {
-        addressRepository.delete(addressMapper.dtoToAddress(id));
+        addressMapper.updateAddressFromDto(newAddressDto, updatedAddress);
+        return addressMapper.toDto(addressRepository.save(updatedAddress));
     }
-
 }

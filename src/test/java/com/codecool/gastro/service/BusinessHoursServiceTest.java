@@ -27,22 +27,19 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BusinessHoursServiceTest {
-
     @InjectMocks
-    private BusinessHourService service;
-
+    BusinessHourService service;
     @Mock
-    private BusinessHourRepository repository;
-
+    BusinessHourRepository repository;
     @Mock
-    private BusinessHourMapper mapper;
-
+    BusinessHourMapper mapper;
 
     private UUID businessHourId;
     private UUID restaurantId;
     private BusinessHourDto businessHourDto;
     private NewBusinessHourDto newBusinessHourDto;
     private BusinessHour businessHour;
+    private Restaurant restaurant;
 
     @BeforeEach
     void setUp() {
@@ -53,56 +50,25 @@ public class BusinessHoursServiceTest {
                 businessHourId,
                 1,
                 LocalTime.of(12, 30),
-                LocalTime.of(15, 50)
+                LocalTime.of(15, 50),
+                false
         );
 
         newBusinessHourDto = new NewBusinessHourDto(
                 1,
                 LocalTime.of(12, 30),
-                LocalTime.of(15, 50),
-                restaurantId
+                LocalTime.of(15, 50)
         );
 
         businessHour = new BusinessHour();
-    }
 
-    @Test
-    void testGetBusinessHours_ShouldReturnEmptyList_WhenNoBusinessHour() {
-        // when
-        when(repository.findAll()).thenReturn(List.of());
-
-        // then
-        List<BusinessHourDto> list = service.getBusinessHours();
-
-        // test
-        assertEquals(0, list.size());
-        verify(repository, times(1)).findAll();
-    }
-
-    @Test
-    void testGetBusinessHourById_ShouldReturnBusinessHourDto_WhenExist() {
-
-        // when
-        when(repository.findById(businessHourId)).thenReturn(Optional.of(businessHour));
-        when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
-
-        // then
-        BusinessHourDto businessHourDtoFromDB = service.getBusinessHourById(businessHourId);
-
-        // test
-        assertEquals(businessHourDto, businessHourDtoFromDB);
-        verify(repository, times(1)).findById(businessHourId);
-        verify(mapper, times(1)).toDto(businessHour);
-    }
-
-    @Test
-    void testGetBusinessHourById_ShouldThrowObjectNotFoundException_WhenNoBusinessHours() {
-        // test
-        assertThrows(ObjectNotFoundException.class, () -> service.getBusinessHourById(businessHourId));
+        restaurant = new Restaurant();
+        restaurant.setId(restaurantId);
     }
 
     @Test
     void testGetBusinessHoursByRestaurantId_ShouldReturnListOfBusinessHourDto_WhenExist() {
+        // given
         BusinessHour businessHourOne = businessHour;
         BusinessHour businessHourTwo = new BusinessHour();
 
@@ -111,18 +77,17 @@ public class BusinessHoursServiceTest {
                 businessHourId,
                 2,
                 LocalTime.of(13, 30),
-                LocalTime.of(16, 50)
+                LocalTime.of(16, 50),
+                false
         );
 
         // when
         when(repository.findAllByRestaurantId(restaurantId)).thenReturn(List.of(businessHourOne, businessHourTwo));
         when(mapper.toDto(businessHourOne)).thenReturn(businessHourDtoOne);
         when(mapper.toDto(businessHourTwo)).thenReturn(businessHourDtoTwo);
-
-        // then
         List<BusinessHourDto> list = service.getBusinessHoursByRestaurantId(restaurantId);
 
-        // test
+        // then
         assertEquals(2, list.size());
         verify(repository, times(1)).findAllByRestaurantId(restaurantId);
         verify(mapper, times(1)).toDto(businessHourOne);
@@ -133,21 +98,16 @@ public class BusinessHoursServiceTest {
     void testGetBusinessHourByRestaurantId_ShouldReturnEmptyList_WhenNoBusinessHours() {
         // when
         when(repository.findAllByRestaurantId(restaurantId)).thenReturn(List.of());
-
-        // then
         List<BusinessHourDto> list = service.getBusinessHoursByRestaurantId(restaurantId);
 
-        // test
+        // then
         assertEquals(0, list.size());
         verify(repository, times(1)).findAllByRestaurantId(restaurantId);
     }
 
     @Test
-    void testSaveNewBusinessHoursAndUpdate_ShouldReturnBusinessHoursDto_WhenCalledWithValidData() {
+    void testUpdateBusinessHour_ShouldReturnBusinessHoursDto_WhenCalledWithValidData() {
         // given
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(restaurantId);
-
         businessHour.setId(businessHourId);
         businessHour.setDayOfWeek(newBusinessHourDto.dayOfWeek());
         businessHour.setOpeningHour(newBusinessHourDto.openingHour());
@@ -155,66 +115,24 @@ public class BusinessHoursServiceTest {
         businessHour.setRestaurant(restaurant);
 
         // when
+        when(repository.findById(businessHourId)).thenReturn(Optional.of(businessHour));
         when(repository.save(businessHour)).thenReturn(businessHour);
-        when(mapper.dtoToBusinessHour(newBusinessHourDto, businessHourId)).thenReturn(businessHour);
-        when(mapper.dtoToBusinessHour(newBusinessHourDto)).thenReturn(businessHour);
         when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
-
-        // then
-        BusinessHourDto savedBusinessHourDto = service.saveNewBusinessHour(newBusinessHourDto);
         BusinessHourDto updatedBusinessHourDto = service.updateBusinessHour(businessHourId, newBusinessHourDto);
 
-        // test
-        assertEquals(savedBusinessHourDto, businessHourDto);
+        // then
         assertEquals(updatedBusinessHourDto, businessHourDto);
-        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto);
-        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto, businessHourId);
-        verify(repository, times(2)).save(businessHour);
-        verify(mapper, times(2)).toDto(businessHour);
-    }
-
-    @Test
-    void testDeleteBusinessHour_ShouldDeleteBusinessHour_WhenCalled() {
-        // given
-        businessHour.setId(businessHourId);
-
-        // when
-        when(mapper.dtoToBusinessHour(businessHourId)).thenReturn(businessHour);
-
-        // then
-        service.deleteBusinessHour(businessHourId);
-
-        // test
-        verify(mapper, times(1)).dtoToBusinessHour(businessHourId);
-        verify(repository, times(1)).delete(businessHour);
-    }
-
-    @Test
-    void testSaveMultipleNewBusinessHour_ShouldReturnListOfBusinessHours_WhenAllAreValid() {
-        // given
-        List<NewBusinessHourDto> list = List.of(newBusinessHourDto, newBusinessHourDto);
-
-        // then
-        List<BusinessHourDto> testedList = service.saveMultipleNewBusinessHour(list);
-
-        // test
-        assertEquals(2, testedList.size());
-    }
-
-    @Test
-    void testSaveMultipleNewBusinessHour_ShouldRollback_WhenOneIsInvalid() {
-        // given
-        List<NewBusinessHourDto> list = List.of(newBusinessHourDto, newBusinessHourDto);
-
-        // when
-        when(mapper.dtoToBusinessHour(newBusinessHourDto)).thenReturn(businessHour);
-        when(repository.save(businessHour)).thenThrow(TransactionalException.class);
-
-        // test
-        assertThrows(TransactionalException.class, () -> service.saveMultipleNewBusinessHour(list));
-        verify(mapper, times(1)).dtoToBusinessHour(newBusinessHourDto);
         verify(repository, times(1)).save(businessHour);
+        verify(mapper, times(1)).toDto(businessHour);
+    }
 
+    @Test
+    void testUpdateBusinessHour_ShouldThrowObjectNotFoundException_WhenNoBusinessHour() {
+        // when
+        when(repository.findById(businessHourId)).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(ObjectNotFoundException.class, () -> service.updateBusinessHour(businessHourId, newBusinessHourDto));
     }
 }
 

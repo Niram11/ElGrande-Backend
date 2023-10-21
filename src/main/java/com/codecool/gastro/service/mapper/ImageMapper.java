@@ -12,11 +12,12 @@ import java.util.UUID;
 public interface ImageMapper {
     ImageDto toDto(Image image);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "restaurantId", target = "restaurant.id")
     Image dtoToImage(NewImageDto newImageDto);
 
-    @Mapping(source = "newImageDto.restaurantId", target = "restaurant.id")
-    Image dtoToImage(UUID id, NewImageDto newImageDto);
-
+    @Mapping(target = "restaurant", ignore = true)
+    @Mapping(target = "pathToImage", ignore = true)
+    @Mapping(target = "id", source = "id")
     Image dtoToImage(UUID id);
 }

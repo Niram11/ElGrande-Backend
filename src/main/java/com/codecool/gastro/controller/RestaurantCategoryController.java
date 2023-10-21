@@ -7,6 +7,7 @@ import com.codecool.gastro.service.RestaurantCategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,23 +28,14 @@ public class RestaurantCategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantCategoryService.getRestaurantCategories());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantCategoryDto> getRestaurantCategory(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantCategoryService.getRestaurantCategory(id));
-    }
-
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<RestaurantCategoryDto> createNewRestaurantCategory(@Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCategoryService.saveRestaurantCategory(newRestaurantCategoryDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RestaurantCategoryDto> updateRestaurantCategory(@PathVariable UUID id,
-                                                          @Valid @RequestBody NewRestaurantCategoryDto newRestaurantCategoryDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantCategoryService.updateRestaurantCategory(id, newRestaurantCategoryDto));
-    }
-
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestaurantCategoryDto> deleteRestaurantCategory(@PathVariable UUID id) {
         restaurantCategoryService.deleteRestaurantCategory(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

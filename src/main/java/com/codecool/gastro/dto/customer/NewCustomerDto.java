@@ -1,6 +1,7 @@
 package com.codecool.gastro.dto.customer;
 
 import com.codecool.gastro.controller.validation.Unoccupied;
+import com.codecool.gastro.dto.NewEntityDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,5 +19,5 @@ public record NewCustomerDto(
 
         @NotBlank(message = "Password cannot be empty")
         String password
-) {
+) implements NewEntityDto {
 }
