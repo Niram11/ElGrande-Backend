@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -35,29 +35,28 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            String jwt = jwtUtils.parseJwt(request);
-            if (Objects.nonNull(jwt) && jwtUtils.validateJwtToken(jwt)) {
+            Optional<String> jwt = jwtUtils.parseJwt(request);
+            jwt.ifPresent(t -> {
+                if (jwtUtils.validateJwtToken(jwt.get())) {
+                    logger.info("JwtToken {} has been successfully validated", jwt.get());
+                    String email = jwtUtils.getEmailFromJwtToken(jwt.get());
 
-                logger.info("JwtToken {} has been successfully validated", jwt);
-                String email = jwtUtils.getEmailFromJwtToken(jwt);
+                    Customer customer = customerRepository.findByEmail(email)
+                            .orElseThrow(() -> new EmailNotFoundException(email));
 
-                Customer customer = customerRepository.findByEmail(email)
-                        .orElseThrow(() -> new EmailNotFoundException(email));
+                    List<SimpleGrantedAuthority> authorities = customer.getRoles().stream()
+                            .map(role -> new SimpleGrantedAuthority(role.getRole().name())).toList();
 
-                List<SimpleGrantedAuthority> authorities = customer.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getRole().name())).toList();
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            customer,
+                            null,
+                            authorities
+                    );
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        customer,
-                        null,
-                        authorities
-                );
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            }
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            });
         } catch (Exception ex) {
             logger.error("Cannot set user authentication: {}", ex.getMessage());
         }
