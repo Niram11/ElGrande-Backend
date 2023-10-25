@@ -14,9 +14,10 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishMapper;
+import com.codecool.gastro.service.validation.DishValidation;
+import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,8 @@ public class DishService {
 
     private final DishRepository dishRepository;
     private final DishMapper dishMapper;
+    private final DishValidation validation;
+    private final RestaurantValidation restaurantValidation;
     private final IngredientService ingredientService;
     private final IngredientRepository ingredientRepository;
     private final DishCategoryService dishCategoryService;
@@ -34,11 +37,13 @@ public class DishService {
     private final RestaurantRepository restaurantRepository;
 
     public DishService(DishRepository dishRepository,
-                       DishMapper dishMapper, IngredientService ingredientService,
+                       DishMapper dishMapper, DishValidation validation, RestaurantValidation restaurantValidation, IngredientService ingredientService,
                        IngredientRepository ingredientRepository, DishCategoryService dishCategoryService,
                        DishCategoryRepository dishCategoryRepository, RestaurantRepository restaurantRepository) {
         this.dishRepository = dishRepository;
         this.dishMapper = dishMapper;
+        this.validation = validation;
+        this.restaurantValidation = restaurantValidation;
         this.ingredientService = ingredientService;
         this.ingredientRepository = ingredientRepository;
         this.dishCategoryService = dishCategoryService;
@@ -60,17 +65,15 @@ public class DishService {
     }
 
     public DishDto saveNewDish(NewDishDto newDishDto) {
-        restaurantRepository.findById(newDishDto.restaurantId())
-                .orElseThrow(() -> new ObjectNotFoundException(newDishDto.restaurantId(), Restaurant.class));
-
+        restaurantValidation.validateUpdate(newDishDto.restaurantId());
+        restaurantRepository.findById(newDishDto.restaurantId()).get();
         Dish savedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto));
         return dishMapper.toDto(savedDish);
     }
 
     public DishDto updateDish(UUID id, EditDishDto editDishDto) {
-        Dish updatedDish = dishRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
-
+        validation.validateUpdate(id);
+        Dish updatedDish = dishRepository.findById(id).get();
         dishMapper.updatedDishFromDto(editDishDto, updatedDish);
         return dishMapper.toDto(dishRepository.save(updatedDish));
     }
@@ -79,11 +82,10 @@ public class DishService {
         dishRepository.delete(dishMapper.dtoToDish(id));
     }
 
+    @Transactional
     public void assignIngredientToDish(UUID dishId, Set<NewIngredientDto> ingredients) {
-        Dish dish = dishRepository.findById(dishId)
-                .orElseThrow(() -> new ObjectNotFoundException(dishId, Dish.class));
-
-
+        validation.validateAssignIngredientToDish(dishId);
+        Dish dish = dishRepository.findById(dishId).get();
         addIngredientsToDish(ingredients, dish);
         dishRepository.save(dish);
     }

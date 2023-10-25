@@ -9,6 +9,7 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
 import com.codecool.gastro.repository.specification.FilteredRestaurantsSpecification;
+import com.codecool.gastro.service.validation.RestaurantValidation;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,14 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
     private final EntityManager entityManager;
+    private final RestaurantValidation validation;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, EntityManager entityManager) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper,
+                             EntityManager entityManager, RestaurantValidation validation) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.entityManager = entityManager;
+        this.validation = validation;
     }
 
     public RestaurantDto getRestaurantById(UUID id) {
@@ -56,16 +60,15 @@ public class RestaurantService {
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
-        Restaurant updatedRestaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id,Restaurant.class));
+        validation.validateUpdate(id);
+        Restaurant updatedRestaurant = restaurantRepository.findById(id).get();
         restaurantMapper.updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
         return restaurantMapper.toDto(restaurantRepository.save(updatedRestaurant));
     }
 
     public void softDelete(UUID id) {
-        Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
-
+        validation.validateUpdate(id);
+        Restaurant restaurant = restaurantRepository.findById(id).get();
         obfuscateData(restaurant);
         restaurantRepository.save(restaurant);
     }
