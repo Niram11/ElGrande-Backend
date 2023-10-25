@@ -1,11 +1,12 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.promotedlocal.EditPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.NewPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.PromotedLocalDto;
 import com.codecool.gastro.repository.PromotedLocalRepository;
 import com.codecool.gastro.repository.entity.PromotedLocal;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.PromotedLocalMapper;
+import com.codecool.gastro.service.validation.PromotedLocalValidation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +16,13 @@ import java.util.UUID;
 public class PromotedLocalService {
     private final PromotedLocalRepository promotedLocalRepository;
     private final PromotedLocalMapper promotedLocalMapper;
+    private final PromotedLocalValidation validation;
 
-    public PromotedLocalService(PromotedLocalRepository promotedLocalRepository, PromotedLocalMapper promotedLocalMapper) {
+    public PromotedLocalService(PromotedLocalRepository promotedLocalRepository, PromotedLocalMapper promotedLocalMapper,
+                                PromotedLocalValidation validation) {
         this.promotedLocalRepository = promotedLocalRepository;
         this.promotedLocalMapper = promotedLocalMapper;
+        this.validation = validation;
     }
 
     public List<PromotedLocalDto> getPromotedLocals() {
@@ -33,9 +37,11 @@ public class PromotedLocalService {
         return promotedLocalMapper.toDto(savedPromotedLocal);
     }
 
-    public PromotedLocalDto updatePromotedLocal(UUID id, NewPromotedLocalDto newPromotedLocalDto) {
-        PromotedLocal updatedPromotedLocal = promotedLocalRepository.save(promotedLocalMapper.dtoToPromotedLocal(id, newPromotedLocalDto));
-        return promotedLocalMapper.toDto(updatedPromotedLocal);
+    public PromotedLocalDto updatePromotedLocal(UUID id, EditPromotedLocalDto editPromotedLocalDto) {
+        validation.validateUpdate(id);
+        PromotedLocal updatedPromotedLocal = promotedLocalRepository.findById(id).get();
+        promotedLocalMapper.updatePromotedLocalFromDto(editPromotedLocalDto, updatedPromotedLocal);
+        return promotedLocalMapper.toDto(promotedLocalRepository.save(updatedPromotedLocal));
     }
 
     public void deletePromotedLocal(UUID id) {

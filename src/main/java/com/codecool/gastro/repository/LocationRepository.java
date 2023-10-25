@@ -17,4 +17,5 @@ public interface LocationRepository extends JpaRepository<Location, UUID> {
 
     @Query("select location from Location location left join fetch location.restaurants where location.id =:id")
     Optional<Location> findById(UUID id);
+
 }

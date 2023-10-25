@@ -1,11 +1,12 @@
 package com.codecool.gastro.service.validation;
 
-import com.codecool.gastro.dto.promotedlocal.NewPromotedLocalDto;
 import com.codecool.gastro.repository.RestaurantRepository;
-import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.PromotedLocal;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 
-public class PromotedLocalValidation implements Validation<NewPromotedLocalDto> {
+import java.util.UUID;
+
+public class PromotedLocalValidation implements Validation<UUID> {
     private final RestaurantRepository restaurantRepository;
 
     public PromotedLocalValidation(RestaurantRepository restaurantRepository) {
@@ -13,8 +14,8 @@ public class PromotedLocalValidation implements Validation<NewPromotedLocalDto> 
     }
 
     @Override
-    public void validateUpdate(NewPromotedLocalDto newPromotedLocalDto) {
-        restaurantRepository.findById(newPromotedLocalDto.restaurantId())
-                .orElseThrow(() -> new ObjectNotFoundException(newPromotedLocalDto.restaurantId(), Restaurant.class));
+    public void validateUpdate(UUID id) {
+        restaurantRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, PromotedLocal.class));
     }
 }
