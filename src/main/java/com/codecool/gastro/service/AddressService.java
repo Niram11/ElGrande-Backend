@@ -33,8 +33,7 @@ public class AddressService {
     }
 
     public AddressDto updateAddress(UUID id, NewAddressDto newAddressDto) {
-        validation.validateEntityById(id);
-        Address updatedAddress = addressRepository.findById(id).get();
+        Address updatedAddress = validation.validateEntityById(id);
         addressMapper.updateAddressFromDto(newAddressDto, updatedAddress);
         return addressMapper.toDto(addressRepository.save(updatedAddress));
     }

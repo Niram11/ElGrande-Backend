@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class BusinessHourValidation implements Validation<UUID>{
+public class BusinessHourValidation implements Validation<UUID, BusinessHour> {
     private final BusinessHourRepository businessHourRepository;
 
     public BusinessHourValidation(BusinessHourRepository businessHourRepository) {
@@ -16,8 +16,8 @@ public class BusinessHourValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateEntityById(UUID id) {
-        businessHourRepository.findById(id)
+    public BusinessHour validateEntityById(UUID id) {
+        return businessHourRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, BusinessHour.class));
 
     }

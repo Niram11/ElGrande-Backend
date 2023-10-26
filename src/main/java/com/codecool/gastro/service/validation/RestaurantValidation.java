@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Component
-public class RestaurantValidation implements Validation<UUID>{
+public class RestaurantValidation implements Validation<UUID, Restaurant> {
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantValidation(RestaurantRepository restaurantRepository) {
@@ -18,8 +18,8 @@ public class RestaurantValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateEntityById(UUID id) {
-        restaurantRepository.findById(id)
+    public Restaurant validateEntityById(UUID id) {
+        return restaurantRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class DishValidation implements Validation<UUID> {
+public class DishValidation implements Validation<UUID, Dish> {
     private final DishRepository dishRepository;
 
     public DishValidation(DishRepository dishRepository) {
@@ -17,13 +17,8 @@ public class DishValidation implements Validation<UUID> {
 
 
     @Override
-    public void validateEntityById(UUID id) {
-        dishRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
-    }
-
-    public void validateAssignIngredientToDish(UUID id) {
-        dishRepository.findById(id)
+    public Dish validateEntityById(UUID id) {
+        return dishRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
     }
 }

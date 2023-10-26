@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class LocationValidation implements Validation<UUID>{
+public class LocationValidation implements Validation<UUID, Location> {
     private final LocationRepository locationRepository;
 
     public LocationValidation(LocationRepository locationRepository) {
@@ -16,8 +16,8 @@ public class LocationValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateEntityById(UUID id) {
-        locationRepository.findById(id)
+    public Location validateEntityById(UUID id) {
+        return locationRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Location.class));
     }
 }

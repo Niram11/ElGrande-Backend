@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class CustomerValidation implements Validation<UUID>{
+public class CustomerValidation implements Validation<UUID, Customer>{
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
 
@@ -21,18 +21,8 @@ public class CustomerValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateEntityById(UUID id) {
-        customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-    }
-
-    public void validateGetDetailedCustomerById(UUID id) {
-        customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-    }
-
-    public void validateSoftDelete(UUID id) {
-        customerRepository.findById(id)
+    public Customer validateEntityById(UUID id) {
+        return customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
     }
 

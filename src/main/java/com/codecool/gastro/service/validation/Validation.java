@@ -1,8 +1,7 @@
 package com.codecool.gastro.service.validation;
 
 
-public interface Validation<T>{
+public interface Validation<T, U>{
 
-    void validateEntityById(T dto);
-    //TODO: change names
+    U validateEntityById(T dto);
 }

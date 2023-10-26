@@ -32,8 +32,7 @@ public class BusinessHourService {
     }
 
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        validation.validateEntityById(id);
-        BusinessHour updatedBusinessHour = businessHourRepository.findById(id).get();
+        BusinessHour updatedBusinessHour = validation.validateEntityById(id);
         businessHourMapper.updateBusinessHourFromDto(newBusinessHourDto, updatedBusinessHour);
         return businessHourMapper.toDto(businessHourRepository.save(updatedBusinessHour));
     }

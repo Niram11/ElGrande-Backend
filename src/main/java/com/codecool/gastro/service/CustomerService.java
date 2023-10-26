@@ -44,7 +44,7 @@ public class CustomerService {
     }
 
     public DetailedCustomerDto getDetailedCustomerById(UUID id) {
-        validation.validateGetDetailedCustomerById(id);
+        validation.validateEntityById(id);
         return customerRepository.findDetailedById(id)
                 .map(customerMapper::toDetailedDto).get();
     }
@@ -59,15 +59,13 @@ public class CustomerService {
 
 
     public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
-        validation.validateEntityById(id);
-        Customer updatedCustomer = customerRepository.findById(id).get();
+        Customer updatedCustomer = validation.validateEntityById(id);
         customerMapper.updateCustomerFromDto(editCustomerDto, updatedCustomer);
         return customerMapper.toDto(customerRepository.save(updatedCustomer));
     }
 
     public void softDelete(UUID id) {
-        validation.validateSoftDelete(id);
-        Customer customer = customerRepository.findById(id).get();
+        Customer customer = validation.validateEntityById(id);
         refreshTokenRepository.findByCustomerId(id).ifPresent(refreshTokenRepository::delete);
         oAuth2ClientTokenRepository.findByCustomerId(id).ifPresent(oAuth2ClientTokenRepository::delete);
         obfuscateData(customer);

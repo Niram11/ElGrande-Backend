@@ -46,16 +46,13 @@ public class LocationService {
     }
 
     public LocationDto updateLocation(UUID id, NewLocationDto newLocationDTO) {
-        validation.validateEntityById(id);
-        Location updatedLocation = locationRepository.findById(id).get();
+        Location updatedLocation = validation.validateEntityById(id);
         locationMapper.updateLocationFromDto(newLocationDTO, updatedLocation);
         return locationMapper.toDto(locationRepository.save(updatedLocation));
     }
 
     public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDto) {
-        //TODO: validation return object from optional
-        validation.validateEntityById(locationId);
-        Location updatedLocation = locationRepository.findById(locationId).get();
+        Location updatedLocation = validation.validateEntityById(locationId);
         restaurantValidation.validateRestaurantsSet(restaurantDto);
         assignRestaurantsSet(updatedLocation, restaurantDto);
         locationRepository.save(updatedLocation);

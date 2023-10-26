@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class AddressValidation implements Validation<UUID>{
+public class AddressValidation implements Validation<UUID, Address> {
     private final AddressRepository addressRepository;
 
     public AddressValidation(AddressRepository addressRepository) {
@@ -16,12 +16,8 @@ public class AddressValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateEntityById(UUID id) {
-        addressRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Address.class));
-    }
-    public void validateGetAddressByRestaurantId(UUID id) {
-        addressRepository.findById(id)
+    public Address validateEntityById(UUID id) {
+        return addressRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Address.class));
     }
 }

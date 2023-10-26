@@ -37,8 +37,7 @@ public class OwnershipService {
     }
 
     public OwnershipDto updateOwnership(UUID id, NewOwnershipDto newOwnershipDto) {
-        validation.validateEntityById(newOwnershipDto);
-        Ownership updatedOwnership = ownershipRepository.findById(id).get();
+        Ownership updatedOwnership = validation.validateEntityById(newOwnershipDto);
         ownershipMapper.updateOwnershipFromDto(newOwnershipDto, updatedOwnership);
         return ownershipMapper.toDto(ownershipRepository.save(updatedOwnership));
     }
