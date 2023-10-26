@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.restaurantcategory.NewRestaurantCategoryDto;
 import com.codecool.gastro.dto.restaurantcategory.RestaurantCategoryDto;
 import com.codecool.gastro.repository.RestaurantCategoryRepository;
 import com.codecool.gastro.repository.entity.RestaurantCategory;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantCategoryMapper;
 import org.springframework.stereotype.Service;
 

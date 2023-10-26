@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.validation.BusinessHourValidation;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class BusinessHourService {
     }
 
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         BusinessHour updatedBusinessHour = businessHourRepository.findById(id).get();
         businessHourMapper.updateBusinessHourFromDto(newBusinessHourDto, updatedBusinessHour);
         return businessHourMapper.toDto(businessHourRepository.save(updatedBusinessHour));

@@ -3,9 +3,11 @@ package com.codecool.gastro.service.validation;
 import com.codecool.gastro.repository.DishRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class DishValidation implements Validation<UUID> {
     private final DishRepository dishRepository;
 
@@ -15,7 +17,7 @@ public class DishValidation implements Validation<UUID> {
 
 
     @Override
-    public void validateUpdate(UUID id) {
+    public void validateEntityById(UUID id) {
         dishRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
     }

@@ -27,13 +27,13 @@ public class AddressService {
     }
 
     public AddressDto getAddressByRestaurantId(UUID restaurantId) {
-        restaurantValidation.validateUpdate(restaurantId);
+        restaurantValidation.validateEntityById(restaurantId);
         return addressRepository.findByRestaurantId(restaurantId)
                 .map(addressMapper::toDto).get();
     }
 
     public AddressDto updateAddress(UUID id, NewAddressDto newAddressDto) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Address updatedAddress = addressRepository.findById(id).get();
         addressMapper.updateAddressFromDto(newAddressDto, updatedAddress);
         return addressMapper.toDto(addressRepository.save(updatedAddress));

@@ -59,20 +59,21 @@ public class DishService {
     }
 
     public DishDto getDishById(UUID id) {
+        //TODO: add validation
         return dishRepository.findById(id)
                 .map(dishMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Dish.class));
     }
 
     public DishDto saveNewDish(NewDishDto newDishDto) {
-        restaurantValidation.validateUpdate(newDishDto.restaurantId());
+        restaurantValidation.validateEntityById(newDishDto.restaurantId());
         restaurantRepository.findById(newDishDto.restaurantId()).get();
         Dish savedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto));
         return dishMapper.toDto(savedDish);
     }
 
     public DishDto updateDish(UUID id, EditDishDto editDishDto) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Dish updatedDish = dishRepository.findById(id).get();
         dishMapper.updatedDishFromDto(editDishDto, updatedDish);
         return dishMapper.toDto(dishRepository.save(updatedDish));

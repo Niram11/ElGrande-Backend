@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewValidation implements Validation<NewReviewDto> {
+    //TODO: change validations into components
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
@@ -19,7 +20,7 @@ public class ReviewValidation implements Validation<NewReviewDto> {
     }
 
     @Override
-    public void validateUpdate(NewReviewDto newReviewDto) {
+    public void validateEntityById(NewReviewDto newReviewDto) {
         restaurantRepository.findById(newReviewDto.restaurantId())
                 .orElseThrow(() -> new ObjectNotFoundException(newReviewDto.restaurantId(), Restaurant.class));
         customerRepository.findById(newReviewDto.customerId())

@@ -59,7 +59,7 @@ public class CustomerService {
 
 
     public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Customer updatedCustomer = customerRepository.findById(id).get();
         customerMapper.updateCustomerFromDto(editCustomerDto, updatedCustomer);
         return customerMapper.toDto(customerRepository.save(updatedCustomer));

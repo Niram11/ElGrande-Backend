@@ -4,10 +4,12 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Component
 public class RestaurantValidation implements Validation<UUID>{
     private final RestaurantRepository restaurantRepository;
 
@@ -16,7 +18,7 @@ public class RestaurantValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateUpdate(UUID id) {
+    public void validateEntityById(UUID id) {
         restaurantRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }

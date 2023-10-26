@@ -3,9 +3,11 @@ package com.codecool.gastro.service.validation;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.entity.Location;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class LocationValidation implements Validation<UUID>{
     private final LocationRepository locationRepository;
 
@@ -14,7 +16,7 @@ public class LocationValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateUpdate(UUID id) {
+    public void validateEntityById(UUID id) {
         locationRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Location.class));
     }

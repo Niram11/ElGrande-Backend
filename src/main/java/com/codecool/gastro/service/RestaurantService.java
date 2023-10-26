@@ -60,14 +60,14 @@ public class RestaurantService {
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Restaurant updatedRestaurant = restaurantRepository.findById(id).get();
         restaurantMapper.updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
         return restaurantMapper.toDto(restaurantRepository.save(updatedRestaurant));
     }
 
     public void softDelete(UUID id) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Restaurant restaurant = restaurantRepository.findById(id).get();
         obfuscateData(restaurant);
         restaurantRepository.save(restaurant);

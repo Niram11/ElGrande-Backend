@@ -4,7 +4,9 @@ import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.repository.OwnershipRepository;
 import com.codecool.gastro.repository.entity.Ownership;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OwnershipValidation implements Validation<NewOwnershipDto>{
     private final OwnershipRepository ownershipRepository;
 
@@ -13,7 +15,7 @@ public class OwnershipValidation implements Validation<NewOwnershipDto>{
     }
 
     @Override
-    public void validateUpdate(NewOwnershipDto newOwnershipDto) {
+    public void validateEntityById(NewOwnershipDto newOwnershipDto) {
         ownershipRepository.findById(newOwnershipDto.customerId())
                 .orElseThrow(() -> new ObjectNotFoundException(newOwnershipDto.customerId(), Ownership.class));
     }

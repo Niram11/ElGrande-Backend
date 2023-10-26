@@ -10,7 +10,6 @@ import com.codecool.gastro.service.mapper.RestaurantMapper;
 import com.codecool.gastro.service.validation.LocationValidation;
 import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -47,26 +46,25 @@ public class LocationService {
     }
 
     public LocationDto updateLocation(UUID id, NewLocationDto newLocationDTO) {
-        validation.validateUpdate(id);
+        validation.validateEntityById(id);
         Location updatedLocation = locationRepository.findById(id).get();
         locationMapper.updateLocationFromDto(newLocationDTO, updatedLocation);
         return locationMapper.toDto(locationRepository.save(updatedLocation));
     }
 
     public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDto) {
-        validation.validateUpdate(locationId);
+        //TODO: validation return object from optional
+        validation.validateEntityById(locationId);
         Location updatedLocation = locationRepository.findById(locationId).get();
         restaurantValidation.validateRestaurantsSet(restaurantDto);
         assignRestaurantsSet(updatedLocation, restaurantDto);
         locationRepository.save(updatedLocation);
     }
 
-    @Transactional
     public void assignRestaurantsSet(Location updatedLocation, Set<RestaurantDto> restaurantDto) {
         restaurantDto.stream()
                 .map(restaurantMapper::dtoToRestaurant)
                 .forEach(updatedLocation::assignRestaurant);
-
     }
 
 

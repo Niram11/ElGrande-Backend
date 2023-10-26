@@ -6,9 +6,11 @@ import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class CustomerValidation implements Validation<UUID>{
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
@@ -19,7 +21,7 @@ public class CustomerValidation implements Validation<UUID>{
     }
 
     @Override
-    public void validateUpdate(UUID id) {
+    public void validateEntityById(UUID id) {
         customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
     }
