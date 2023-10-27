@@ -23,47 +23,54 @@ public class ErrorHandler {
 
     @ExceptionHandler(value = {ObjectNotFoundException.class, ObjectNotFoundException.class,
             TokenAlreadyExistException.class, TokenRefreshException.class, EmailNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ErrorResponse handleNotObjectFound(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
+    //Not used
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ErrorResponse handleNotValidArgument(MethodArgumentNotValidException ex) {
         String errMsg = ex.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(" | "));
-
         return new ErrorResponse(errMsg);
     }
 
+    //TODO: from here
+    //Not used
     @ExceptionHandler(value = TransientPropertyValueException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ErrorResponse handleNullPropertyInNotNullableObject(TransientPropertyValueException ex) {
         String errMsg = "Field that references " + ex.getPropertyName() + " cannot be of null value";
         return new ErrorResponse(errMsg);
     }
 
+    //Not used
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ErrorResponse handleNotReadableException(HttpMessageNotReadableException ex) {
         String errMsg = "One or more fields are incorrect type";
         return new ErrorResponse(errMsg);
     }
 
+    //Not used
     @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String errMsg = "Operation cannot be completed due to incorrect data";
         return new ErrorResponse(errMsg);
     }
 
+    //TODO:Find new response
     @ExceptionHandler(value = ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
         String errMsg = "One or more fields are does not meet requirements";
         return new ErrorResponse(errMsg);
     }
+
+    //TODO: to that place
 
     @ExceptionHandler(value = SessionNotRegisteredException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
