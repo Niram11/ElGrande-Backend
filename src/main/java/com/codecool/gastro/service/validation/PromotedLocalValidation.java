@@ -1,23 +1,23 @@
 package com.codecool.gastro.service.validation;
 
-import com.codecool.gastro.repository.RestaurantRepository;
-import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.PromotedLocalRepository;
+import com.codecool.gastro.repository.entity.PromotedLocal;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
-public class PromotedLocalValidation implements Validation<UUID, Restaurant> {
-    private final RestaurantRepository restaurantRepository;
+public class PromotedLocalValidation implements Validation<UUID, PromotedLocal> {
+    private final PromotedLocalRepository promotedLocalRepository;
 
-    public PromotedLocalValidation(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
+    public PromotedLocalValidation(PromotedLocalRepository promotedLocalRepository) {
+        this.promotedLocalRepository = promotedLocalRepository;
     }
 
     @Override
-    public Restaurant validateEntityById(UUID id) {
-        return restaurantRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
+    public PromotedLocal validateEntityById(UUID id) {
+        return promotedLocalRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, PromotedLocal.class));
     }
 }

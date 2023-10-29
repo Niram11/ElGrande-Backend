@@ -18,9 +18,6 @@ public interface PromotedLocalMapper {
     @Mapping(target = "restaurant.id", source = "newPromotedLocalDto.restaurantId")
     PromotedLocal dtoToPromotedLocal(NewPromotedLocalDto newPromotedLocalDto);
 
-    @Mapping(target = "restaurant.id", source = "newPromotedLocalDto.restaurantId")
-    PromotedLocal dtoToPromotedLocal(UUID id, NewPromotedLocalDto newPromotedLocalDto);
-
     PromotedLocal dtoToPromotedLocal(UUID id);
 
     @Mapping(target = "id", ignore = true)

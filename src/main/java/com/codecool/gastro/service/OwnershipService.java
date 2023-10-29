@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.ownership.EditOwnershipDto;
 import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.dto.ownership.OwnershipDto;
 import com.codecool.gastro.repository.OwnershipRepository;
@@ -36,9 +37,9 @@ public class OwnershipService {
         return ownershipMapper.toDto(savedOwnership);
     }
 
-    public OwnershipDto updateOwnership(UUID id, NewOwnershipDto newOwnershipDto) {
-        Ownership updatedOwnership = validation.validateEntityById(newOwnershipDto);
-        ownershipMapper.updateOwnershipFromDto(newOwnershipDto, updatedOwnership);
+    public OwnershipDto updateOwnership(UUID id, EditOwnershipDto editOwnershipDto) {
+        Ownership updatedOwnership = validation.validateEntityById(id);
+        ownershipMapper.updateOwnershipFromDto(editOwnershipDto, updatedOwnership);
         return ownershipMapper.toDto(ownershipRepository.save(updatedOwnership));
     }
 

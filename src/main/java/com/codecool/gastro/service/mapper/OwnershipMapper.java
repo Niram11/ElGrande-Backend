@@ -1,5 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
+import com.codecool.gastro.dto.customer.EditCustomerDto;
+import com.codecool.gastro.dto.ownership.EditOwnershipDto;
 import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.dto.ownership.OwnershipDto;
 import com.codecool.gastro.repository.entity.Ownership;
@@ -23,5 +25,5 @@ public interface OwnershipMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customer", ignore = true)
-    void updateOwnershipFromDto(NewOwnershipDto newOwnershipDto, @MappingTarget Ownership updatedOwnership);
+    void updateOwnershipFromDto(EditOwnershipDto editOwnershipDto, @MappingTarget Ownership updatedOwnership);
 }

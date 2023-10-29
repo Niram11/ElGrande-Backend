@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class UnoccupiedValidatorTest {
+class UnoccupiedEmailEmailValidatorTest {
 
-    private UnoccupiedValidator unoccupiedValidator;
+    private UnoccupiedEmailValidator unoccupiedEmailValidator;
     private CustomerRepository customerRepository;
 
     @BeforeEach
     void setUp() {
         customerRepository = mock(CustomerRepository.class);
-        unoccupiedValidator = new UnoccupiedValidator(customerRepository);
+        unoccupiedEmailValidator = new UnoccupiedEmailValidator(customerRepository);
     }
 
     @Test
@@ -30,7 +30,7 @@ class UnoccupiedValidatorTest {
         //act
         when(customerRepository.findByEmail(email)).thenReturn(Optional.empty());
         //assert
-        assertTrue(unoccupiedValidator.isValid(email, null));
+        assertTrue(unoccupiedEmailValidator.isValid(email, null));
     }
 
     @Test
@@ -40,6 +40,6 @@ class UnoccupiedValidatorTest {
         //act
         when(customerRepository.findByEmail(email)).thenReturn(Optional.of(new Customer()));
         //assert
-        assertFalse(unoccupiedValidator.isValid(email, null));
+        assertFalse(unoccupiedEmailValidator.isValid(email, null));
     }
 }

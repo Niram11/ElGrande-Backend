@@ -37,7 +37,6 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    //TODO: from here
     //Not used
     @ExceptionHandler(value = TransientPropertyValueException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
@@ -70,7 +69,6 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    //TODO: to that place
 
     @ExceptionHandler(value = SessionNotRegisteredException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
