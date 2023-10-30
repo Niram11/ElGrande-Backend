@@ -131,7 +131,7 @@ class ReviewServiceTest {
         ReviewDto reviewDto = new ReviewDto(REVIEW_ID, COMMENT, GRADE, LOCAL_DATE);
 
         //Mocking interactions
-        doNothing().when(validateReview).validateUpdate(newReviewDto);
+        doNothing().when(validateReview).validateEntityById(newReviewDto);
         Mockito.when(repository.save(Mockito.any())).thenReturn(review);
         Mockito.when(mapper.dtoToReview(newReviewDto)).thenReturn(review);
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
@@ -149,7 +149,7 @@ class ReviewServiceTest {
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, null);
 
         // When
-        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateEntityById(newReviewDto);
         assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 
@@ -159,7 +159,7 @@ class ReviewServiceTest {
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, null, RESTAURANT_ID);
 
         // When
-        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateEntityById(newReviewDto);
         assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 
@@ -169,7 +169,7 @@ class ReviewServiceTest {
         NewReviewDto newReviewDto = new NewReviewDto(COMMENT, GRADE, CUSTOMER_ID, null);
 
         // When
-        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateUpdate(newReviewDto);
+        Mockito.doThrow(ObjectNotFoundException.class).when(validateReview).validateEntityById(newReviewDto);
         assertThrows(ObjectNotFoundException.class, () -> service.saveReview(newReviewDto));
     }
 }

@@ -12,9 +12,8 @@ import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.entity.Role;
 import com.codecool.gastro.security.jwt.repository.OAuth2ClientTokenRepository;
 import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
-import com.codecool.gastro.service.exception.EmailNotFoundException;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
+import com.codecool.gastro.service.validation.CustomerValidation;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +28,25 @@ public class CustomerService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final OAuth2ClientTokenRepository oAuth2ClientTokenRepository;
     private final PasswordEncoder encoder;
+    private final CustomerValidation validation;
 
     public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper,
-                           RestaurantRepository restaurantRepository, RefreshTokenRepository refreshTokenRepository, OAuth2ClientTokenRepository oAuth2ClientTokenRepository, PasswordEncoder encoder) {
+                           RestaurantRepository restaurantRepository, RefreshTokenRepository refreshTokenRepository,
+                           OAuth2ClientTokenRepository oAuth2ClientTokenRepository, PasswordEncoder encoder,
+                           CustomerValidation validation) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
         this.restaurantRepository = restaurantRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.oAuth2ClientTokenRepository = oAuth2ClientTokenRepository;
         this.encoder = encoder;
+        this.validation = validation;
     }
 
     public DetailedCustomerDto getDetailedCustomerById(UUID id) {
+        validation.validateEntityById(id);
         return customerRepository.findDetailedById(id)
-                .map(customerMapper::toDetailedDto)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
+                .map(customerMapper::toDetailedDto).get();
     }
 
     public CustomerDto saveCustomer(NewCustomerDto newCustomerDto) {
@@ -56,37 +59,29 @@ public class CustomerService {
 
 
     public CustomerDto updateCustomer(UUID id, EditCustomerDto editCustomerDto) {
-        Customer updatedCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-
+        Customer updatedCustomer = validation.validateEntityById(id);
         customerMapper.updateCustomerFromDto(editCustomerDto, updatedCustomer);
         return customerMapper.toDto(customerRepository.save(updatedCustomer));
     }
 
     public void softDelete(UUID id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-
+        Customer customer = validation.validateEntityById(id);
         refreshTokenRepository.findByCustomerId(id).ifPresent(refreshTokenRepository::delete);
         oAuth2ClientTokenRepository.findByCustomerId(id).ifPresent(oAuth2ClientTokenRepository::delete);
-
         obfuscateData(customer);
         customerRepository.save(customer);
     }
 
     public CustomerDto getCustomerByEmail(String email) {
+        validation.validateGetCustomerByEmail(email);
         return customerRepository.findByEmail(email)
-                .map(customerMapper::toDto)
-                .orElseThrow(() -> new EmailNotFoundException(email));
+                .map(customerMapper::toDto).get();
     }
 
     public void assignRestaurantToCustomer(UUID id, UUID restaurantId) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Customer.class));
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new ObjectNotFoundException(restaurantId, Restaurant.class));
-
+        validation.validateAssignRestaurantToCustomer(id, restaurantId);
+        Customer customer = customerRepository.findById(id).get();
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
         customer.assignRestaurant(restaurant);
         customerRepository.save(customer);
     }
@@ -118,5 +113,4 @@ public class CustomerService {
         role.setRole(CustomerRole.ROLE_USER);
         customerToSave.assignRole(role);
     }
-
 }

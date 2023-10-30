@@ -6,10 +6,10 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = UnoccupiedValidator.class)
+@Constraint(validatedBy = UnoccupiedEmailValidator.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Unoccupied {
+public @interface UnoccupiedEmail {
     String message() default "This email is already used";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

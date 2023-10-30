@@ -5,6 +5,8 @@ import com.codecool.gastro.dto.location.LocationDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.repository.entity.Location;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
 
@@ -17,5 +19,6 @@ public interface LocationMapper {
 
     Location dtoToLocation(UUID id);
 
-    Location dtoToLocation(NewLocationDto newLocationsDto, UUID id);
+    @Mapping(target = "id", ignore = true)
+    void updateLocationFromDto(NewLocationDto newLocationDTO, @MappingTarget Location updatedLocation);
 }

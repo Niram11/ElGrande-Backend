@@ -63,18 +63,4 @@ public class LocationMapperTest {
         assertNull(location.getLatitude());
         assertNull(location.getLongitude());
     }
-
-    @Test
-    void testMappingDtoToLocationWithNewLocationDtoAndIdShouldMapDtoToLocationWithIdWhenProvidingValidData() {
-        // Given
-        NewLocationDto newLocationDto = new NewLocationDto(LATITUDE, LONGITUDE);
-
-        // When
-        Location location = mapper.dtoToLocation(newLocationDto, LOCATION_ID);
-
-        // Then
-        assertEquals(location.getId(), LOCATION_ID);
-        assertEquals(location.getLatitude(), newLocationDto.latitude());
-        assertEquals(location.getLongitude(), newLocationDto.longitude());
-    }
 }

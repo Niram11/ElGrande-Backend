@@ -3,14 +3,12 @@ package com.codecool.gastro.service.mapper;
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.EditCustomerDto;
-import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.entity.Customer;
+import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +21,11 @@ public class LocationController {
 
     public LocationController(LocationService locationsService) {
         this.locationsService = locationsService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LocationDto>> getAllLocations() {
+        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getAllLocations());
     }
 
     @PostMapping

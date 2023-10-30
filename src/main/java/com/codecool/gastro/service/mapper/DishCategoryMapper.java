@@ -5,7 +5,6 @@ import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.repository.entity.DishCategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
 

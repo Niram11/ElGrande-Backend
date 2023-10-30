@@ -27,18 +27,16 @@ public class PromotedLocalControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockBean
-    private PromotedLocalController promotedLocalController;
 
     @MockBean
     private PromotedLocalService promotedLocalService;
     private final static LocalTime START_TIME = LocalTime.of(10, 0);
     private final static LocalTime END_TIME = LocalTime.of(18, 0);
 
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(promotedLocalController).build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        mockMvc = MockMvcBuilders.standaloneSetup(promotedLocalController).build();
+//    }
 
     @Test
     void testGetAllPromotedLocalsShouldReturnStatusOkAndListOfPromotedLocalDto() throws Exception {
@@ -51,39 +49,36 @@ public class PromotedLocalControllerTest {
                 new PromotedLocalDto(id1, now, now.plusHours(1)),
                 new PromotedLocalDto(id2, now, now.plusHours(2))
         );
-
+        //when
         Mockito.when(promotedLocalService.getPromotedLocals()).thenReturn(promotedLocals);
 
-        // when-then
+        //then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/promoted-locals"))
-                .andExpect(status().isOk())
                 .andExpectAll(status().isOk());
     }
 
-//    @Test
-//    void testCreateNewPromotedLocalShouldReturnStatusCreatedAndPromotedLocalDto() throws Exception {
-//        // given
-//        UUID promotedLocalId = UUID.randomUUID();
-//        LocalTime startTime = LocalTime.of(12, 0,0);
-//        LocalTime endTime = LocalTime.of(14, 0,0);
-//        PromotedLocalDto promotedLocalDto = new PromotedLocalDto(promotedLocalId, START_TIME, END_TIME);
-//
-//        String contentRequest = """
-//        {
-//            "startDate": "12:00",
-//            "endDate": "14:00",
-//            "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
-//        }
-//        """;
-//
-//        Mockito.when(promotedLocalService.saveNewPromotedLocal(Mockito.any(NewPromotedLocalDto.class))).thenReturn(promotedLocalDto);
-//
-//        // when-then
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/promoted-locals")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(contentRequest))
-//                .andExpect(status().isCreated());
-//    }
+    @Test
+    void testCreateNewPromotedLocalShouldReturnStatusCreatedAndPromotedLocalDto() throws Exception {
+        // given
+        UUID promotedLocalId = UUID.randomUUID();
+        PromotedLocalDto promotedLocalDto = new PromotedLocalDto(promotedLocalId, START_TIME, END_TIME);
+
+        String contentRequest = """
+        {
+            "startDate": "12:00",
+            "endDate": "14:00",
+            "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
+        }
+        """;
+        //when
+        Mockito.when(promotedLocalService.saveNewPromotedLocal(Mockito.any(NewPromotedLocalDto.class))).thenReturn(promotedLocalDto);
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/promoted-locals")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentRequest))
+                .andExpect(status().isCreated());
+    }
 
 //    @Test
 //    void testUpdatePromotedLocalShouldReturnUpdatedPromotedLocal() throws Exception {
@@ -115,7 +110,7 @@ public class PromotedLocalControllerTest {
         Mockito.doNothing().when(promotedLocalService).deletePromotedLocal(UUID.fromString("7b571224-8506-4947-a975-bc1fa0d5b743"));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/promoted-locals/{id}", "7b571224-8506-4947-a975-bc1fa0d5b743"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
 }

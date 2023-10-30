@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public record NewOwnershipDto(
-        UUID customerId,
-        Set<RestaurantDto> restaurants
+        UUID customerId
 ) implements NewEntityDto {
 }
