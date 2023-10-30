@@ -20,9 +20,6 @@ public interface OwnershipMapper {
 
     Ownership dtoToOwnership(UUID id);
 
-    @Mapping(source = "ownershipDto.customerId", target = "customer.id")
-    Ownership dtoToOwnership(NewOwnershipDto ownershipDto, UUID id);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customer", ignore = true)
     void updateOwnershipFromDto(EditOwnershipDto editOwnershipDto, @MappingTarget Ownership updatedOwnership);

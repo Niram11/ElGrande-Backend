@@ -61,14 +61,12 @@ public class ErrorHandler {
         return new ErrorResponse(errMsg);
     }
 
-    //TODO:Find new response
     @ExceptionHandler(value = ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
         String errMsg = "One or more fields are does not meet requirements";
         return new ErrorResponse(errMsg);
     }
-
 
     @ExceptionHandler(value = SessionNotRegisteredException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)

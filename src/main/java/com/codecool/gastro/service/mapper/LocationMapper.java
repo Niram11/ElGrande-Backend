@@ -19,7 +19,6 @@ public interface LocationMapper {
 
     Location dtoToLocation(UUID id);
 
-    Location dtoToLocation(NewLocationDto newLocationsDto, UUID id);
     @Mapping(target = "id", ignore = true)
     void updateLocationFromDto(NewLocationDto newLocationDTO, @MappingTarget Location updatedLocation);
 }

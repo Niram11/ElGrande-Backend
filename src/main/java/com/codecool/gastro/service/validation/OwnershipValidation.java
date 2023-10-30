@@ -1,6 +1,5 @@
 package com.codecool.gastro.service.validation;
 
-import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.repository.OwnershipRepository;
 import com.codecool.gastro.repository.entity.Ownership;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;

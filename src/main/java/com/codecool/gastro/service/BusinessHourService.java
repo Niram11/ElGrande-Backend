@@ -2,9 +2,9 @@ package com.codecool.gastro.service;
 
 import com.codecool.gastro.dto.businesshour.BusinessHourDto;
 import com.codecool.gastro.dto.businesshour.NewBusinessHourDto;
-import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.repository.BusinessHourRepository;
 import com.codecool.gastro.repository.entity.BusinessHour;
+import com.codecool.gastro.service.mapper.BusinessHourMapper;
 import com.codecool.gastro.service.validation.BusinessHourValidation;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
 package com.codecool.gastro.repository.entity;
 
-import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 

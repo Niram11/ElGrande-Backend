@@ -1,8 +1,8 @@
 package com.codecool.gastro.service.mapper;
 
+import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.dto.dish.EditDishDto;
 import com.codecool.gastro.dto.dish.NewDishDto;
-import com.codecool.gastro.dto.dish.DishDto;
 import com.codecool.gastro.repository.entity.Dish;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

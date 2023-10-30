@@ -39,7 +39,6 @@ public class PromotedLocalService {
 
     public PromotedLocalDto updatePromotedLocal(UUID id, EditPromotedLocalDto editPromotedLocalDto) {
         validation.validateEntityById(id);
-        //TODO: create query in repo(not now)
         PromotedLocal updatedPromotedLocal = promotedLocalRepository.findById(id).get();
         promotedLocalMapper.updatePromotedLocalFromDto(editPromotedLocalDto, updatedPromotedLocal);
         return promotedLocalMapper.toDto(promotedLocalRepository.save(updatedPromotedLocal));

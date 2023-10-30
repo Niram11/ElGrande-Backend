@@ -35,7 +35,6 @@ public class LocationController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
-    //TODO: create editOwnershipDto with restaurants
     public ResponseEntity<LocationDto> updateLocation(@PathVariable UUID id, @Valid @RequestBody NewLocationDto newLocationDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }

@@ -7,21 +7,23 @@ import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.dto.ingredient.IngredientDto;
 import com.codecool.gastro.dto.ingredient.NewIngredientDto;
-import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.DishRepository;
+import com.codecool.gastro.repository.IngredientRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishMapper;
 import com.codecool.gastro.service.validation.DishValidation;
 import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class DishService {

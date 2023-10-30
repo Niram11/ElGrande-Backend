@@ -18,8 +18,6 @@ public interface RestaurantMapper {
 
     DetailedRestaurantDto toDetailedDto(DetailedRestaurantProjection restaurant);
 
-    Restaurant dtoToRestaurant(NewRestaurantDto newRestaurantDto);
-
     Restaurant dtoToRestaurant(RestaurantDto restaurantDto);
 
     @Mapping(target = "deleted", ignore = true)
