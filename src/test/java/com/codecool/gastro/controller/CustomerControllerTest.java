@@ -189,7 +189,7 @@ public class CustomerControllerTest {
         mockMvc.perform(put("/api/v1/customers/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Surname cannot be empty"))
                 );

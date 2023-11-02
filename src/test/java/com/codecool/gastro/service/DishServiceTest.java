@@ -19,6 +19,8 @@ import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
 import com.codecool.gastro.service.mapper.IngredientMapper;
+import com.codecool.gastro.service.validation.DishValidation;
+import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.checkerframework.checker.units.qual.N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,8 @@ class DishServiceTest {
     @Mock
     DishMapper mapper;
     @Mock
+    DishValidation validation;
+    @Mock
     IngredientRepository ingredientRepository;
     @Mock
     IngredientService ingredientService;
@@ -56,6 +60,8 @@ class DishServiceTest {
     DishCategoryService dishCategoryService;
     @Mock
     RestaurantRepository restaurantRepository;
+    @Mock
+    RestaurantValidation restaurantValidation;
 
     private UUID restaurantId;
     private UUID dishId;

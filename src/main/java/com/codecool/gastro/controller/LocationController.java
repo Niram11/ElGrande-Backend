@@ -39,9 +39,10 @@ public class LocationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }
 
-    @PutMapping ("/{id}/restaurants")
+    @PutMapping("/{id}/restaurants")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
+    public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id,
+                                                                @Valid @RequestBody Set<RestaurantDto> restaurants) {
         locationsService.assignRestaurantToLocation(id, restaurants);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

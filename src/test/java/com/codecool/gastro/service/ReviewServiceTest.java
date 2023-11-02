@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
@@ -40,7 +41,8 @@ class ReviewServiceTest {
     private ReviewValidation validateReview;
 
     private final static String COMMENT = "comment";
-    private final static int GRADE = 6;
+    private final static int GRADE = 4;
+    private final static String NAME = "Name";
     private final static UUID REVIEW_ID = UUID.randomUUID();
     private final static UUID CUSTOMER_ID = UUID.randomUUID();
     private final static UUID RESTAURANT_ID = UUID.randomUUID();
@@ -137,10 +139,13 @@ class ReviewServiceTest {
         Mockito.when(mapper.toDto(review)).thenReturn(reviewDto);
 
         //When
-        ReviewDto testedReview = service.saveReview(newReviewDto);
+        DetailedReviewDto testedReview = service.saveReview(newReviewDto);
 
         //Test
-        assertEquals(reviewDto, testedReview);
+        assertEquals(testedReview.comment(), COMMENT);
+        assertEquals(testedReview.grade(), GRADE);
+        assertEquals(testedReview.name(), NAME);
+        assertEquals(testedReview.submissionTime(), LOCAL_DATE);
     }
 
     @Test

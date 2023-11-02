@@ -32,14 +32,15 @@ public class RestaurantService {
         this.validation = validation;
     }
 
-    public RestaurantDto getRestaurantById(UUID id) {
-        return restaurantRepository.findById(id)
-                .map(restaurantMapper::toDto)
+    public DetailedRestaurantDto getRestaurantById(UUID id) {
+        return restaurantRepository.findDetailedRestaurantById(id)
+                .map(restaurantMapper::toDetailedDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
     public List<RestaurantDto> getRestaurantByCustomerId(UUID customerId) {
-        return restaurantRepository.findAllByCustomerId(customerId).stream()
+        return restaurantRepository.findAllByCustomerId(customerId)
+                .stream()
                 .map(restaurantMapper::toDto)
                 .toList();
     }

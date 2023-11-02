@@ -76,7 +76,6 @@ public class RefreshTokenService {
     }
 
     public void deleteByCustomerId(UUID customerId) {
-        refreshTokenRepository.findByCustomerId(customerId)
-                .ifPresent(refreshTokenRepository::delete);
+        refreshTokenRepository.findByCustomerId(customerId).ifPresent(refreshTokenRepository::delete);
     }
 }

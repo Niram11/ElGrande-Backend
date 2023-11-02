@@ -101,8 +101,7 @@ public class DishService {
         ingredients.forEach(ingredient -> {
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name().toLowerCase());
 
-            ingredientOptional.ifPresentOrElse(dish::assignIngredient,
-                    () -> {
+            ingredientOptional.ifPresentOrElse(dish::assignIngredient, () -> {
                         IngredientDto savedIngredient = ingredientService.saveNewIngredient(ingredient);
                         Ingredient newIngredient = new Ingredient();
                         newIngredient.setName(savedIngredient.name());

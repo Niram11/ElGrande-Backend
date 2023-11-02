@@ -124,7 +124,7 @@ public class FormControllerTest {
         mockMvc.perform(post("/api/v1/forms/restaurant")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage",
                                 Matchers.containsString("Name cannot be empty")),
                         jsonPath("$.errorMessage",
