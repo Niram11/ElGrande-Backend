@@ -41,6 +41,7 @@ public class LocationController {
 
     @PutMapping ("/{id}/restaurants")
     @PreAuthorize("hasRole('OWNER')")
+    //TODO: response from void
     public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
         locationsService.assignRestaurantToLocation(id, restaurants);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -53,6 +53,7 @@ public class LocationService {
 
     public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDto) {
         Location updatedLocation = validation.validateEntityById(locationId);
+        //TODO: change method to not use mapper
         restaurantValidation.validateRestaurantsSet(restaurantDto);
         assignRestaurantsSet(updatedLocation, restaurantDto);
         locationRepository.save(updatedLocation);
