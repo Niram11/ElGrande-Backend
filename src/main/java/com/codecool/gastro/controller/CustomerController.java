@@ -3,7 +3,6 @@ package com.codecool.gastro.controller;
 import com.codecool.gastro.dto.customer.CustomerDto;
 import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.EditCustomerDto;
-import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

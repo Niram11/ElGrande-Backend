@@ -1,7 +1,6 @@
 package com.codecool.gastro.repository.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;

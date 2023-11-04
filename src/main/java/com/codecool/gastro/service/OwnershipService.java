@@ -1,5 +1,6 @@
 package com.codecool.gastro.service;
 
+import com.codecool.gastro.dto.ownership.EditOwnershipDto;
 import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.dto.ownership.OwnershipDto;
 import com.codecool.gastro.repository.OwnershipRepository;
@@ -7,19 +8,22 @@ import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ownership;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.OwnershipMapper;
+import com.codecool.gastro.service.validation.OwnershipValidation;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class OwnershipService {
     private final OwnershipMapper ownershipMapper;
     private final OwnershipRepository ownershipRepository;
+    private final OwnershipValidation validation;
 
-    public OwnershipService(OwnershipMapper ownershipMapper, OwnershipRepository ownershipRepository) {
+    public OwnershipService(OwnershipMapper ownershipMapper, OwnershipRepository ownershipRepository,
+                            OwnershipValidation validation) {
         this.ownershipMapper = ownershipMapper;
         this.ownershipRepository = ownershipRepository;
+        this.validation = validation;
     }
 
     public OwnershipDto getOwnershipById(UUID id) {
@@ -33,10 +37,10 @@ public class OwnershipService {
         return ownershipMapper.toDto(savedOwnership);
     }
 
-    public OwnershipDto updateOwnership(UUID id, NewOwnershipDto newOwnershipDto) {
-        Ownership updateOwnership = ownershipRepository.save(
-                ownershipMapper.dtoToOwnership(newOwnershipDto, id));
-        return ownershipMapper.toDto(updateOwnership);
+    public OwnershipDto updateOwnership(UUID id, EditOwnershipDto editOwnershipDto) {
+        Ownership updatedOwnership = validation.validateEntityById(id);
+        ownershipMapper.updateOwnershipFromDto(editOwnershipDto, updatedOwnership);
+        return ownershipMapper.toDto(ownershipRepository.save(updatedOwnership));
     }
 
     public void deleteOwnership(UUID id) {

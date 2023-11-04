@@ -99,7 +99,7 @@ public class DishCategoryControllerTest {
         mockMvc.perform(post("/api/v1/dish-categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(categoryErrMsg))
                 );
     }

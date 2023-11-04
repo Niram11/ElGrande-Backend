@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.dto.ownership.EditOwnershipDto;
 import com.codecool.gastro.dto.ownership.NewOwnershipDto;
 import com.codecool.gastro.dto.ownership.OwnershipDto;
 import com.codecool.gastro.service.OwnershipService;
@@ -34,8 +35,8 @@ public class OwnershipController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<OwnershipDto> updateOwnership(@PathVariable UUID id, @Valid @RequestBody NewOwnershipDto newOwnershipDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ownershipService.updateOwnership(id, newOwnershipDto));
+    public ResponseEntity<OwnershipDto> updateOwnership(@PathVariable UUID id, @Valid @RequestBody EditOwnershipDto editOwnershipDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ownershipService.updateOwnership(id, editOwnershipDto));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,7 @@
 package com.codecool.gastro.service.mapper;
 
 
-import com.codecool.gastro.dto.review.DetailedReview;
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.entity.Review;
@@ -22,5 +22,5 @@ public interface ReviewMapper {
 
     Review dtoToReview(UUID id);
 
-    DetailedReview toDetailedDto(DetailedReviewProjection detailedReviewProjection);
+    DetailedReviewDto toDetailedDto(DetailedReviewProjection detailedReviewProjection);
 }

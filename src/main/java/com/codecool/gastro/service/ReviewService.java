@@ -1,17 +1,18 @@
 package com.codecool.gastro.service;
 
 
-import com.codecool.gastro.dto.review.DetailedReview;
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.ReviewRepository;
+import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.ReviewMapper;
 import com.codecool.gastro.service.validation.ReviewValidation;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -48,20 +49,20 @@ public class ReviewService {
                 .toList();
     }
 
-    public ReviewDto saveReview(NewReviewDto newReviewDto) {
-        validateReview.validateUpdate(newReviewDto);
+    public DetailedReviewDto saveReview(NewReviewDto newReviewDto) {
+        validateReview.validateSaveReview(newReviewDto);
         Review savedReview = reviewMapper.dtoToReview(newReviewDto);
         savedReview.setSubmissionTime(LocalDate.now());
-        return reviewMapper.toDto(reviewRepository.save(savedReview));
+        reviewRepository.save(savedReview);
+        return reviewMapper.toDetailedDto(reviewRepository.findDetailedReviewById(savedReview.getId())
+                .orElseThrow(() ->new ObjectNotFoundException(savedReview.getId(), Review.class)));
     }
-
-
 
     public void deleteReview(UUID id) {
         reviewRepository.delete(reviewMapper.dtoToReview(id));
     }
 
-    public List<DetailedReview> getDetailedReviewsByRestaurantId(UUID restaurantId) {
+    public List<DetailedReviewDto> getDetailedReviewsByRestaurantId(UUID restaurantId) {
         return reviewRepository.findDetailedReviewsByRestaurantId(restaurantId)
                 .stream()
                 .map(reviewMapper::toDetailedDto)

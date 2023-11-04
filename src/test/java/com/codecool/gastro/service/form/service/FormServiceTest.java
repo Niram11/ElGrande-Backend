@@ -4,10 +4,12 @@ import com.codecool.gastro.dto.address.NewAddressDto;
 import com.codecool.gastro.dto.form.NewRestaurantFormDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
+import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.entity.Address;
 import com.codecool.gastro.repository.entity.BusinessHour;
 import com.codecool.gastro.repository.entity.Location;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.security.jwt.service.JwtUtils;
 import com.codecool.gastro.service.form.handler.FormHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,10 @@ import static org.mockito.Mockito.verify;
 public class FormServiceTest {
     FormService restaurantFormService;
     @Mock
+    CustomerRepository customerRepository;
+    @Mock
+    JwtUtils jwtUtils;
+    @Mock
     FormHandler<Restaurant> restaurantHandler;
     @Mock
     FormHandler<Address> addressHandler;
@@ -40,6 +46,8 @@ public class FormServiceTest {
     @BeforeEach
     void setUp() {
         restaurantFormService = new FormService(
+                jwtUtils,
+                customerRepository,
                 restaurantHandler,
                 addressHandler,
                 businessHourHandler,

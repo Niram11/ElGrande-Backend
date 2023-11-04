@@ -6,11 +6,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnoccupiedValidator implements ConstraintValidator<Unoccupied, String> {
+public class UnoccupiedEmailValidator implements ConstraintValidator<UnoccupiedEmail, String> {
 
     private final CustomerRepository customerRepository;
 
-    public UnoccupiedValidator(CustomerRepository customerRepository) {
+    public UnoccupiedEmailValidator(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 

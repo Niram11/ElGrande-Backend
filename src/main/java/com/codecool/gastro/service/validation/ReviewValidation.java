@@ -5,11 +5,12 @@ import com.codecool.gastro.repository.CustomerRepository;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.Review;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReviewValidation implements Validation<NewReviewDto> {
+public class ReviewValidation implements Validation<NewReviewDto, Review> {
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
@@ -19,7 +20,11 @@ public class ReviewValidation implements Validation<NewReviewDto> {
     }
 
     @Override
-    public void validateUpdate(NewReviewDto newReviewDto) {
+    public Review validateEntityById(NewReviewDto newReviewDto) {
+        return null;
+    }
+
+    public void validateSaveReview(NewReviewDto newReviewDto) {
         restaurantRepository.findById(newReviewDto.restaurantId())
                 .orElseThrow(() -> new ObjectNotFoundException(newReviewDto.restaurantId(), Restaurant.class));
         customerRepository.findById(newReviewDto.customerId())

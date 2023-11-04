@@ -152,7 +152,7 @@ public class DishControllerTest {
         mockMvc.perform(post("/api/v1/dishes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequestOne))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(dishNameErrMsg)),
                         jsonPath("$.errorMessage", Matchers.containsString(priceErrMsg))
                 );
@@ -199,7 +199,7 @@ public class DishControllerTest {
         mockMvc.perform(put("/api/v1/dishes/" + dishId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequestOne))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(dishNameErrMsg)),
                         jsonPath("$.errorMessage", Matchers.containsString(priceErrMsg))
                 );
