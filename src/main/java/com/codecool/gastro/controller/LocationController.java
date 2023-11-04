@@ -39,6 +39,7 @@ public class LocationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }
 
+    // todo if location exist then add address restaurant to it instead of creating a new one
     @PutMapping("/{id}/restaurants")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id,

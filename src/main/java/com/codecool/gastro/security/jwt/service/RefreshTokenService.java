@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class RefreshTokenService {
@@ -37,9 +39,9 @@ public class RefreshTokenService {
                 .map(this::verifyExpiration)
                 .map(RefreshToken::getCustomer)
                 .map(customer -> {
-                    String token = jwtUtils.generateTokenFromEmail(customer.getEmail());
                     deleteByCustomerId(customer.getId());
                     RefreshToken newRefreshToken = createRefreshToken(customer.getId());
+                    String token = jwtUtils.generateTokenFromEmail(customer.getEmail());
                     return new TokenRefreshResponse(token, newRefreshToken.getToken(), "Bearer");
                 })
                 .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.token()));
