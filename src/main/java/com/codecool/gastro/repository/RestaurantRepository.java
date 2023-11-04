@@ -24,6 +24,52 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
             """)
     List<Restaurant> findAllByCustomerId(UUID customerId);
 
+    @Query(nativeQuery = true, value = """
+            SELECT
+                res_data.id,
+                res_data.name,
+                res_data.description,
+                res_data.website,
+                res_data.contactNumber,
+                res_data.contactEmail,
+                COALESCE(res_data.imagesPaths, '{}') AS imagesPaths,
+                COALESCE(rev_data.averageGrade, NULL) AS averageGrade
+            FROM (
+                SELECT
+                    res.id,
+                    res.name,
+                    res.description,
+                    res.website,
+                    res.is_deleted,
+                    res.contact_number AS contactNumber,
+                    res.contact_email AS contactEmail,
+                    ARRAY_AGG(DISTINCT ima.path_to_image) FILTER (
+                    WHERE
+                        ima.path_to_image IS NOT NULL
+                  ) AS imagesPaths
+                FROM
+                    restaurant res
+                    LEFT JOIN image ima ON res.id = ima.restaurant_id
+                GROUP BY
+                    res.id
+              ) AS res_data
+              LEFT JOIN (
+                    SELECT
+                        res.id AS id,
+                        AVG(rev.grade) AS averageGrade
+                    FROM
+                        restaurant res
+                    LEFT JOIN review rev ON res.id = rev.restaurant_id
+                    GROUP BY
+                        res.id
+              ) AS rev_data ON res_data.id = rev_data.id
+            WHERE res_data.is_deleted = false AND res_data.id = :id
+            ORDER BY
+            CASE WHEN averageGrade IS NULL THEN 1 ELSE 0 END,
+            averageGrade DESC
+            """)
+    Optional<DetailedRestaurantProjection> findDetailedRestaurantById(UUID id);
+
     //TODO: add sum of reviews here and in projection
     @Query(nativeQuery = true, value = """
             SELECT

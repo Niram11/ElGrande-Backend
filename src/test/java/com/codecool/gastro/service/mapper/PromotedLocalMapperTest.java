@@ -50,16 +50,4 @@ class PromotedLocalMapperTest {
         assertEquals(promotedLocal.getEndDate(), newPromotedLocalDto.endDate());
         assertEquals(promotedLocal.getRestaurant().getId(), newPromotedLocalDto.restaurantId());
     }
-
-    @Test
-    void testMappingDtoToPromotedLocalWithIdShouldMapDtoToPromotedLocalWithIdWhenProvidingValidData() {
-        // When
-        PromotedLocal promotedLocal = mapper.dtoToPromotedLocal(PROMOTED_LOCAL_ID, new NewPromotedLocalDto(START_TIME, END_TIME, RESTAURANT_ID));
-
-        // Then
-        assertEquals(promotedLocal.getId(), PROMOTED_LOCAL_ID);
-        assertEquals(promotedLocal.getStartDate(), START_TIME);
-        assertEquals(promotedLocal.getEndDate(), END_TIME);
-        assertEquals(promotedLocal.getRestaurant().getId(), RESTAURANT_ID);
-    }
 }

@@ -19,9 +19,14 @@ public class LocationFormHandler implements FormHandler<Location> {
 
     @Override
     public void handleRestaurantForm(NewRestaurantFormDto formDto, Restaurant restaurant) {
-        Location location = locationMapper.dtoToLocation(formDto.location());
-        location.assignRestaurant(restaurant);
-
-        locationRepository.save(location);
+        locationRepository.findByCoordinates(formDto.location().latitude(), formDto.location().longitude())
+                .ifPresentOrElse(location -> {
+                    location.assignRestaurant(restaurant);
+                    locationRepository.save(location);
+                }, () -> {
+                    Location location = locationMapper.dtoToLocation(formDto.location());
+                    location.assignRestaurant(restaurant);
+                    locationRepository.save(location);
+                });
     }
 }

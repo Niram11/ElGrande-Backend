@@ -6,9 +6,10 @@ import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.specification.FilteredRestaurantsSpecification;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
-import com.codecool.gastro.repository.specification.FilteredRestaurantsSpecification;
+import com.codecool.gastro.service.validation.RestaurantValidation;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,21 +22,25 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
     private final EntityManager entityManager;
+    private final RestaurantValidation validation;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper, EntityManager entityManager) {
+    public RestaurantService(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper,
+                             EntityManager entityManager, RestaurantValidation validation) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMapper = restaurantMapper;
         this.entityManager = entityManager;
+        this.validation = validation;
     }
 
-    public RestaurantDto getRestaurantById(UUID id) {
-        return restaurantRepository.findById(id)
-                .map(restaurantMapper::toDto)
+    public DetailedRestaurantDto getRestaurantById(UUID id) {
+        return restaurantRepository.findDetailedRestaurantById(id)
+                .map(restaurantMapper::toDetailedDto)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
     }
 
     public List<RestaurantDto> getRestaurantByCustomerId(UUID customerId) {
-        return restaurantRepository.findAllByCustomerId(customerId).stream()
+        return restaurantRepository.findAllByCustomerId(customerId)
+                .stream()
                 .map(restaurantMapper::toDto)
                 .toList();
     }
@@ -56,16 +61,13 @@ public class RestaurantService {
     }
 
     public RestaurantDto updateRestaurant(UUID id, NewRestaurantDto newRestaurantDto) {
-        Restaurant updatedRestaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id,Restaurant.class));
+        Restaurant updatedRestaurant = validation.validateEntityById(id);
         restaurantMapper.updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
         return restaurantMapper.toDto(restaurantRepository.save(updatedRestaurant));
     }
 
     public void softDelete(UUID id) {
-        Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, Restaurant.class));
-
+        Restaurant restaurant = validation.validateEntityById(id);
         obfuscateData(restaurant);
         restaurantRepository.save(restaurant);
     }

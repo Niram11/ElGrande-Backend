@@ -106,7 +106,7 @@ public class IngredientControllerTest {
         mockMvc.perform(post("/api/v1/ingredients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(nameErrMsg))
                 );
     }

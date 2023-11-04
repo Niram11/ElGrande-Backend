@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +21,11 @@ public class LocationController {
 
     public LocationController(LocationService locationsService) {
         this.locationsService = locationsService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LocationDto>> getAllLocations() {
+        return ResponseEntity.status(HttpStatus.OK).body(locationsService.getAllLocations());
     }
 
     @PostMapping
@@ -33,9 +39,11 @@ public class LocationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(locationsService.updateLocation(id, newLocationDTO));
     }
 
-    @PutMapping ("/{id}/restaurants")
+    // todo if location exist then add address restaurant to it instead of creating a new one
+    @PutMapping("/{id}/restaurants")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id, @Valid @RequestBody Set<RestaurantDto> restaurants ){
+    public ResponseEntity<LocationDto> addRestaurantsToLocation(@PathVariable UUID id,
+                                                                @Valid @RequestBody Set<RestaurantDto> restaurants) {
         locationsService.assignRestaurantToLocation(id, restaurants);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

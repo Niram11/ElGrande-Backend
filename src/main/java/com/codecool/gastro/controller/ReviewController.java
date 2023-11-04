@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
 
-import com.codecool.gastro.dto.review.DetailedReview;
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.service.ReviewService;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -36,13 +35,13 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/details", params = "restaurantId")
-    public ResponseEntity<List<DetailedReview>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+    public ResponseEntity<List<DetailedReviewDto>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getDetailedReviewsByRestaurantId(restaurantId));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
+    public ResponseEntity<DetailedReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.saveReview(newReviewDTO));
     }
 

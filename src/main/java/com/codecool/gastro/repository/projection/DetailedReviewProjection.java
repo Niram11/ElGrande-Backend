@@ -1,8 +1,11 @@
 package com.codecool.gastro.repository.projection;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public interface DetailedReviewProjection {
+    UUID getId();
+
     String getComment();
 
     int getGrade();
@@ -10,6 +13,8 @@ public interface DetailedReviewProjection {
     LocalDate getSubmissionTime();
 
     String getName();
+
+    void setId(UUID id);
 
     void setComment(String comment);
 

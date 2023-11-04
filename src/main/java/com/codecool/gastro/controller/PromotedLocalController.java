@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.dto.promotedlocal.EditPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.NewPromotedLocalDto;
 import com.codecool.gastro.dto.promotedlocal.PromotedLocalDto;
 import com.codecool.gastro.service.PromotedLocalService;
@@ -35,8 +36,8 @@ public class PromotedLocalController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<PromotedLocalDto> updatePromotedLocal(@PathVariable UUID id,
-                                                @Valid @RequestBody NewPromotedLocalDto newPromotedLocalDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.updatePromotedLocal(id, newPromotedLocalDto));
+                                                                @Valid @RequestBody EditPromotedLocalDto editPromotedLocalDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(promotedLocalService.updatePromotedLocal(id, editPromotedLocalDto));
     }
 
     @DeleteMapping("/{id}")

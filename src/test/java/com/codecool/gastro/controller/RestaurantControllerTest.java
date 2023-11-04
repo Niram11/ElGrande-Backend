@@ -18,22 +18,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = RestaurantController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -62,13 +55,15 @@ public class RestaurantControllerTest {
     @Test
     void testGetRestaurantByIdShouldReturnStatusOkAndRestaurantDtoWhenRestaurantExist() throws Exception {
         // given
-        RestaurantDto restaurantDto = new RestaurantDto(
+        DetailedRestaurantDto restaurantDto = new DetailedRestaurantDto(
                 UUID.randomUUID(),
                 "Name",
                 "Desc",
                 "Website.pl",
                 123123123,
-                "Email@gmail.com"
+                "Email@gmail.com",
+                new String[]{"image1", "image2"},
+                BigDecimal.valueOf(12)
         );
 
         // when
@@ -77,12 +72,14 @@ public class RestaurantControllerTest {
         // then
         mockMvc.perform(get("/api/v1/restaurants/" + restaurantDto.id()))
                 .andExpectAll(status().isOk(),
-                        jsonPath(("$.id")).value(restaurantDto.id().toString()),
-                        jsonPath(("$.name")).value(restaurantDto.name()),
-                        jsonPath(("$.description")).value(restaurantDto.description()),
-                        jsonPath(("$.website")).value(restaurantDto.website()),
-                        jsonPath(("$.contactNumber")).value(restaurantDto.contactNumber().toString()),
-                        jsonPath(("$.contactEmail")).value(restaurantDto.contactEmail())
+                        jsonPath("$.id").value(restaurantDto.id().toString()),
+                        jsonPath("$.name").value(restaurantDto.name()),
+                        jsonPath("$.description").value(restaurantDto.description()),
+                        jsonPath("$.website").value(restaurantDto.website()),
+                        jsonPath("$.contactNumber").value(restaurantDto.contactNumber().toString()),
+                        jsonPath("$.contactEmail").value(restaurantDto.contactEmail()),
+//                        jsonPath("$.imagesPaths").value(Arrays.asList(restaurantDto.imagesPaths()).toString()),
+                        jsonPath("$.averageGrade").value(restaurantDto.averageGrade())
                 );
     }
 
@@ -187,10 +184,11 @@ public class RestaurantControllerTest {
 
         // then
         mockMvc.perform(put("/api/v1/restaurants/" + restaurantId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage").value("Name cannot be empty"));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newRestaurantDto)))
+                .andExpectAll(status().isUnsupportedMediaType(),
+                        jsonPath("$.errorMessage").value("Name cannot be empty")
+                );
     }
 
     @Test

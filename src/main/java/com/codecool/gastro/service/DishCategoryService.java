@@ -4,9 +4,7 @@ import com.codecool.gastro.dto.dishcategory.DishCategoryDto;
 import com.codecool.gastro.dto.dishcategory.NewDishCategoryDto;
 import com.codecool.gastro.repository.DishCategoryRepository;
 import com.codecool.gastro.repository.entity.DishCategory;
-import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.DishCategoryMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,9 +31,7 @@ public class DishCategoryService {
     public DishCategoryDto saveDishCategory(NewDishCategoryDto newDishCategoryDto) {
         DishCategory dishCategory = dishCategoryMapper.dtoToDishCategory(newDishCategoryDto);
         parseToLowerCase(dishCategory);
-        return dishCategoryMapper.toDto(dishCategoryRepository.save(
-                dishCategory
-        ));
+        return dishCategoryMapper.toDto(dishCategoryRepository.save(dishCategory));
     }
 
     public void deleteDishCategory(UUID id) {

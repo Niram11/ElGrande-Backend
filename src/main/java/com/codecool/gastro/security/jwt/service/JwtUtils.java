@@ -84,27 +84,27 @@ public class JwtUtils {
         } catch (SignatureException ex) {
             logger.error("Invalid JWT signature: {}", ex.getMessage());
         } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token: {}", ex.getMessage());
+            logger.error("Invalid JWT accessToken: {}", ex.getMessage());
         } catch (ExpiredJwtException ex) {
-            logger.error("JWT token is expired: {}", ex.getMessage());
+            logger.error("JWT accessToken is expired: {}", ex.getMessage());
         } catch (UnsupportedJwtException ex) {
-            logger.error("JWT token is unsupported: {}", ex.getMessage());
+            logger.error("JWT accessToken is unsupported: {}", ex.getMessage());
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty: {}", ex.getMessage());
         }
         return false;
     }
 
-    public String parseJwt(HttpServletRequest request) {
-        if (Objects.isNull(request.getCookies())) {
-            return null;
+    public Optional<String> parseJwt(HttpServletRequest request) {
+        if (Objects.isNull(request.getHeader("Authorization"))) {
+            return Optional.empty();
         }
-
-        Optional<Cookie> jwtToken = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("JWT_TOKEN"))
-                .findFirst();
-
-        return jwtToken.map(Cookie::getValue).orElse(null);
+        try {
+            // 7 Means that it will take out "Bearer " from value
+            return Optional.of(request.getHeader("Authorization").substring(7));
+        } catch (StringIndexOutOfBoundsException ex) {
+            return Optional.empty();
+        }
     }
 
     private Key key() {

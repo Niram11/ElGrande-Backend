@@ -150,7 +150,7 @@ public class AddressControllerTest {
         mockMvc.perform(put("/api/v1/addresses/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString("Country cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("City cannot be empty")),
                         jsonPath("$.errorMessage", Matchers.containsString("Postal code cannot be empty")),
