@@ -15,13 +15,13 @@ import java.util.UUID;
 public class BusinessHourService {
     private final BusinessHourRepository businessHourRepository;
     private final BusinessHourMapper businessHourMapper;
-    private final BusinessHourValidation validation;
+    private final BusinessHourValidation businessHourValidation;
 
     public BusinessHourService(BusinessHourRepository businessHourRepository, BusinessHourMapper businessHourMapper,
-                               BusinessHourValidation validation) {
+                               BusinessHourValidation businessHourValidation) {
         this.businessHourRepository = businessHourRepository;
         this.businessHourMapper = businessHourMapper;
-        this.validation = validation;
+        this.businessHourValidation = businessHourValidation;
     }
 
     public List<BusinessHourDto> getBusinessHoursByRestaurantId(UUID restaurantId) {
@@ -32,7 +32,7 @@ public class BusinessHourService {
     }
 
     public BusinessHourDto updateBusinessHour(UUID id, NewBusinessHourDto newBusinessHourDto) {
-        BusinessHour updatedBusinessHour = validation.validateEntityById(id);
+        BusinessHour updatedBusinessHour = businessHourValidation.validateEntityById(id);
         businessHourMapper.updateBusinessHourFromDto(newBusinessHourDto, updatedBusinessHour);
         return businessHourMapper.toDto(businessHourRepository.save(updatedBusinessHour));
     }

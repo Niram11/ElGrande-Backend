@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class LocationValidation implements Validation<UUID, Location> {
+public class LocationValidation implements Validation<Location> {
     private final LocationRepository locationRepository;
 
     public LocationValidation(LocationRepository locationRepository) {

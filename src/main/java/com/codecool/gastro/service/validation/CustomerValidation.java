@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class CustomerValidation implements Validation<UUID, Customer>{
+public class CustomerValidation implements Validation<Customer>{
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
 

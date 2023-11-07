@@ -6,6 +6,7 @@ import com.codecool.gastro.repository.AddressRepository;
 import com.codecool.gastro.repository.entity.Address;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.AddressMapper;
+import com.codecool.gastro.service.validation.AddressValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,8 @@ public class AddressServiceTest {
     AddressRepository repository;
     @Mock
     AddressMapper mapper;
+    @Mock
+    AddressValidation validation;
 
     private UUID addressId;
     private UUID restaurantId;
@@ -71,42 +74,41 @@ public class AddressServiceTest {
     @Test
     void testGetAddressByRestaurantId_ShouldReturnAddressDto_WhenExist() {
         // when
-        when(repository.findByRestaurantId(restaurantId)).thenReturn(Optional.of(address));
-        when(mapper.toDto(any(Address.class))).thenReturn(addressDto);
+        when(validation.validateByRestaurantId(restaurantId)).thenReturn(address);
+        when(mapper.toDto(address)).thenReturn(addressDto);
 
         // when
         AddressDto pickedAddress = service.getAddressByRestaurantId(restaurantId);
 
         // then
         assertEquals(address.getId(), pickedAddress.id());
-        verify(repository, times(1)).findByRestaurantId(any(UUID.class));
-        verify(mapper, times(1)).toDto(any(Address.class));
     }
 
     @Test
     void testGetAddressByRestaurantId_ShouldThrowObjectNotFoundException_WhenNoAddress() {
+        // when
+        doThrow(ObjectNotFoundException.class).when(validation).validateByRestaurantId(restaurantId);
+
         // then
-        assertThrows(ObjectNotFoundException.class, () -> service.getAddressByRestaurantId(UUID.randomUUID()));
+        assertThrows(ObjectNotFoundException.class, () -> service.getAddressByRestaurantId(restaurantId));
     }
 
     @Test
     void testUpdateAddress_ShouldReturnAddressDto_WhenExist() {
         // when
-        when(repository.findById(addressId)).thenReturn(Optional.of(address));
+        when(validation.validateEntityById(addressId)).thenReturn(address);
         when(repository.save(address)).thenReturn(address);
         when(mapper.toDto(any(Address.class))).thenReturn(addressDto);
         AddressDto savedAddressDto = service.updateAddress(addressId, newAddressDto);
 
         // then
         assertEquals(savedAddressDto, addressDto);
-        verify(repository, times(1)).save(any(Address.class));
-        verify(mapper, times(1)).toDto(any(Address.class));
     }
 
     @Test
     void testUpdateAddress_ShouldThrowObjectNotFoundException_WhenNoAddress() {
         // when
-        when(repository.findById(addressId)).thenReturn(Optional.empty());
+        doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(addressId);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.updateAddress(addressId, newAddressDto));

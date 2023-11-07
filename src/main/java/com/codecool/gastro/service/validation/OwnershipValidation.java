@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class OwnershipValidation implements Validation<UUID, Ownership> {
+public class OwnershipValidation implements Validation<Ownership> {
     private final OwnershipRepository ownershipRepository;
 
     public OwnershipValidation(OwnershipRepository ownershipRepository) {

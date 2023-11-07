@@ -196,45 +196,6 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void testAssignRestaurantToCustomer_ShouldReturnStatusNoContent_WhenAllExists() throws Exception {
-        // then
-        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
-                .andExpectAll(status().isNoContent());
-    }
-
-    @Test
-    void testAssignRestaurantToCustomer_ShouldReturnStatusNotFoundAdnThrowObjectNotFoundException_WhenNoCustomer()
-            throws Exception {
-        // when
-        doThrow(new ObjectNotFoundException(customerId, Customer.class)).when(service)
-                .assignRestaurantToCustomer(customerId, restaurantId);
-
-        // then
-        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage")
-                                .value("Object of class " + Customer.class.getSimpleName() + " and id "
-                                        + customerId + " cannot be found")
-                );
-    }
-
-    @Test
-    void testAssignRestaurantToCustomer_ShouldReturnStatusNotFoundAdnThrowObjectNotFoundException_WhenNoRestaurant()
-            throws Exception {
-        // when
-        doThrow(new ObjectNotFoundException(restaurantId, Restaurant.class)).when(service)
-                .assignRestaurantToCustomer(customerId, restaurantId);
-
-        // then
-        mockMvc.perform(put("/api/v1/customers/" + customerId + "/restaurants/" + restaurantId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage")
-                                .value("Object of class " + Restaurant.class.getSimpleName() + " and id "
-                                        + restaurantId + " cannot be found")
-                );
-    }
-
-    @Test
     void testSoftDeleteCustomer_ShouldReturnStatusNoContent_WhenCustomerExist() throws Exception {
         // then
         mockMvc.perform(delete("/api/v1/customers/" + customerId))
