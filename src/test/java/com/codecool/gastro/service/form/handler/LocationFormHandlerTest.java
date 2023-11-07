@@ -18,6 +18,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +53,8 @@ public class LocationFormHandlerTest {
                 null,
                 newAddressDto,
                 null,
-                null
+                null,
+                UUID.randomUUID()
         );
 
         location = new Location();

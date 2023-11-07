@@ -8,6 +8,8 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Location;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.mapper.LocationMapper;
+import com.codecool.gastro.service.validation.LocationValidation;
+import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LocationServiceTest {
-    private static final UUID LOCATION_ID = UUID.randomUUID();
     @InjectMocks
     LocationService service;
     @Mock
@@ -33,7 +34,9 @@ public class LocationServiceTest {
     @Mock
     LocationMapper locationMapper;
     @Mock
-    RestaurantRepository restaurantRepository;
+    LocationValidation locationValidation;
+    @Mock
+    RestaurantValidation restaurantValidation;
 
     private UUID locationId;
     private LocationDto locationDto;
@@ -93,19 +96,14 @@ public class LocationServiceTest {
         restaurantDtoSet.add(restaurantDto1);
         restaurantDtoSet.add(restaurantDto2);
 
-        when(locationRepository.findById(locationId)).thenReturn(Optional.of(location));
-        when(restaurantRepository.findById(restaurantDto1.id())).thenReturn(Optional.of(new Restaurant()));
-        when(restaurantRepository.findById(restaurantDto2.id())).thenReturn(Optional.of(new Restaurant()));
-
         // Act
+        when(locationValidation.validateEntityById(locationId)).thenReturn(location);
+        when(restaurantValidation.validateEntityById(restaurantDto1.id())).thenReturn(new Restaurant());
+        when(restaurantValidation.validateEntityById(restaurantDto2.id())).thenReturn(new Restaurant());
         service.assignRestaurantToLocation(locationId, restaurantDtoSet);
 
         // Assert
         assertEquals(2, location.getRestaurants().size());
-        verify(locationRepository, times(1)).findById(locationId);
-        verify(restaurantRepository, times(1)).findById(restaurantDto1.id());
-        verify(restaurantRepository, times(1)).findById(restaurantDto2.id());
-        verify(locationRepository, times(1)).save(location);
     }
 }
 

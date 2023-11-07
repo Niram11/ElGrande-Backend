@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,6 @@ public class BusinessHourFormHandlerTest {
     private BusinessHour businessHour;
     private Restaurant restaurant;
     private NewRestaurantFormDto formDto;
-
     @BeforeEach
     void setUp() {
         formHandler = new BusinessHourFormHandler(
@@ -52,7 +52,8 @@ public class BusinessHourFormHandlerTest {
                 null,
                 null,
                 List.of(newBusinessHourDto),
-                null
+                null,
+                UUID.randomUUID()
         );
 
         businessHour = new BusinessHour();

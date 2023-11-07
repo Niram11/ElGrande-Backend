@@ -5,13 +5,15 @@ import com.codecool.gastro.dto.customer.DetailedCustomerDto;
 import com.codecool.gastro.dto.customer.EditCustomerDto;
 import com.codecool.gastro.dto.customer.NewCustomerDto;
 import com.codecool.gastro.repository.CustomerRepository;
-import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedCustomerProjection;
+import com.codecool.gastro.security.jwt.repository.OAuth2ClientTokenRepository;
+import com.codecool.gastro.security.jwt.repository.RefreshTokenRepository;
 import com.codecool.gastro.service.exception.EmailNotFoundException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.CustomerMapper;
+import com.codecool.gastro.service.validation.CustomerValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +27,6 @@ import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -40,9 +41,13 @@ public class CustomerServiceTest {
     @Mock
     CustomerRepository repository;
     @Mock
-    RestaurantRepository restaurantRepository;
-    @Mock
     CustomerMapper mapper;
+    @Mock
+    CustomerValidation validation;
+    @Mock
+    RefreshTokenRepository refreshTokenRepository;
+    @Mock
+    OAuth2ClientTokenRepository oAuth2ClientTokenRepository;
     @Mock
     PasswordEncoder encoder;
 
@@ -162,7 +167,7 @@ public class CustomerServiceTest {
     @Test
     void testUpdateCustomer_ShouldReturnUpdatedCustomerDto_WhenExist() {
         // when
-        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(validation.validateEntityById(customerId)).thenReturn(customer);
         when(repository.save(customer)).thenReturn(customer);
         when(mapper.toDto(customer)).thenReturn(customerDto);
         CustomerDto testedCustomerDto = service.updateCustomer(customerId, editCustomerDto);
@@ -174,18 +179,16 @@ public class CustomerServiceTest {
         assertEquals(testedCustomerDto.surname(), newCustomerDto.surname());
         assertEquals(testedCustomerDto.email(), newCustomerDto.email());
         assertEquals(testedCustomerDto.submissionTime(), captor.getValue().getSubmissionTime());
-        verify(repository, times(1)).findById(customerId);
         verify(mapper, times(1)).toDto(customer);
     }
 
     @Test
     void testUpdateCustomer_ShouldThrowObjectNotFoundException_WhenIsDeletedOrNoCustomer() {
         // when
-        when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
+        when(validation.validateEntityById(customerId)).thenThrow(ObjectNotFoundException.class);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.updateCustomer(customerId, editCustomerDto));
-        verify(repository, times(1)).findById(customerId);
     }
 
     @Test
@@ -195,20 +198,19 @@ public class CustomerServiceTest {
         customer.setEmail("Email@wp.pl");
 
         // when
-        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(validation.validateEntityById(customerId)).thenReturn(customer);
         service.softDelete(customerId);
 
         // then
         verify(repository, times(1)).save(captor.capture());
-        assertEquals(captor.getValue().getSurname(), "*" .repeat(customer.getSurname().length()));
+        assertEquals(captor.getValue().getSurname(), "*".repeat(customer.getSurname().length()));
         assertNotEquals(captor.getValue().getEmail(), "Email@wp.pl");
-        verify(repository, times(1)).findById(customerId);
     }
 
     @Test
     void testSoftDelete_ShouldThrowObjectNotFoundException_WhenNoCustomerOrDeleted() {
         // when
-        when(repository.findById(customerId)).thenThrow(ObjectNotFoundException.class);
+        when(validation.validateEntityById(customerId)).thenThrow(ObjectNotFoundException.class);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.softDelete(customerId));
@@ -236,36 +238,5 @@ public class CustomerServiceTest {
 
         // then
         assertThrows(EmailNotFoundException.class, () -> service.getCustomerByEmail(customer.getEmail()));
-    }
-
-    @Test
-    void testAssignRestaurantToCustomer_ShouldSaveCustomerWithAssignedRestaurant_WhenExist() {
-        // when
-        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
-        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
-        service.assignRestaurantToCustomer(customerId, restaurantId);
-
-        // then
-        verify(repository, times(1)).save(captor.capture());
-        assertTrue(captor.getValue().getRestaurants().contains(restaurant));
-    }
-
-    @Test
-    void testAssignRestaurantToCustomer_ShouldThrowObjectNotFoundException_WhenNoCustomer() {
-        // when
-        when(repository.findById(customerId)).thenReturn(Optional.empty());
-
-        // then
-        assertThrows(ObjectNotFoundException.class, () -> service.assignRestaurantToCustomer(customerId, restaurantId));
-    }
-
-    @Test
-    void testAssignRestaurantToCustomer_ShouldThrowObjectNotFoundException_WhenNoRestaurant() {
-        // when
-        when(repository.findById(customerId)).thenReturn(Optional.of(customer));
-        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
-
-        // then
-        assertThrows(ObjectNotFoundException.class, () -> service.assignRestaurantToCustomer(customerId, restaurantId));
     }
 }

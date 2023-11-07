@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class BusinessHourValidation implements Validation<UUID, BusinessHour> {
+public class BusinessHourValidation implements Validation<BusinessHour> {
     private final BusinessHourRepository businessHourRepository;
 
     public BusinessHourValidation(BusinessHourRepository businessHourRepository) {

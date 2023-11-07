@@ -14,14 +14,10 @@ import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Dish;
 import com.codecool.gastro.repository.entity.DishCategory;
 import com.codecool.gastro.repository.entity.Ingredient;
-import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import com.codecool.gastro.service.mapper.DishCategoryMapper;
 import com.codecool.gastro.service.mapper.DishMapper;
-import com.codecool.gastro.service.mapper.IngredientMapper;
 import com.codecool.gastro.service.validation.DishValidation;
 import com.codecool.gastro.service.validation.RestaurantValidation;
-import org.checkerframework.checker.units.qual.N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +33,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -111,7 +108,7 @@ class DishServiceTest {
     @Test
     void testGetDishById_ShouldReturnDishDto_WhenExist() {
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
         DishDto expectedDishDto = service.getDishById(dishId);
 
@@ -126,7 +123,7 @@ class DishServiceTest {
     @Test
     void testGetDishById_ShouldThrowObjectNotFoundException_WhenNoDish() {
         // when
-        doThrow(ObjectNotFoundException.class).when(repository).findById(dishId);
+        doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(dishId);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.getDishById(dishId));
@@ -138,7 +135,6 @@ class DishServiceTest {
         when(mapper.dtoToDish(newDishDto)).thenReturn(dish);
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
-        when(restaurantRepository.findById(newDishDto.restaurantId())).thenReturn(Optional.of(new Restaurant()));
         DishDto expectedDishDto = service.saveNewDish(newDishDto);
 
         // then
@@ -151,7 +147,7 @@ class DishServiceTest {
     @Test
     void testUpdateDish_ShouldReturnDishDto_WhenCalled() {
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(repository.save(dish)).thenReturn(dish);
         when(mapper.toDto(dish)).thenReturn(dishDto);
         DishDto expectedDishDto = service.updateDish(dishId, editDishDto);
@@ -167,7 +163,7 @@ class DishServiceTest {
     @Test
     void testAssignIngredientToDish_ShouldThrowObjectNotFoundException_WhenNoDish() {
         // when
-        doThrow(ObjectNotFoundException.class).when(repository).findById(dishId);
+        doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(dishId);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.assignIngredientToDish(dishId, Set.of()));
@@ -191,7 +187,7 @@ class DishServiceTest {
         Set<NewIngredientDto> ingredientDtoSet = Set.of(newIngredientDtoOne, newIngredientDtoTwo);
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(ingredientRepository.findByName(newIngredientDtoOne.name())).thenReturn(Optional.of(ingredientOne));
         when(ingredientRepository.findByName(newIngredientDtoTwo.name())).thenReturn(Optional.of(ingredientTwo));
 
@@ -217,7 +213,7 @@ class DishServiceTest {
         Set<NewIngredientDto> ingredientDtoSet = Set.of(newIngredientDtoOne, newIngredientDtoTwo);
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(ingredientRepository.findByName(newIngredientDtoOne.name())).thenReturn(Optional.of(ingredientOne));
         when(ingredientRepository.findByName(newIngredientDtoTwo.name())).thenReturn(Optional.of(ingredientTwo));
 
@@ -248,7 +244,7 @@ class DishServiceTest {
         Set<NewIngredientDto> ingredientDtoSet = Set.of(newIngredientDtoOne, newIngredientDtoTwo);
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(ingredientRepository.findByName(anyString())).thenReturn(Optional.empty());
         when(ingredientService.saveNewIngredient(newIngredientDtoOne)).thenReturn(ingredientDtoOne);
         when(ingredientService.saveNewIngredient(newIngredientDtoTwo)).thenReturn(ingredientDtoTwo);
@@ -274,9 +270,9 @@ class DishServiceTest {
         Set<NewDishCategoryDto> newDishCategoryDtoSet = Set.of(newDishCategoryDtoOne, newDishCategoryDtoTwo);
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
-        when(dishCategoryRepository.findByCategory(newDishCategoryDtoOne.category())).thenReturn(Optional.of(dishCategoryOne));
-        when(dishCategoryRepository.findByCategory(newDishCategoryDtoTwo.category())).thenReturn(Optional.of(dishCategoryTwo));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
+        when(dishCategoryRepository.findByCategory(newDishCategoryDtoOne.category().toLowerCase())).thenReturn(Optional.of(dishCategoryOne));
+        when(dishCategoryRepository.findByCategory(newDishCategoryDtoTwo.category().toLowerCase())).thenReturn(Optional.of(dishCategoryTwo));
 
         service.assignDishCategoryToDish(dishId, newDishCategoryDtoSet);
 
@@ -302,9 +298,9 @@ class DishServiceTest {
 
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
-        when(dishCategoryRepository.findByCategory(newDishCategoryDtoOne.category())).thenReturn(Optional.of(dishCategoryOne));
-        when(dishCategoryRepository.findByCategory(newDishCategoryDtoTwo.category())).thenReturn(Optional.of(dishCategoryTwo));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
+        when(dishCategoryRepository.findByCategory(newDishCategoryDtoOne.category().toLowerCase())).thenReturn(Optional.of(dishCategoryOne));
+        when(dishCategoryRepository.findByCategory(newDishCategoryDtoTwo.category().toLowerCase())).thenReturn(Optional.of(dishCategoryTwo));
 
         service.assignDishCategoryToDish(dishId, newDishCategoryDtoSet);
 
@@ -333,7 +329,7 @@ class DishServiceTest {
         Set<NewDishCategoryDto> newDishCategoryDtoSet = Set.of(newDishCategoryDtoOne, newDishCategoryDtoTwo);
 
         // when
-        when(repository.findById(dishId)).thenReturn(Optional.of(dish));
+        when(validation.validateEntityById(dishId)).thenReturn(dish);
         when(dishCategoryRepository.findByCategory(anyString())).thenReturn(Optional.empty());
         when(dishCategoryService.saveDishCategory(newDishCategoryDtoOne)).thenReturn(dishCategoryDtoOne);
         when(dishCategoryService.saveDishCategory(newDishCategoryDtoTwo)).thenReturn(dishCategoryDtoTwo);

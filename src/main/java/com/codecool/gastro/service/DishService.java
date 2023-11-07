@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,24 +52,20 @@ public class DishService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public List<DishDto> getDishesByRestaurantId(UUID id) {
-        return dishRepository.findByRestaurantId(id)
+    public List<DishDto> getDishesByRestaurantId(UUID restaurantId) {
+        return dishRepository.findByRestaurantId(restaurantId)
                 .stream()
                 .map(dishMapper::toDto)
                 .toList();
     }
 
     public DishDto getDishById(UUID id) {
-        validation.validateEntityById(id);
-        return dishRepository.findById(id)
-                .map(dishMapper::toDto).get();
+        return dishMapper.toDto(validation.validateEntityById(id));
     }
 
     public DishDto saveNewDish(NewDishDto newDishDto) {
         restaurantValidation.validateEntityById(newDishDto.restaurantId());
-        restaurantRepository.findById(newDishDto.restaurantId()).get();
-        Dish savedDish = dishRepository.save(dishMapper.dtoToDish(newDishDto));
-        return dishMapper.toDto(savedDish);
+        return dishMapper.toDto(dishRepository.save(dishMapper.dtoToDish(newDishDto)));
     }
 
     public DishDto updateDish(UUID id, EditDishDto editDishDto) {
@@ -98,32 +93,27 @@ public class DishService {
     }
 
     private void addIngredientsToDish(Set<NewIngredientDto> ingredients, Dish dish) {
-        ingredients.forEach(ingredient -> {
-            Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredient.name().toLowerCase());
-
-            ingredientOptional.ifPresentOrElse(dish::assignIngredient, () -> {
-                        IngredientDto savedIngredient = ingredientService.saveNewIngredient(ingredient);
-                        Ingredient newIngredient = new Ingredient();
-                        newIngredient.setName(savedIngredient.name());
-                        newIngredient.setId(savedIngredient.id());
-                        dish.assignIngredient(newIngredient);
-                    });
-        });
+        ingredients.forEach(ingredient -> ingredientRepository.findByName(ingredient.name().toLowerCase())
+                .ifPresentOrElse(dish::assignIngredient, () -> {
+                    IngredientDto savedIngredient = ingredientService.saveNewIngredient(ingredient);
+                    Ingredient newIngredient = new Ingredient();
+                    newIngredient.setName(savedIngredient.name());
+                    newIngredient.setId(savedIngredient.id());
+                    dish.assignIngredient(newIngredient);
+                })
+        );
     }
 
     private void addDishCategoryToDish(Set<NewDishCategoryDto> categories, Dish dish) {
-        categories.forEach(category -> {
-            Optional<DishCategory> dishCategoryOptional = dishCategoryRepository.findByCategory(category.category());
-
-            dishCategoryOptional.ifPresentOrElse(dish::assignCategories,
-                    () -> {
-                        DishCategoryDto savedDishCategory = dishCategoryService.saveDishCategory(category);
-                        DishCategory newDishCategory = new DishCategory();
-                        newDishCategory.setCategory(savedDishCategory.category());
-                        newDishCategory.setId(savedDishCategory.id());
-                        dish.assignCategories(newDishCategory);
-                    });
-        });
+        categories.forEach(category -> dishCategoryRepository.findByCategory(category.category().toLowerCase())
+                .ifPresentOrElse(dish::assignCategories, () -> {
+                    DishCategoryDto savedDishCategory = dishCategoryService.saveDishCategory(category);
+                    DishCategory newDishCategory = new DishCategory();
+                    newDishCategory.setCategory(savedDishCategory.category());
+                    newDishCategory.setId(savedDishCategory.id());
+                    dish.assignCategories(newDishCategory);
+                })
+        );
     }
 
 }

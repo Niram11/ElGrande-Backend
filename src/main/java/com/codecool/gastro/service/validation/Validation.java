@@ -1,7 +1,8 @@
 package com.codecool.gastro.service.validation;
 
 
-public interface Validation<T, U>{
+import java.util.UUID;
 
-    U validateEntityById(T dto);
+public interface Validation<T>{
+    T validateEntityById(UUID id);
 }

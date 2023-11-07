@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class DishValidation implements Validation<UUID, Dish> {
+public class DishValidation implements Validation<Dish> {
     private final DishRepository dishRepository;
 
     public DishValidation(DishRepository dishRepository) {

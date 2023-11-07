@@ -7,6 +7,7 @@ import com.codecool.gastro.repository.entity.BusinessHour;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.BusinessHourMapper;
+import com.codecool.gastro.service.validation.BusinessHourValidation;
 import jakarta.transaction.TransactionalException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,8 @@ public class BusinessHoursServiceTest {
     BusinessHourRepository repository;
     @Mock
     BusinessHourMapper mapper;
+    @Mock
+    BusinessHourValidation validation;
 
     private UUID businessHourId;
     private UUID restaurantId;
@@ -115,7 +118,7 @@ public class BusinessHoursServiceTest {
         businessHour.setRestaurant(restaurant);
 
         // when
-        when(repository.findById(businessHourId)).thenReturn(Optional.of(businessHour));
+        when(validation.validateEntityById(businessHourId)).thenReturn(businessHour);
         when(repository.save(businessHour)).thenReturn(businessHour);
         when(mapper.toDto(businessHour)).thenReturn(businessHourDto);
         BusinessHourDto updatedBusinessHourDto = service.updateBusinessHour(businessHourId, newBusinessHourDto);
@@ -129,7 +132,7 @@ public class BusinessHoursServiceTest {
     @Test
     void testUpdateBusinessHour_ShouldThrowObjectNotFoundException_WhenNoBusinessHour() {
         // when
-        when(repository.findById(businessHourId)).thenReturn(Optional.empty());
+        doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(businessHourId);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.updateBusinessHour(businessHourId, newBusinessHourDto));

@@ -33,13 +33,6 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(id, updateDto));
     }
 
-    @PutMapping("/{id}/restaurants/{restaurantId}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> assignRestaurantToCustomer(@PathVariable UUID id, @PathVariable UUID restaurantId) {
-        customerService.assignRestaurantToCustomer(id, restaurantId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {

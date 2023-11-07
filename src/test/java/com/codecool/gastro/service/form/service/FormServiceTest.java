@@ -5,10 +5,7 @@ import com.codecool.gastro.dto.form.NewRestaurantFormDto;
 import com.codecool.gastro.dto.location.NewLocationDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.repository.CustomerRepository;
-import com.codecool.gastro.repository.entity.Address;
-import com.codecool.gastro.repository.entity.BusinessHour;
-import com.codecool.gastro.repository.entity.Location;
-import com.codecool.gastro.repository.entity.Restaurant;
+import com.codecool.gastro.repository.entity.*;
 import com.codecool.gastro.security.jwt.service.JwtUtils;
 import com.codecool.gastro.service.form.handler.FormHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,10 +27,6 @@ import static org.mockito.Mockito.verify;
 public class FormServiceTest {
     FormService restaurantFormService;
     @Mock
-    CustomerRepository customerRepository;
-    @Mock
-    JwtUtils jwtUtils;
-    @Mock
     FormHandler<Restaurant> restaurantHandler;
     @Mock
     FormHandler<Address> addressHandler;
@@ -40,18 +34,18 @@ public class FormServiceTest {
     FormHandler<BusinessHour> businessHourHandler;
     @Mock
     FormHandler<Location> locationHandler;
-
+    @Mock
+    FormHandler<Customer> customerHandler;
     private NewRestaurantFormDto newRestaurantFormDto;
 
     @BeforeEach
     void setUp() {
         restaurantFormService = new FormService(
-                jwtUtils,
-                customerRepository,
                 restaurantHandler,
                 addressHandler,
                 businessHourHandler,
-                locationHandler
+                locationHandler,
+                customerHandler
         );
 
         NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
@@ -80,7 +74,8 @@ public class FormServiceTest {
                 newRestaurantDto,
                 newLocationDto,
                 List.of(),
-                newAddressDto
+                newAddressDto,
+                UUID.randomUUID()
         );
 
     }

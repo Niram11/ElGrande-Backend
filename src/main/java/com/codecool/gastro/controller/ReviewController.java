@@ -23,11 +23,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewById(id));
-    }
-
     @GetMapping(params = "customerId")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {

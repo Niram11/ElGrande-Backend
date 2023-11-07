@@ -94,30 +94,6 @@ public class ReviewControllerTest {
 
 
     @Test
-    void testGetReviewById_ShouldReturnStatusOkAndReviewDto_WhenExist() throws Exception {
-        // when
-        Mockito.when(reviewService.getReviewById(reviewId)).thenReturn(reviewDto);
-
-        // then
-        mockMvc.perform(get("/api/v1/reviews/" + reviewId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentRespond));
-    }
-
-    @Test
-    void testGetReviewById_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoReview() throws Exception {
-        // when
-        Mockito.when(reviewService.getReviewById(reviewId)).thenThrow(new ObjectNotFoundException(reviewId, Review.class));
-
-        // then
-        mockMvc.perform(get("/api/v1/reviews/" + reviewId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage")
-                                .value("Object of class " + Review.class.getSimpleName() + " and id " + reviewId + " cannot be found")
-                );
-    }
-
-    @Test
     void testGetReviewsByCustomerId_ShouldReturnStatusOkAndListOfReviewDto_WhenExist() throws Exception {
         // when
         Mockito.when(reviewService.getReviewByCustomerId(customerId)).thenReturn(List.of());
