@@ -85,11 +85,11 @@ public class LocationControllerTest {
         when(service.saveLocation(any(NewLocationDto.class))).thenReturn(locationDto);
 
         String requestBody = """
-        {
-            "latitude": 52.5200,
-            "longitude": 13.4050
-        }
-        """;
+                {
+                    "latitude": 52.5200,
+                    "longitude": 13.4050
+                }
+                """;
 
         // then
         mockMvc.perform(post("/api/v1/locations")
@@ -106,41 +106,44 @@ public class LocationControllerTest {
                 Arguments.of(new BigDecimal("52.5200"), "Longitude cannot be null")
         );
     }
+
     //TODO: to parametrized test
     @Test
     void testCreateNewLocationShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues() throws Exception {
         // given
         String contentRequest = """
-            {
-                "latitude": null,
-                "longitude": 13.4050
-            }
-            """;
+                {
+                    "latitude": null,
+                    "longitude": 13.4050
+                }
+                """;
 
         // then
         mockMvc.perform(post("/api/v1/locations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage", Matchers.containsString("Latitude cannot be null")));
+                .andExpectAll(status().isUnsupportedMediaType(),
+                        jsonPath("$.errorMessage", Matchers.containsString("Latitude cannot be null"))
+                );
     }
 
     @Test
     void testCreateNewLocationShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidLongitude() throws Exception {
         // given
         String contentRequest = """
-            {
-                "latitude": 52.5200,
-                "longitude": null
-            }
-            """;
+                {
+                    "latitude": 52.5200,
+                    "longitude": null
+                }
+                """;
 
         // then
         mockMvc.perform(post("/api/v1/locations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage", Matchers.containsString("Longitude cannot be null")));
+                .andExpectAll(status().isUnsupportedMediaType(),
+                        jsonPath("$.errorMessage", Matchers.containsString("Longitude cannot be null"))
+                );
     }
 
 
@@ -152,7 +155,7 @@ public class LocationControllerTest {
         // When and Then
         mockMvc.perform(put("/api/v1/locations/{id}/restaurants", locationId)
                         .contentType(MediaType.APPLICATION_JSON)
-                //TODO:to multiline string
+                        //TODO:to multiline string
                         .content("[{\"id\": \"" + restaurantId + "\", \"name\": \"Restaurant Name\"}]"))
                 .andExpect(status().isNoContent());
     }

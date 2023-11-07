@@ -1,7 +1,7 @@
 package com.codecool.gastro.controller;
 
 
-import com.codecool.gastro.dto.review.DetailedReview;
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.service.ReviewService;
@@ -23,11 +23,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewById(id));
-    }
-
     @GetMapping(params = "customerId")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<ReviewDto>> getReviewsByCustomerId(@RequestParam("customerId") UUID customerId) {
@@ -35,13 +30,13 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/details", params = "restaurantId")
-    public ResponseEntity<List<DetailedReview>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
+    public ResponseEntity<List<DetailedReviewDto>> getDetailedReviewsByRestaurantId(@RequestParam("restaurantId") UUID restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getDetailedReviewsByRestaurantId(restaurantId));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
+    public ResponseEntity<DetailedReviewDto> createNewReview(@Valid @RequestBody NewReviewDto newReviewDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.saveReview(newReviewDTO));
     }
 

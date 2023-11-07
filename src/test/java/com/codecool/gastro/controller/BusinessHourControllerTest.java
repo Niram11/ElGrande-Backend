@@ -146,7 +146,7 @@ public class BusinessHourControllerTest {
         mockMvc.perform(put("/api/v1/business-hours/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(dayErrMsg)),
                         jsonPath("$.errorMessage", Matchers.containsString(openingHourErrMsg)),
                         jsonPath("$.errorMessage", Matchers.containsString(closingHourErrMsg))

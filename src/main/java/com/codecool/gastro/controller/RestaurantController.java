@@ -25,9 +25,10 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable UUID id) {
+    public ResponseEntity<DetailedRestaurantDto> getRestaurantById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantById(id));
     }
+
     @GetMapping(params = "customerId")
     public ResponseEntity<List<RestaurantDto>> getRestaurantByCustomerId(@RequestParam("customerId") UUID customerId) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantByCustomerId(customerId));

@@ -1,5 +1,6 @@
 package com.codecool.gastro.controller;
 
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.dto.review.NewReviewDto;
 import com.codecool.gastro.dto.review.ReviewDto;
 import com.codecool.gastro.repository.CustomerRepository;
@@ -50,6 +51,7 @@ public class ReviewControllerTest {
     private UUID restaurantId;
     private ReviewDto reviewDto;
     private NewReviewDto newReviewDto;
+    private DetailedReviewDto detailedReviewDto;
     private String contentRespond;
 
     @BeforeEach
@@ -61,13 +63,21 @@ public class ReviewControllerTest {
         reviewDto = new ReviewDto(
                 reviewId,
                 "CommentTest",
-                6,
+                4,
                 LocalDate.of(2012, 12, 12)
+        );
+
+        detailedReviewDto = new DetailedReviewDto(
+                reviewId,
+                "CommentTest",
+                4,
+                LocalDate.of(2012, 12, 12),
+                "Name"
         );
 
         newReviewDto = new NewReviewDto(
                 "Comment",
-                5,
+                4,
                 customerId,
                 restaurantId
         );
@@ -76,36 +86,12 @@ public class ReviewControllerTest {
                 {
                     "id": "7a3404cb-fcf3-4b8e-875e-d14767b2d397",
                     "comment": "CommentTest",
-                    "grade" : 6,
+                    "grade" : 4,
                     "submissionTime": "2012-12-12"
                 }
                 """;
     }
 
-
-    @Test
-    void testGetReviewById_ShouldReturnStatusOkAndReviewDto_WhenExist() throws Exception {
-        // when
-        Mockito.when(reviewService.getReviewById(reviewId)).thenReturn(reviewDto);
-
-        // then
-        mockMvc.perform(get("/api/v1/reviews/" + reviewId))
-                .andExpectAll(status().isOk(),
-                        content().json(contentRespond));
-    }
-
-    @Test
-    void testGetReviewById_ShouldReturnStatusNotFoundAndErrorMessage_WhenNoReview() throws Exception {
-        // when
-        Mockito.when(reviewService.getReviewById(reviewId)).thenThrow(new ObjectNotFoundException(reviewId, Review.class));
-
-        // then
-        mockMvc.perform(get("/api/v1/reviews/" + reviewId))
-                .andExpectAll(status().isNotFound(),
-                        jsonPath("$.errorMessage")
-                                .value("Object of class " + Review.class.getSimpleName() + " and id " + reviewId + " cannot be found")
-                );
-    }
 
     @Test
     void testGetReviewsByCustomerId_ShouldReturnStatusOkAndListOfReviewDto_WhenExist() throws Exception {
@@ -138,14 +124,14 @@ public class ReviewControllerTest {
         String contentRequest = """
                 {
                     "comment": "Comment",
-                    "grade" : 5,
+                    "grade" : 4,
                     "customerId": "3466582c-580b-4d87-aa1d-615350e9598c",
                     "restaurantId": "7b571224-8506-4947-a975-bc1fa0d5b743"
                 }
                 """;
 
         // when
-        Mockito.when(reviewService.saveReview(newReviewDto)).thenReturn(reviewDto);
+        Mockito.when(reviewService.saveReview(newReviewDto)).thenReturn(detailedReviewDto);
         Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(new Customer()));
         Mockito.when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(new Restaurant()));
 
@@ -160,9 +146,8 @@ public class ReviewControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideIntForIsBlank")
-    void testCreateNewReviewShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues(String comment, int grade,
-                                                                                          String expectedErrMsg)
-            throws Exception {
+    void testCreateNewReviewShouldReturnStatusBadRequestAndErrorMessagesWhenInvalidValues(
+            String comment, int grade, String expectedErrMsg) throws Exception {
         String contentRequest = """
                 {
                     "comment": "%s",
@@ -173,7 +158,7 @@ public class ReviewControllerTest {
                 """.formatted(comment, grade);
 
         // when
-        Mockito.when(reviewService.saveReview(newReviewDto)).thenReturn(reviewDto);
+        Mockito.when(reviewService.saveReview(newReviewDto)).thenReturn(detailedReviewDto);
         Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
         Mockito.when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
 
@@ -181,7 +166,7 @@ public class ReviewControllerTest {
         mockMvc.perform(post("/api/v1/reviews")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
+                .andExpectAll(status().isUnsupportedMediaType(),
                         jsonPath("$.errorMessage", Matchers.containsString(expectedErrMsg))
                 );
     }

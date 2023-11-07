@@ -6,7 +6,6 @@ import com.codecool.gastro.dto.restaurant.RestaurantDto;
 import com.codecool.gastro.repository.LocationRepository;
 import com.codecool.gastro.repository.entity.Location;
 import com.codecool.gastro.service.mapper.LocationMapper;
-import com.codecool.gastro.service.mapper.RestaurantMapper;
 import com.codecool.gastro.service.validation.LocationValidation;
 import com.codecool.gastro.service.validation.RestaurantValidation;
 import org.springframework.stereotype.Service;
@@ -19,17 +18,14 @@ import java.util.UUID;
 public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
-    private final RestaurantMapper restaurantMapper;
-    private final LocationValidation validation;
+    private final LocationValidation locationValidation;
     private final RestaurantValidation restaurantValidation;
 
     public LocationService(LocationRepository locationRepository, LocationMapper locationMapper,
-                           RestaurantMapper restaurantMapper, LocationValidation validation,
-                           RestaurantValidation restaurantValidation) {
+                           LocationValidation locationValidation, RestaurantValidation restaurantValidation) {
         this.locationRepository = locationRepository;
         this.locationMapper = locationMapper;
-        this.restaurantMapper = restaurantMapper;
-        this.validation = validation;
+        this.locationValidation = locationValidation;
         this.restaurantValidation = restaurantValidation;
     }
 
@@ -46,25 +42,16 @@ public class LocationService {
     }
 
     public LocationDto updateLocation(UUID id, NewLocationDto newLocationDTO) {
-        Location updatedLocation = validation.validateEntityById(id);
+        Location updatedLocation = locationValidation.validateEntityById(id);
         locationMapper.updateLocationFromDto(newLocationDTO, updatedLocation);
         return locationMapper.toDto(locationRepository.save(updatedLocation));
     }
 
-    public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDto) {
-        Location updatedLocation = validation.validateEntityById(locationId);
-        //TODO: change method to not use mapper
-        restaurantValidation.validateRestaurantsSet(restaurantDto);
-        assignRestaurantsSet(updatedLocation, restaurantDto);
+    public void assignRestaurantToLocation(UUID locationId, Set<RestaurantDto> restaurantDtoSet) {
+        Location updatedLocation = locationValidation.validateEntityById(locationId);
+        restaurantDtoSet.forEach(r -> updatedLocation.assignRestaurant(restaurantValidation.validateEntityById(r.id())));
         locationRepository.save(updatedLocation);
     }
-
-    public void assignRestaurantsSet(Location updatedLocation, Set<RestaurantDto> restaurantDto) {
-        restaurantDto.stream()
-                .map(restaurantMapper::dtoToRestaurant)
-                .forEach(updatedLocation::assignRestaurant);
-    }
-
 
     public void deleteLocation(UUID id) {
         locationRepository.delete(locationMapper.dtoToLocation(id));

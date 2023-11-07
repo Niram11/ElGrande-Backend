@@ -12,6 +12,7 @@ import com.codecool.gastro.security.jwt.service.JwtUtils;
 import com.codecool.gastro.security.jwt.service.OAuth2ClientTokenService;
 import com.codecool.gastro.security.jwt.service.RefreshTokenService;
 import com.codecool.gastro.service.CustomerService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auths")
@@ -76,8 +79,9 @@ public class AuthController {
 
     @PostMapping("/jwt/refresh")
     public ResponseEntity<TokenRefreshResponse> refreshToken(
-            @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest, @CookieValue("JWT_TOKEN") String jwtToken) {
-        if (jwtUtils.hasTokenExpired(jwtToken)) {
+            @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest, HttpServletRequest request) {
+        Optional<String> token = jwtUtils.parseJwt(request);
+        if (token.isPresent() && jwtUtils.hasTokenExpired(token.get())) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(refreshTokenService.handleRefreshTokenRequest(tokenRefreshRequest));
         }
@@ -87,17 +91,22 @@ public class AuthController {
 
 
     @PostMapping("/jwt/logout")
-    public ResponseEntity<Void> logoutCustomer(@CookieValue("JWT_TOKEN") String jwtToken) {
-        try {
-            Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            refreshTokenService.deleteByCustomerId(customer.getId());
-            oAuth2ClientTokenService.deleteByCustomerId(customer.getId());
-        } catch (ClassCastException ex) {
-            CustomerDto customerDto = customerService.getCustomerByEmail(jwtUtils.getEmailFromJwtToken(jwtToken));
-            refreshTokenService.deleteByCustomerId(customerDto.id());
-            oAuth2ClientTokenService.deleteByCustomerId(customerDto.id());
+    public ResponseEntity<Void> logoutCustomer(HttpServletRequest request) {
+        Optional<String> token = jwtUtils.parseJwt(request);
+        if (token.isPresent()) {
+            try {
+                Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                refreshTokenService.deleteByCustomerId(customer.getId());
+                oAuth2ClientTokenService.deleteByCustomerId(customer.getId());
+            } catch (ClassCastException ex) {
+                CustomerDto customerDto = customerService.getCustomerByEmail(jwtUtils.getEmailFromJwtToken(token.get()));
+                refreshTokenService.deleteByCustomerId(customerDto.id());
+                oAuth2ClientTokenService.deleteByCustomerId(customerDto.id());
+            }
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/oauth2")

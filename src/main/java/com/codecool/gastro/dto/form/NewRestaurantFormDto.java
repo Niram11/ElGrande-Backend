@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.UUID;
+
 public record NewRestaurantFormDto(
         @Valid
         NewRestaurantDto restaurant,
@@ -16,6 +18,7 @@ public record NewRestaurantFormDto(
         @Valid
         List<NewBusinessHourDto> businessHour,
         @Valid
-        NewAddressDto address
+        NewAddressDto address,
+        UUID customerId
 ) {
 }

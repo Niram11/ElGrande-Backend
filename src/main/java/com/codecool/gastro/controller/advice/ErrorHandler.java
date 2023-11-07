@@ -23,7 +23,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(value = {ObjectNotFoundException.class, ObjectNotFoundException.class,
             TokenAlreadyExistException.class, TokenRefreshException.class, EmailNotFoundException.class})
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotObjectFound(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());
     }

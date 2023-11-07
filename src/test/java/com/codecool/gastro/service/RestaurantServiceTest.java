@@ -3,18 +3,19 @@ package com.codecool.gastro.service;
 import com.codecool.gastro.dto.restaurant.DetailedRestaurantDto;
 import com.codecool.gastro.dto.restaurant.NewRestaurantDto;
 import com.codecool.gastro.dto.restaurant.RestaurantDto;
+import com.codecool.gastro.dto.review.DetailedReviewDto;
 import com.codecool.gastro.repository.RestaurantRepository;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.repository.projection.DetailedRestaurantProjection;
+import com.codecool.gastro.repository.projection.DetailedReviewProjection;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import com.codecool.gastro.service.mapper.RestaurantMapper;
+import com.codecool.gastro.service.validation.RestaurantValidation;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,18 +34,23 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class RestaurantServiceTest {
     @InjectMocks
-    private RestaurantService service;
-
+    RestaurantService service;
     @Mock
-    private RestaurantRepository repository;
-
+    RestaurantRepository repository;
     @Mock
-    private RestaurantMapper mapper;
+    RestaurantMapper mapper;
+    @Mock
+    EntityManager entityManager;
+    @Mock
+    RestaurantValidation validation;
 
 
+    SpelAwareProxyProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+    DetailedRestaurantProjection projection = factory.createProjection(DetailedRestaurantProjection.class);
     private UUID restaurantId;
     private RestaurantDto restaurantDto;
     private Restaurant restaurant;
+    private DetailedRestaurantDto detailedRestaurantDto;
     @BeforeEach
     void setUp() {
         restaurantId = UUID.fromString("6f2dd202-21c2-45a7-bc16-10b62f8173ab");
@@ -58,6 +64,17 @@ public class RestaurantServiceTest {
                 "test@wp.pl"
         );
 
+        detailedRestaurantDto = new DetailedRestaurantDto(
+                restaurantId,
+                "Tomek",
+                "test2",
+                "test.pl",
+                321,
+                "test@wp.pl",
+                new String[]{"image1"},
+                BigDecimal.valueOf(1)
+        );
+
         restaurant = new Restaurant();
     }
 
@@ -65,15 +82,14 @@ public class RestaurantServiceTest {
     void testGetRestaurantById_ShouldReturnRestaurantDto_WhenRestaurantExist() {
         // given
         restaurant.setId(restaurantId);
+        projection.setId(restaurantId);
 
         // when
-        when(repository.findById(restaurant.getId())).thenReturn(Optional.of(restaurant));
-        when(mapper.toDto(any(Restaurant.class))).thenReturn(restaurantDto);
+        when(repository.findDetailedRestaurantById(restaurantId)).thenReturn(Optional.of(projection));
+        when(mapper.toDetailedDto(projection)).thenReturn(detailedRestaurantDto);
 
         // then
-        assertEquals(restaurant.getId(), service.getRestaurantById(restaurant.getId()).id());
-        verify(repository, times(1)).findById(any(UUID.class));
-        verify(mapper, times(1)).toDto(any(Restaurant.class));
+        assertEquals(detailedRestaurantDto, service.getRestaurantById(restaurantId));
     }
 
     @Test
@@ -96,12 +112,11 @@ public class RestaurantServiceTest {
         restaurant.setContactEmail("kacper@wp.pl");
 
         // when
-        when(repository.findById(restaurant.getId())).thenReturn(Optional.of(restaurant));
-        service.softDelete(restaurant.getId());
+        when(validation.validateEntityById(restaurantId)).thenReturn(restaurant);
+        service.softDelete(restaurantId);
 
         // then
         verify(repository, times(1)).save(captor.capture());
-        verify(repository, times(1)).findById(restaurant.getId());
         assertEquals(captor.getValue().getName(), "*".repeat(restaurant.getName().length()));
         assertEquals(captor.getValue().getDescription(), "*".repeat(restaurant.getDescription().length()));
         assertEquals(captor.getValue().getWebsite(), "*".repeat(restaurant.getWebsite().length()));
@@ -112,8 +127,11 @@ public class RestaurantServiceTest {
 
     @Test
     void testSoftDelete_ShouldThrowObjectNotFoundException_WhenSavingNotExistingRestaurant() {
+        // when
+        Mockito.doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(restaurantId);
+
         // then
-        assertThrows(ObjectNotFoundException.class, () -> service.softDelete(UUID.randomUUID()));
+        assertThrows(ObjectNotFoundException.class, () -> service.softDelete(restaurantId));
     }
 
     @Test
@@ -173,15 +191,13 @@ public class RestaurantServiceTest {
         updatedRestaurant.setId(restaurantId);
 
         // when
-        when(repository.findById(restaurantId)).thenReturn(Optional.of(updatedRestaurant));
-        doNothing().when(mapper).updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
+        when(validation.validateEntityById(restaurantId)).thenReturn(updatedRestaurant);
         when(repository.save(updatedRestaurant)).thenReturn(updatedRestaurant);
         when(mapper.toDto(updatedRestaurant)).thenReturn(restaurantDto);
         RestaurantDto updatedRestaurantDto = service.updateRestaurant(restaurantId, newRestaurantDto);
 
         // then
         assertEquals(updatedRestaurantDto, restaurantDto);
-        verify(repository, times(1)).findById(restaurantId);
         verify(mapper, times(1)).updateRestaurantFromDto(newRestaurantDto, updatedRestaurant);
         verify(repository, times(1)).save(updatedRestaurant);
         verify(mapper, times(1)).toDto(updatedRestaurant);
@@ -199,10 +215,9 @@ public class RestaurantServiceTest {
         );
 
         // when
-        when(repository.findById(restaurantId)).thenReturn(Optional.empty());
+        doThrow(ObjectNotFoundException.class).when(validation).validateEntityById(restaurantId);
 
         // then
         assertThrows(ObjectNotFoundException.class, () -> service.updateRestaurant(restaurantId, newRestaurantDto));
-        verify(repository, times(1)).findById(restaurantId);
     }
 }

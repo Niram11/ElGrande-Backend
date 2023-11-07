@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class PromotedLocalValidation implements Validation<UUID, PromotedLocal> {
+public class PromotedLocalValidation implements Validation<PromotedLocal> {
     private final PromotedLocalRepository promotedLocalRepository;
 
     public PromotedLocalValidation(PromotedLocalRepository promotedLocalRepository) {

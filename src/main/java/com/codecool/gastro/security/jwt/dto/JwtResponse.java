@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public record JwtResponse(
-        String token,
+        String accessToken,
         String type,
         String refreshToken,
         UUID customerId,

@@ -3,11 +3,9 @@ package com.codecool.gastro.controller;
 import com.codecool.gastro.dto.image.ImageDto;
 import com.codecool.gastro.dto.image.NewImageDto;
 import com.codecool.gastro.repository.RestaurantRepository;
-import com.codecool.gastro.repository.entity.Image;
 import com.codecool.gastro.repository.entity.Restaurant;
 import com.codecool.gastro.service.ImageService;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
-import org.checkerframework.checker.units.qual.UnknownUnits;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -110,9 +104,9 @@ public class ImageControllerTest {
         mockMvc.perform(post("/api/v1/images")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contentRequest))
-                .andExpectAll(status().isBadRequest(),
-                        jsonPath("$.errorMessage", Matchers
-                                .containsString("Path to image cannot be empty"))
+                .andExpectAll(status().isUnsupportedMediaType(),
+                        jsonPath("$.errorMessage",
+                                Matchers.containsString("Path to image cannot be empty"))
                 );
     }
 

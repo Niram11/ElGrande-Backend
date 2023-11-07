@@ -14,6 +14,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -50,7 +52,8 @@ public class AddressFormHandlerTest {
                 null,
                 null,
                 null,
-                newAddressDto
+                newAddressDto,
+                UUID.randomUUID()
         );
 
         address = new Address();

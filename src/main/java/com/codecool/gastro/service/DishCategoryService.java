@@ -31,9 +31,7 @@ public class DishCategoryService {
     public DishCategoryDto saveDishCategory(NewDishCategoryDto newDishCategoryDto) {
         DishCategory dishCategory = dishCategoryMapper.dtoToDishCategory(newDishCategoryDto);
         parseToLowerCase(dishCategory);
-        return dishCategoryMapper.toDto(dishCategoryRepository.save(
-                dishCategory
-        ));
+        return dishCategoryMapper.toDto(dishCategoryRepository.save(dishCategory));
     }
 
     public void deleteDishCategory(UUID id) {
