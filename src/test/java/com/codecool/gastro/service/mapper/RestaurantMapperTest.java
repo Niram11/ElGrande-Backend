@@ -46,6 +46,7 @@ public class RestaurantMapperTest {
 
 //    @Test
 //    void testDtoToRestaurantShouldMapToRestaurantWhenProvidingValidData() {
+        //TODO: fix
 //        // given
 //        NewRestaurantDto newRestaurantDto = new NewRestaurantDto(
 //                "Name",
