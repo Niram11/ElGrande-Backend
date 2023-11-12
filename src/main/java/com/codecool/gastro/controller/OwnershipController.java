@@ -35,7 +35,8 @@ public class OwnershipController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<OwnershipDto> updateOwnership(@PathVariable UUID id, @Valid @RequestBody EditOwnershipDto editOwnershipDto) {
+    public ResponseEntity<OwnershipDto> updateOwnership(@PathVariable UUID id,
+                                                        @Valid @RequestBody EditOwnershipDto editOwnershipDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ownershipService.updateOwnership(id, editOwnershipDto));
     }
 

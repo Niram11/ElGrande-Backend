@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,9 +21,18 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query(nativeQuery = true, value = """
             select res.id, res.name, res.description, res.contact_email, res.contact_number, res.website, res.is_deleted from restaurant res
             left join customer_restaurants on res.id = customer_restaurants.restaurants_id
-            left join customer c on customer_restaurants.customer_id = c.id where c.id = :customerId
+            left join customer c on customer_restaurants.customer_id = c.id
+            where c.id = :customerId
             """)
     List<Restaurant> findAllByCustomerId(UUID customerId);
+
+    @Query(nativeQuery = true, value = """
+            select res.id, res.name, res.description, res.contact_email, res.contact_number, res.website, res.is_deleted from restaurant as res
+            left join ownership_restaurants on res.id = ownership_restaurants.restaurants_id
+            left join ownership on ownership.id = ownership_restaurants.ownership_id
+            where ownership.id = :ownershipId
+            """)
+    List<Restaurant> findAllByOwnershipId(UUID ownershipId);
 
     @Query(nativeQuery = true, value = """
             SELECT
@@ -116,4 +126,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
             averageGrade DESC
             """)
     List<DetailedRestaurantProjection> findAllDetailedRestaurants(Pageable pageable);
+
 }

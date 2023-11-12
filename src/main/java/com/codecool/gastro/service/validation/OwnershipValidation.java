@@ -1,7 +1,9 @@
 package com.codecool.gastro.service.validation;
 
 import com.codecool.gastro.repository.OwnershipRepository;
+import com.codecool.gastro.repository.entity.Customer;
 import com.codecool.gastro.repository.entity.Ownership;
+import com.codecool.gastro.service.exception.ObjectAlreadyExistException;
 import com.codecool.gastro.service.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -19,5 +21,12 @@ public class OwnershipValidation implements Validation<Ownership> {
     public Ownership validateEntityById(UUID id) {
         return ownershipRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, Ownership.class));
+    }
+
+    public void validateOwnershipByCustomerId(UUID customerId) {
+        ownershipRepository.findByCustomerId(customerId)
+                .ifPresent(o -> {
+                    throw new ObjectAlreadyExistException(o.getId(), Ownership.class);
+                });
     }
 }

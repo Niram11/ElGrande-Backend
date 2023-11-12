@@ -17,4 +17,7 @@ public interface OwnershipRepository extends JpaRepository<Ownership, UUID>
 
     @Query("SELECT ownership from Ownership ownership where ownership.id = :id")
     Optional<Ownership> findById(UUID id);
+
+    @Query("SELECT ownership from Ownership ownership where ownership.customer.id = :customerId")
+    Optional<Ownership> findByCustomerId(UUID customerId);
 }

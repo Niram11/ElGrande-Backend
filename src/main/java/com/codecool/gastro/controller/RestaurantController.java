@@ -34,6 +34,11 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantByCustomerId(customerId));
     }
 
+    @GetMapping(params = "ownershipId")
+    public ResponseEntity<List<RestaurantDto>> getRestaurantByOwnershipId(@RequestParam("ownershipId") UUID ownershipId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantByOwnershipId(ownershipId));
+    }
+
     @GetMapping(params = {"page", "size", "sort"})
     public ResponseEntity<List<DetailedRestaurantDto>> getDetailedRestaurants(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getDetailedRestaurants(pageable));

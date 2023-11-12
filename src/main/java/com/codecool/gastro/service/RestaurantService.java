@@ -45,6 +45,13 @@ public class RestaurantService {
                 .toList();
     }
 
+    public List<RestaurantDto> getRestaurantByOwnershipId(UUID ownershipId) {
+        return restaurantRepository.findAllByOwnershipId(ownershipId)
+                .stream()
+                .map(restaurantMapper::toDto)
+                .toList();
+    }
+
     public List<DetailedRestaurantDto> getDetailedRestaurants(Pageable pageable) {
         return restaurantRepository.findAllDetailedRestaurants(pageable)
                 .stream()
@@ -89,4 +96,6 @@ public class RestaurantService {
         String emailSuffix = restaurant.getContactEmail().split("@")[1];
         restaurant.setContactEmail(UUID.randomUUID() + "@" + emailSuffix);
     }
+
+
 }

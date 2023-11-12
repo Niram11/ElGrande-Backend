@@ -41,4 +41,8 @@ public class Ownership implements EntityObject {
     public Set<Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    public void assignRestaurantToOwnership(Restaurant restaurant) {
+        restaurants.add(restaurant);
+    }
 }
